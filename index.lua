@@ -42,6 +42,8 @@ current = {piece = {}, x = 0, y = 0, dir = DIR.UP, state = STATE.INIT } -- curre
 next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
 field = {} -- playing field table
 oldpad = SCE_CTRL_CROSS -- user input init
+score = 0
+line_count = 0
 
 -- pieces
 i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -243,6 +245,7 @@ function drop()
 		remove_lines() -- find full lines
 		set_current_piece() -- set next piece as current
 		set_next_piece() -- determ a new piece
+		add_score(10) -- add 10 points for dropping a piece
 		
 		-- if not possible to find a spot for its current location its overwritten = dead
 		if occupied(current.piece, current.x, current.y, current.dir) then
@@ -271,6 +274,7 @@ function remove_lines()
 		-- if a full line remove it
 		if full_line then
 			remove_line(y)
+			add_score(100) -- scored a line :D
 			y = y - 1 -- recheck the same line
 		end
 	end
@@ -328,6 +332,13 @@ function drop_pieces()
 	end
 end
 
+function add_score(n)
+	score = score + n
+end
+
+function add_line(n)
+	line_count = line_count + n
+end
 
 -- drawing
 
@@ -355,6 +366,9 @@ function draw_frame()
 	
 	-- draw piece playing with
 	draw_current()
+	
+	-- draw upcomming piece 
+	draw_next()
 	
 	-- Terminating drawing phase
 	Graphics.termBlend()
@@ -425,6 +439,40 @@ function draw_block(x, y, color)
 		color)
 end
 
+function draw_score()
+end
+
+--next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
+
+function draw_next()
+	local x = 0
+	local y = 0
+	
+	-- 8x8
+	local bitx = 0x8000
+	while bitx > 0 do
+		
+		-- if current.piece bit is set are draw block
+		if bit.band(next_piece.piece.BLOCK[current.dir], bitx) > 0 then
+			-- draw_block uses SIZE.COURT_OFFSET by default
+			Graphics.fillRect(
+					(x*SIZE.X) + x, 
+					((x+1)*SIZE.X) + x, 
+					(y*SIZE.Y) + y, 
+					((y+1)*SIZE.Y) + y, 
+					next_piece.piece.COLOR)
+		end
+		
+		x = x + 1
+		if x == 4 then
+			x = 0
+			y = y + 1
+		end
+		
+		-- shift it
+		bitx = bit.rshift(bitx, 1)
+	end
+end
 
 -- user_input
 

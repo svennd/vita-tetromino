@@ -20,5 +20,6 @@ If you wish to 'compile' this game :
 
 # Credits
 * [Lua Player Plus Vita](https://github.com/Rinnegatamante/lpp-vita) by Rinnegatamante
-* the people from irc #vitsdk, for information and help
+* the people from irc #henkaku and #vitsdk, for information and help
 * the tetris implementation is based on the code for [Javascript Tetris](http://codeincomplete.com/posts/javascript-tetris/)
+* font : [xolonium](https://fontlibrary.org/en/font/xolonium)
