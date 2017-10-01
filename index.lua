@@ -1,5 +1,5 @@
 -- tetrinomi for vita, by svennd
--- version 0.1
+-- version 0.3
 
 -- vita constants
 DISPLAY_WIDTH = 960
@@ -8,11 +8,14 @@ DISPLAY_HEIGHT = 544
 -- screen bg
 background = Graphics.loadImage("app0:/assets/background.png")
 
+-- font
+main_font = Font.load("app0:/assets/xolonium.ttf")
+
 -- game constants
 DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
 STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
 MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
-SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 20, WIDTH_FIELD = 10, COURT_OFFSET_X = 300, COURT_OFFSET_Y = 0 } -- size in px
+SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 10, COURT_OFFSET_X = 300, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 180, NEXT_OFFSET_Y = 40 } -- size in px
 
 -- color definitions
 local white 	= Color.new(255, 255, 255)
@@ -34,16 +37,18 @@ local grey_3	= Color.new(96, 96, 96)
 
 -- initialize variables
 actions = {} -- table with all user input 
-current_time = Timer.new() -- timer for limiting user input
 pieces = {} -- fill all the blocks in this
-game = {start = Timer.new(), last_tick = 0}
+game = {start = Timer.new(), last_tick = 0, state = STATE.INIT}
 step = 500 -- each step the block drops, will become a more important variable once we start using levels/lines
-current = {piece = {}, x = 0, y = 0, dir = DIR.UP, state = STATE.INIT } -- current active piece
+current = {piece = {}, x = 0, y = 0, dir = DIR.UP } -- current active piece
 next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
 field = {} -- playing field table
 oldpad = SCE_CTRL_CROSS -- user input init
 score = 0
+vscore = 0 -- visual score
 line_count = 0
+double_down_speed = 0
+show_help = false
 
 -- pieces
 i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -61,7 +66,7 @@ z = { BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
 function update ()
 	
 	-- check if we are playing
-	if current.state ~= STATE.PLAY then
+	if game.state ~= STATE.PLAY then
 		return true
 	end
 	
@@ -80,13 +85,35 @@ function update ()
 		move(DIR.RIGHT)
 	end
 	
+	-- tick score 
+	if score > vscore then
+		vscore = vscore + 1
+	end
+	
 	-- tick if deltaT > step
 	dt = time_played - game.last_tick
+		
+	-- if double speed is activated drop extra every step/2
+	if double_down_speed == 1 then
+		if dt > math.floor(step/2) then
+			drop()
+		end
+	end
+	
+	-- normal speed drop 
 	if dt > step then
 		-- drop block and update last tick
 		game.last_tick = time_played
 		drop()
 	end	
+	
+	-- increase speed based on lines
+	increase_speed()
+end
+
+-- increase speed based on lines
+function increase_speed()
+	step = 500 - (line_count*5)
 end
 
 -- set upcoming piece and start rotation
@@ -98,7 +125,9 @@ end
 -- current = {piece = {}, x = 0, y = 0, dir = DIR.UP }
 function set_current_piece()
 	current.piece = next_piece.piece
-	current.x = 0
+	-- randomize entry point 
+	-- 4 : 4x4 size for blocks
+	current.x = math.random(0, SIZE.WIDTH_FIELD - 4)
 	current.y = 0
 	current.dir = next_piece.dir
 end
@@ -250,8 +279,12 @@ function drop()
 		-- if not possible to find a spot for its current location its overwritten = dead
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
-			current.state = STATE.DEAD
+			game.state = STATE.DEAD
+			show_help = true
 		end
+		
+		-- cant move further so disable doube speed
+		double_down_speed = 0
 	end
 end
 
@@ -259,6 +292,7 @@ end
 function remove_lines()
 	local x = 0
 	local y = 0
+	local multi_line = 0
 	local full_line = true
 	
 	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
@@ -274,7 +308,14 @@ function remove_lines()
 		-- if a full line remove it
 		if full_line then
 			remove_line(y)
-			add_score(100) -- scored a line :D
+			-- if its not the first line double score !
+			if (multi_line > 0) then
+				add_score( 100 * ( multi_line + 1 ) )
+			else
+				add_score( 100 ) -- scored a line :D
+				multi_line = multi_line + 1
+			end
+				add_line(1)
 			y = y - 1 -- recheck the same line
 		end
 	end
@@ -340,6 +381,31 @@ function add_line(n)
 	line_count = line_count + n
 end
 
+-- start the game
+function game_start()
+	-- reset the score
+	score = 0
+	vscore = 0
+	
+	-- clear field
+	clear_field()
+	
+	-- set up next and current piece
+	set_next_piece() -- determ next piece
+	set_current_piece() -- set next piece as current piece
+	set_next_piece() -- pull the next piece
+
+	-- reset start timer
+	Timer.reset(game.start)
+	
+	-- reset ticks
+	game.last_tick = 0
+	
+	-- set state to playing
+	game.state = STATE.PLAY
+end
+
+
 -- drawing
 
 -- main drawing function
@@ -355,7 +421,7 @@ function draw_frame()
 	Graphics.drawImage(0,0, background)
 	
 	-- temp
-	if current.state == STATE.DEAD then
+	if game.state == STATE.DEAD then
 		Graphics.debugPrint(700, 5, "loser!!!!", white)
 	end
 	
@@ -369,6 +435,13 @@ function draw_frame()
 	
 	-- draw upcomming piece 
 	draw_next()
+	
+	-- score
+	draw_score()
+	
+	if show_help then
+		draw_show_help()
+	end
 	
 	-- Terminating drawing phase
 	Graphics.termBlend()
@@ -439,27 +512,41 @@ function draw_block(x, y, color)
 		color)
 end
 
+-- draw score
 function draw_score()
-end
+	local margin = 15
+	
+	-- increase draw size
+	Font.setPixelSizes(main_font, 30)
+	
+	-- score
+	Font.print(main_font, 110, 270, "SCORE : ", white)
+	Font.print(main_font, 110, 330, vscore, white)
+	draw_box(100, 270, 260, 370, 3, grey_3)
 
---next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
+	-- lines
+	Font.print(main_font, 110, 390, "LINES : " , white)
+	Font.print(main_font, 110, 450, line_count , white)
+	draw_box(100, 270, 380, 490, 3, grey_3)
+end
 
 function draw_next()
 	local x = 0
 	local y = 0
+	local margin = 15 -- margin around next box
 	
 	-- 8x8
 	local bitx = 0x8000
 	while bitx > 0 do
 		
 		-- if current.piece bit is set are draw block
-		if bit.band(next_piece.piece.BLOCK[current.dir], bitx) > 0 then
+		if bit.band(next_piece.piece.BLOCK[next_piece.dir], bitx) > 0 then
 			-- draw_block uses SIZE.COURT_OFFSET by default
 			Graphics.fillRect(
-					(x*SIZE.X) + x, 
-					((x+1)*SIZE.X) + x, 
-					(y*SIZE.Y) + y, 
-					((y+1)*SIZE.Y) + y, 
+					SIZE.NEXT_OFFSET_X + (x*SIZE.X) + x, 
+					SIZE.NEXT_OFFSET_X + ((x+1)*SIZE.X) + x, 
+					SIZE.NEXT_OFFSET_Y + (y*SIZE.Y) + y, 
+					SIZE.NEXT_OFFSET_Y + ((y+1)*SIZE.Y) + y, 
 					next_piece.piece.COLOR)
 		end
 		
@@ -472,18 +559,54 @@ function draw_next()
 		-- shift it
 		bitx = bit.rshift(bitx, 1)
 	end
+	
+	-- draw frame around				
+	draw_box(
+			SIZE.NEXT_OFFSET_X - margin, 
+			SIZE.NEXT_OFFSET_X+(4*SIZE.X) + margin, 
+			SIZE.NEXT_OFFSET_Y - margin, 
+			SIZE.NEXT_OFFSET_Y+(4*SIZE.Y) + margin,
+			3,
+			red)
+			
+	-- text
+	Font.setPixelSizes(main_font, 25)
+	Font.print(main_font, SIZE.NEXT_OFFSET_X-margin, SIZE.NEXT_OFFSET_Y-(margin*3), "upcoming" , white)
+end
+
+-- draw a box
+-- untill fillEmptyRect is fixed
+function draw_box(x1, x2, y1, y2, width, color)
+
+	-- top line
+	Graphics.fillRect(x1, x2+width, y1, y1+width, color)
+	
+	-- bot line
+	Graphics.fillRect(x1, x2+width, y2, y2+width, color)
+	
+	-- left line
+	Graphics.fillRect(x1, x1+width, y1, y2, color)
+	
+	-- right line
+	Graphics.fillRect(x2, x2+width, y1, y2, color)
+	
+end
+
+-- help
+function draw_show_help()
+	Font.setPixelSizes(main_font, 16)
+	Font.print(main_font, 700, 50, "START to play", white)
+	Font.print(main_font, 700, 70, "SELECT to exit", white)
+	Font.print(main_font, 700, 90, "< left right >", white)
+	Font.print(main_font, 700, 110, "UP/X rotate", white)
+	Font.print(main_font, 700, 130, "O drop", white)
 end
 
 -- user_input
 
 -- work through user input
 function user_input()
-	
-	-- limit input
-	if Timer.getTime(current_time) < MIN_INPUT_DELAY then
-		return true
-	end
-	
+		
 	-- input data
 	local pad = Controls.read()
 	
@@ -497,21 +620,35 @@ function user_input()
 	elseif Controls.check(pad, SCE_CTRL_LEFT) and not Controls.check(oldpad, SCE_CTRL_LEFT) then
 		table.insert(actions, DIR.LEFT)
 		
+	elseif Controls.check(pad, SCE_CTRL_LTRIGGER) and not Controls.check(oldpad, SCE_CTRL_LTRIGGER ) then
+		table.insert(actions, DIR.LEFT)
+		
 	elseif Controls.check(pad, SCE_CTRL_RIGHT) and not Controls.check(oldpad, SCE_CTRL_RIGHT) then
+		table.insert(actions, DIR.RIGHT)
+		
+	elseif Controls.check(pad, SCE_CTRL_RTRIGGER) and not Controls.check(oldpad, SCE_CTRL_RTRIGGER) then
 		table.insert(actions, DIR.RIGHT)
 		
 	elseif Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS) then
 		table.insert(actions, DIR.UP)
 
-	elseif Controls.check(pad, SCE_CTRL_START) then
-		System.exit()
+	elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE) then
+		double_down_speed = 1 -- speed down
+		
+	elseif Controls.check(pad, SCE_CTRL_START) and not Controls.check(oldpad, SCE_CTRL_START) then
+		if game.state == STATE.INIT then
+			-- give option to start
+		elseif game.state == STATE.PLAY then
+			-- pauze ?
+		elseif game.state == STATE.DEAD then
+			game_start()
+		end
+	elseif Controls.check(pad, SCE_CTRL_SELECT) then
+		clean_exit()
 	end
 	
 	-- pepperidge farm remembers
 	oldpad = pad
-	
-	-- reset time
-	Timer.reset(current_time)
 end
 
 
@@ -519,17 +656,9 @@ end
 
 -- main function
 function main()
-	
-	-- set up next and current piece
-	set_next_piece() -- determ next piece
-	set_current_piece() -- set next piece as current piece
-	set_next_piece() -- pull the next piece
-	
-	-- reset start timer
-	Timer.reset(game.start)
-	
-	-- set game as started
-	current.state = STATE.PLAY
+
+	-- initiate game variables
+	game_start()
 	
 	-- gameloop
 	while true do
@@ -549,6 +678,15 @@ function main()
 	
 end
 
+-- close all resources
+-- while not strictly necessary, its clean
+function clean_exit()
+
+	Graphics.freeImage(background)
+	Font.unload(main_font)
+	System.exit()
+	
+end
 
 -- run the code
 main()
