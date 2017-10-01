@@ -386,6 +386,7 @@ function game_start()
 	-- reset the score
 	score = 0
 	vscore = 0
+	line_count = 0
 	
 	-- clear field
 	clear_field()
