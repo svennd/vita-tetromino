@@ -1,5 +1,5 @@
 -- tetrinomi for vita, by svennd
--- version 0.3
+-- version 0.4
 
 -- vita constants
 DISPLAY_WIDTH = 960
@@ -7,6 +7,7 @@ DISPLAY_HEIGHT = 544
 
 -- screen bg
 background = Graphics.loadImage("app0:/assets/background.png")
+battery_icon = Graphics.loadImage("app0:/assets/power.png")
 
 -- font
 main_font = Font.load("app0:/assets/xolonium.ttf")
@@ -16,6 +17,7 @@ DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo d
 STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
 MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
 SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 10, COURT_OFFSET_X = 300, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 180, NEXT_OFFSET_Y = 40 } -- size in px
+MIN_INPUT_DELAY = 100
 
 -- color definitions
 local white 	= Color.new(255, 255, 255)
@@ -36,20 +38,21 @@ local grey_2	= Color.new(160, 160, 160)
 local grey_3	= Color.new(96, 96, 96)
 
 -- initialize variables
-actions = {} -- table with all user input 
+actions = {} -- table with all user input
 pieces = {} -- fill all the blocks in this
 game = {start = Timer.new(), last_tick = 0, state = STATE.INIT}
 step = 500 -- each step the block drops, will become a more important variable once we start using levels/lines
-current = {piece = {}, x = 0, y = 0, dir = DIR.UP } -- current active piece
+current = {piece = {}, x = 0, y = 0, dir = DIR.UP, highscore = 0 } -- current active piece
 next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
 field = {} -- playing field table
 oldpad = SCE_CTRL_CROSS -- user input init
+last_user_tick = 0
 score = 0
 vscore = 0 -- visual score
 line_count = 0
 double_down_speed = 0
 show_help = false
-new_highscore = false
+new_highscore_flag = false
 
 -- pieces
 i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -86,7 +89,7 @@ function update ()
 		move(DIR.RIGHT)
 	end
 	
-	-- tick score 
+	-- tick score
 	if score > vscore then
 		vscore = vscore + 1
 	end
@@ -101,12 +104,12 @@ function update ()
 		end
 	end
 	
-	-- normal speed drop 
+	-- normal speed drop
 	if dt > step then
 		-- drop block and update last tick
 		game.last_tick = time_played
 		drop()
-	end	
+	end
 	
 	-- increase speed based on lines
 	increase_speed()
@@ -126,7 +129,7 @@ end
 -- current = {piece = {}, x = 0, y = 0, dir = DIR.UP }
 function set_current_piece()
 	current.piece = next_piece.piece
-	-- randomize entry point 
+	-- randomize entry point
 	-- 4 : 4x4 size for blocks
 	current.x = math.random(0, SIZE.WIDTH_FIELD - 4)
 	current.y = 0
@@ -225,7 +228,7 @@ function move(dir)
 	local x = current.x
 	local y = current.y
 	
-	if dir == DIR.RIGHT then 
+	if dir == DIR.RIGHT then
 		x = x + 1
 	elseif dir == DIR.LEFT then
 		x = x - 1
@@ -247,7 +250,7 @@ function move(dir)
 end
 
 -- pseudo random that is usefull for tetris
-function random_piece() 
+function random_piece()
 
 	-- no more pieces left
 	if table.getn(pieces) == 0 then
@@ -257,7 +260,7 @@ function random_piece()
 		-- shuffle them, http://gamebuildingtools.com/using-lua/shuffle-table-lua
 		-- might require a better implementation
 		local n = table.getn(pieces)
-		while n > 2 do 
+		while n > 2 do
 			local k = math.random(n) -- get a random number
 			pieces[n], pieces[k] = pieces[k], pieces[n]
 			n = n - 1
@@ -281,7 +284,7 @@ function drop()
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
 			-- store highscore if needed
-			highscore(score)
+			new_highscore(score)
 			game.state = STATE.DEAD
 			show_help = true
 		end
@@ -392,6 +395,7 @@ function game_start()
 	score = 0
 	vscore = 0
 	line_count = 0
+	new_highscore_flag = false
 	
 	-- clear field
 	clear_field()
@@ -409,32 +413,45 @@ function game_start()
 	
 	-- set state to playing
 	game.state = STATE.PLAY
+	
+	-- set current highscore
+	current.highscore = get_high_score()
 end
 
--- check if its a new highscore
-function highscore(score)
-	
-	local highscore = 0
-	
-	-- determ the current highest score or store it
+-- get the highscore from file
+function get_high_score()
+    
+    -- check if file exist
 	if System.doesFileExist("app0:/tetris_score.txt") then
-	
-		-- open file
+	    
+	    -- open file
 		local score_file = System.openFile("app0:/tetris_score", FREAD)
 		
 		-- read content
-		highscore = System.readFile(score_file, System.sizeFile(score_file))
+		local highscore = System.readFile(score_file, System.sizeFile(score_file))
 		
 		-- close file again
 		System.closeFile(score_file)
 		
-		-- current score is higher or equal
-		if highscore >= score then
-			return false
-		else
-			-- its a higher score
-			System.deleteFile("app0:/tetris_score")
-		end
+		return highscore
+		
+	else
+	    return 0
+	end
+end
+
+-- check if its a new highscore
+function new_highscore(score)
+	
+	local highscore = get_high_score()
+	
+    -- current score is higher or equal
+	if highscore >= score then
+		return false
+	else
+		-- its a higher score
+		new_highscore_flag = true
+		System.deleteFile("app0:/tetris_score")
 	end
 	
 	-- create it a new highscore file
@@ -460,9 +477,10 @@ function draw_frame()
 	-- temp
 	if game.state == STATE.DEAD then
 		Graphics.debugPrint(700, 5, "loser!!!!", white)
+		if new_highscore_flag then
+		    Graphics.debugPrint(700, 5, "new high score, congratz !", white)
+		end
 	end
-	
-	--Graphics.debugPrint(700, 200, "step " .. step, white)
 	
 	-- draw court
 	draw_court()
@@ -470,11 +488,14 @@ function draw_frame()
 	-- draw piece playing with
 	draw_current()
 	
-	-- draw upcomming piece 
+	-- draw upcomming piece
 	draw_next()
 	
 	-- score
 	draw_score()
+	
+	-- draw battery info
+	draw_battery()
 	
 	if show_help then
 		draw_show_help()
@@ -515,10 +536,10 @@ function draw_court()
 
 	-- draw background frame
 	Graphics.fillRect(
-		SIZE.COURT_OFFSET_X, 
-		SIZE.COURT_OFFSET_X + ( (SIZE.WIDTH_FIELD + 1) * SIZE.X) + SIZE.WIDTH_FIELD, 
-		SIZE.COURT_OFFSET_Y, 
-		SIZE.COURT_OFFSET_Y + ( (SIZE.HEIGHT_FIELD + 1) * SIZE.Y) + SIZE.HEIGHT_FIELD, 
+		SIZE.COURT_OFFSET_X,
+		SIZE.COURT_OFFSET_X + ( (SIZE.WIDTH_FIELD + 1) * SIZE.X) + SIZE.WIDTH_FIELD,
+		SIZE.COURT_OFFSET_Y,
+		SIZE.COURT_OFFSET_Y + ( (SIZE.HEIGHT_FIELD + 1) * SIZE.Y) + SIZE.HEIGHT_FIELD,
 		black)
 	
 	-- draw blocks
@@ -539,13 +560,13 @@ function draw_court()
 end
 
 -- draw a single block
-function draw_block(x, y, color)	
+function draw_block(x, y, color)
 
 	Graphics.fillRect(
-		SIZE.COURT_OFFSET_X+(x*SIZE.X) + x, 
-		SIZE.COURT_OFFSET_X+((x+1)*SIZE.X) + x, 
-		SIZE.COURT_OFFSET_Y+(y*SIZE.Y) + y, 
-		SIZE.COURT_OFFSET_Y+((y+1)*SIZE.Y) + y, 
+		SIZE.COURT_OFFSET_X+(x*SIZE.X) + x,
+		SIZE.COURT_OFFSET_X+((x+1)*SIZE.X) + x,
+		SIZE.COURT_OFFSET_Y+(y*SIZE.Y) + y,
+		SIZE.COURT_OFFSET_Y+((y+1)*SIZE.Y) + y,
 		color)
 end
 
@@ -567,6 +588,7 @@ function draw_score()
 	draw_box(100, 270, 380, 490, 3, grey_3)
 end
 
+-- draw next block
 function draw_next()
 	local x = 0
 	local y = 0
@@ -580,10 +602,10 @@ function draw_next()
 		if bit.band(next_piece.piece.BLOCK[next_piece.dir], bitx) > 0 then
 			-- draw_block uses SIZE.COURT_OFFSET by default
 			Graphics.fillRect(
-					SIZE.NEXT_OFFSET_X + (x*SIZE.X) + x, 
-					SIZE.NEXT_OFFSET_X + ((x+1)*SIZE.X) + x, 
-					SIZE.NEXT_OFFSET_Y + (y*SIZE.Y) + y, 
-					SIZE.NEXT_OFFSET_Y + ((y+1)*SIZE.Y) + y, 
+					SIZE.NEXT_OFFSET_X + (x*SIZE.X) + x,
+					SIZE.NEXT_OFFSET_X + ((x+1)*SIZE.X) + x,
+					SIZE.NEXT_OFFSET_Y + (y*SIZE.Y) + y,
+					SIZE.NEXT_OFFSET_Y + ((y+1)*SIZE.Y) + y,
 					next_piece.piece.COLOR)
 		end
 		
@@ -597,11 +619,11 @@ function draw_next()
 		bitx = bit.rshift(bitx, 1)
 	end
 	
-	-- draw frame around				
+	-- draw frame around
 	draw_box(
-			SIZE.NEXT_OFFSET_X - margin, 
-			SIZE.NEXT_OFFSET_X+(4*SIZE.X) + margin, 
-			SIZE.NEXT_OFFSET_Y - margin, 
+			SIZE.NEXT_OFFSET_X - margin,
+			SIZE.NEXT_OFFSET_X+(4*SIZE.X) + margin,
+			SIZE.NEXT_OFFSET_Y - margin,
 			SIZE.NEXT_OFFSET_Y+(4*SIZE.Y) + margin,
 			3,
 			red)
@@ -609,6 +631,19 @@ function draw_next()
 	-- text
 	Font.setPixelSizes(main_font, 25)
 	Font.print(main_font, SIZE.NEXT_OFFSET_X-margin, SIZE.NEXT_OFFSET_Y-(margin*3), "upcoming" , white)
+end
+
+-- draw battery
+function draw_battery()
+    local margin = 25
+    local life = System.getBatteryPercentage()
+	Font.print(main_font, DISPLAY_WIDTH - margin - 25, margin, life .. " %", white)
+	Graphics.drawImage(DISPLAY_WIDTH - margin, margin, battery_icon)
+end
+
+-- draw highscore
+function draw_score()
+    
 end
 
 -- draw a box
@@ -643,7 +678,13 @@ end
 
 -- work through user input
 function user_input()
-		
+	
+	-- get time played
+	local time_played = Timer.getTime(game.start)
+	
+	-- last valid input
+	local last_input = time_played - last_user_tick
+
 	-- input data
 	local pad = Controls.read()
 	
@@ -653,15 +694,25 @@ function user_input()
 		
 	elseif Controls.check(pad, SCE_CTRL_DOWN) and not Controls.check(oldpad, SCE_CTRL_DOWN) then
 		table.insert(actions, DIR.DOWN)
-		
+	
 	elseif Controls.check(pad, SCE_CTRL_LEFT) and not Controls.check(oldpad, SCE_CTRL_LEFT) then
 		table.insert(actions, DIR.LEFT)
+			
+	-- sticky key support
+	elseif Controls.check(pad, SCE_CTRL_LEFT) and last_input > MIN_INPUT_DELAY then
+		table.insert(actions, DIR.LEFT)
+		last_user_tick = time_played
 		
 	elseif Controls.check(pad, SCE_CTRL_LTRIGGER) and not Controls.check(oldpad, SCE_CTRL_LTRIGGER ) then
 		table.insert(actions, DIR.LEFT)
 		
 	elseif Controls.check(pad, SCE_CTRL_RIGHT) and not Controls.check(oldpad, SCE_CTRL_RIGHT) then
 		table.insert(actions, DIR.RIGHT)
+
+	-- sticky key support
+	elseif Controls.check(pad, SCE_CTRL_RIGHT) and last_input > MIN_INPUT_DELAY then
+		table.insert(actions, DIR.RIGHT)
+		last_user_tick = time_played
 		
 	elseif Controls.check(pad, SCE_CTRL_RTRIGGER) and not Controls.check(oldpad, SCE_CTRL_RTRIGGER) then
 		table.insert(actions, DIR.RIGHT)
