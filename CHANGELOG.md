@@ -19,3 +19,4 @@ v0.4
 - fixed similar color for two pieces
 - fixed line_count not resetting after a game_over
 - show battery indicator
+- sticky direction are now working

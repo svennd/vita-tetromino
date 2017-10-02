@@ -51,7 +51,6 @@ score = 0
 vscore = 0 -- visual score
 line_count = 0
 double_down_speed = 0
-show_help = false
 new_highscore_flag = false
 
 -- pieces
@@ -286,7 +285,6 @@ function drop()
 			-- store highscore if needed
 			new_highscore(score)
 			game.state = STATE.DEAD
-			show_help = true
 		end
 		
 		-- cant move further so disable doube speed
@@ -421,17 +419,27 @@ end
 -- get the highscore from file
 function get_high_score()
     
+	System.createDirectory("ux0:/data/tetrinomi")
+	
     -- check if file exist
-	if System.doesFileExist("app0:/tetris_score.txt") then
+	if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
 	    
 	    -- open file
-		local score_file = System.openFile("app0:/tetris_score", FREAD)
+		local score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FREAD)
 		
 		-- read content
 		local highscore = System.readFile(score_file, System.sizeFile(score_file))
 		
 		-- close file again
 		System.closeFile(score_file)
+		
+		-- cast to number
+		highscore = tonumber(highscore)
+		
+		-- verify if its a sane number
+		if highscore == nil then
+			return 0
+		end
 		
 		return highscore
 		
@@ -451,13 +459,17 @@ function new_highscore(score)
 	else
 		-- its a higher score
 		new_highscore_flag = true
-		System.deleteFile("app0:/tetris_score")
+		current.highscore = score
+		
+		if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
+			System.deleteFile("ux0:/data/tetrinomi/tetris_score")
+		end
 	end
 	
 	-- create it a new highscore file
-	local new_score_file = System.openFile("app0:/tetris_score", FCREATE)
-	System.writeFile(score_file, score, string.len(score))
-	System.closeFile(score_file)
+	local new_score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FCREATE)
+	System.writeFile(new_score_file, score, string.len(score))
+	System.closeFile(new_score_file)
 end
 
 -- drawing
@@ -476,9 +488,11 @@ function draw_frame()
 	
 	-- temp
 	if game.state == STATE.DEAD then
-		Graphics.debugPrint(700, 5, "loser!!!!", white)
+		Font.setPixelSizes(main_font, 25)
+	
+		Font.print(main_font, 610, 50, "GAME OVER", white)
 		if new_highscore_flag then
-		    Graphics.debugPrint(700, 5, "new high score, congratz !", white)
+			Font.print(main_font, 610, 90, "! NEW HIGHSCORE !", white)
 		end
 	end
 	
@@ -497,9 +511,8 @@ function draw_frame()
 	-- draw battery info
 	draw_battery()
 	
-	if show_help then
-		draw_show_help()
-	end
+	-- show help
+	draw_show_help()
 	
 	-- Terminating drawing phase
 	Graphics.termBlend()
@@ -586,6 +599,9 @@ function draw_score()
 	Font.print(main_font, 110, 390, "LINES : " , white)
 	Font.print(main_font, 110, 450, line_count , white)
 	draw_box(100, 270, 380, 490, 3, grey_3)
+	
+	-- high_score
+	draw_high_score()
 end
 
 -- draw next block
@@ -635,15 +651,28 @@ end
 
 -- draw battery
 function draw_battery()
-    local margin = 25
+    local margin = 50
+	local y_offset = 5
     local life = System.getBatteryPercentage()
-	Font.print(main_font, DISPLAY_WIDTH - margin - 25, margin, life .. " %", white)
-	Graphics.drawImage(DISPLAY_WIDTH - margin, margin, battery_icon)
+	
+	-- icon
+	Graphics.drawImage(DISPLAY_WIDTH - margin, y_offset, battery_icon)
+	
+	-- decrease font size
+	Font.setPixelSizes(main_font, 16)
+	Font.print(main_font, DISPLAY_WIDTH - margin, y_offset, life .. "%", black)
 end
 
 -- draw highscore
-function draw_score()
-    
+function draw_high_score()
+    -- increase draw size
+	Font.setPixelSizes(main_font, 30)
+	
+	-- score
+	Font.print(main_font, 610, 270, "highscore : ", white)
+	Font.print(main_font, 610, 330, current.highscore, white)
+	draw_box(600, 790, 260, 370, 3, white)
+	
 end
 
 -- draw a box
@@ -667,11 +696,11 @@ end
 -- help
 function draw_show_help()
 	Font.setPixelSizes(main_font, 16)
-	Font.print(main_font, 700, 50, "START to play", white)
-	Font.print(main_font, 700, 70, "SELECT to exit", white)
-	Font.print(main_font, 700, 90, "< left right >", white)
-	Font.print(main_font, 700, 110, "UP/X rotate", white)
-	Font.print(main_font, 700, 130, "O drop", white)
+	Font.print(main_font, 800, 350, "START to play", white)
+	Font.print(main_font, 800, 370, "SELECT to exit", white)
+	Font.print(main_font, 800, 390, "< left right >", white)
+	Font.print(main_font, 800, 410, "UP/X rotate", white)
+	Font.print(main_font, 800, 430, "O drop", white)
 end
 
 -- user_input
@@ -692,12 +721,11 @@ function user_input()
 	if Controls.check(pad, SCE_CTRL_UP) and not Controls.check(oldpad, SCE_CTRL_UP) then
 		table.insert(actions, DIR.UP)
 		
-	elseif Controls.check(pad, SCE_CTRL_DOWN) and not Controls.check(oldpad, SCE_CTRL_DOWN) then
+	-- sticky key support
+	elseif Controls.check(pad, SCE_CTRL_DOWN) and last_input > MIN_INPUT_DELAY then
 		table.insert(actions, DIR.DOWN)
-	
-	elseif Controls.check(pad, SCE_CTRL_LEFT) and not Controls.check(oldpad, SCE_CTRL_LEFT) then
-		table.insert(actions, DIR.LEFT)
-			
+		last_user_tick = time_played
+		
 	-- sticky key support
 	elseif Controls.check(pad, SCE_CTRL_LEFT) and last_input > MIN_INPUT_DELAY then
 		table.insert(actions, DIR.LEFT)
@@ -706,9 +734,6 @@ function user_input()
 	elseif Controls.check(pad, SCE_CTRL_LTRIGGER) and not Controls.check(oldpad, SCE_CTRL_LTRIGGER ) then
 		table.insert(actions, DIR.LEFT)
 		
-	elseif Controls.check(pad, SCE_CTRL_RIGHT) and not Controls.check(oldpad, SCE_CTRL_RIGHT) then
-		table.insert(actions, DIR.RIGHT)
-
 	-- sticky key support
 	elseif Controls.check(pad, SCE_CTRL_RIGHT) and last_input > MIN_INPUT_DELAY then
 		table.insert(actions, DIR.RIGHT)
