@@ -49,6 +49,7 @@ vscore = 0 -- visual score
 line_count = 0
 double_down_speed = 0
 show_help = false
+new_highscore = false
 
 -- pieces
 i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -279,6 +280,8 @@ function drop()
 		-- if not possible to find a spot for its current location its overwritten = dead
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
+			-- store highscore if needed
+			highscore(score)
 			game.state = STATE.DEAD
 			show_help = true
 		end
@@ -373,10 +376,12 @@ function drop_pieces()
 	end
 end
 
+-- add score line
 function add_score(n)
 	score = score + n
 end
 
+-- add line score
 function add_line(n)
 	line_count = line_count + n
 end
@@ -406,6 +411,37 @@ function game_start()
 	game.state = STATE.PLAY
 end
 
+-- check if its a new highscore
+function highscore(score)
+	
+	local highscore = 0
+	
+	-- determ the current highest score or store it
+	if System.doesFileExist("app0:/tetris_score.txt") then
+	
+		-- open file
+		local score_file = System.openFile("app0:/tetris_score", FREAD)
+		
+		-- read content
+		highscore = System.readFile(score_file, System.sizeFile(score_file))
+		
+		-- close file again
+		System.closeFile(score_file)
+		
+		-- current score is higher or equal
+		if highscore >= score then
+			return false
+		else
+			-- its a higher score
+			System.deleteFile("app0:/tetris_score")
+		end
+	end
+	
+	-- create it a new highscore file
+	local new_score_file = System.openFile("app0:/tetris_score", FCREATE)
+	System.writeFile(score_file, score, string.len(score))
+	System.closeFile(score_file)
+end
 
 -- drawing
 
