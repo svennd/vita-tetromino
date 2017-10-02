@@ -13,3 +13,9 @@ v0.3
 - added double down function
 - can now restart the game
 - added difficulity increase over time
+
+v0.4
+- added support for highscore
+- fixed similar color for two pieces
+- fixed line_count not resetting after a game_over
+- show battery indicator
