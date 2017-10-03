@@ -711,11 +711,11 @@ end
 -- help
 function draw_show_help()
 	Font.setPixelSizes(main_font, 16)
-	Font.print(main_font, 800, 350, "START to play", white)
-	Font.print(main_font, 800, 370, "SELECT to exit", white)
-	Font.print(main_font, 800, 390, "< left right >", white)
-	Font.print(main_font, 800, 410, "UP/X rotate", white)
-	Font.print(main_font, 800, 430, "O drop", white)
+	Font.print(main_font, 800, 410, "START to play", white)
+	Font.print(main_font, 800, 430, "SELECT to exit", white)
+	-- Font.print(main_font, 800, 390, "< left right >", white)
+	-- Font.print(main_font, 800, 410, "UP/X rotate", white)
+	-- Font.print(main_font, 800, 430, "O drop", white)
 end
 
 -- user_input
@@ -789,7 +789,8 @@ function main()
 	game_start()
 	
 	-- verify game version
-	version_check()
+	-- not functional
+	--version_check()
 	
 	-- gameloop
 	while true do
@@ -829,11 +830,45 @@ function version_check()
 	if Network.isWifiEnabled() then
 
 		-- sync send a request for the content
-		local uplink_version = Network.requestString("https://raw.githubusercontent.com/svennd/vita-tetromino/master/VERSION.md")
+		local skt = Socket.connect("raw.githubusercontent.com", 443)
+		-- send request
+		Socket.send(skt, "GET /svennd/vita-tetromino/master/VERSION.md HTTP/1.1\r\nHost: raw.githubusercontent.com\r\n\r\n")
 
-		if uplink_version ~= VERSION then
+		-- Since sockets are non blocking, we wait till at least a byte is received
+		local raw_data = ""
+		while raw_data == "" do
+			raw_data = raw_data .. Socket.receive(skt, 8192)
+		end
+
+		-- Keep downloading till the whole response is received
+		dwnld_data = raw_data
+		retry = 0
+		while dwnld_data ~= "" or retry < 1000 do
+			dwnld_data = Socket.receive(skt, 8192)
+			raw_data = raw_data .. dwnld_data
+			if dwnld_data == "" then
+				retry = retry + 1
+			else
+				retry = 0
+			end
+		end
+	
+		-- Extracting Content-Length value
+		offs1, offs2 = string.find(raw_data, "Length: ")
+		offs3 = string.find(raw_data, "\r", offs2)
+		content_length = tonumber(string.sub(raw_data, offs2, offs3))
+
+		-- getting the version
+		stub, content_offset = string.find(raw_data, "\r\n\r\n")
+		local uplink_version = string.sub(raw_data, content_offset+1)
+		
+		if uplink_version == VERSION then
 			draw_new_version = true
 		end
+		
+		-- Closing socket
+		Socket.close(skt)
+		
 	end
 
 	-- Terminating network

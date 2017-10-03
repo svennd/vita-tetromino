@@ -20,4 +20,3 @@ v0.4
 - fixed line_count not resetting after a game_over
 - show battery indicator
 - sticky direction are now working
-- simple version check
