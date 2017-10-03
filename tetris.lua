@@ -19,24 +19,21 @@ function update ()
 	
 	-- check if we are playing
 	if game.state ~= STATE.PLAY then
+	    
+	    -- menu input
+	    if game.state == STATE.INIT then
+	        handle_menu_input()
+	    end
+	    
 		return true
 	end
 	
 	local time_played = Timer.getTime(game.start)
 	local dt = 0
-	local current_action = table.remove(actions, 1) -- get the first action
 	
 	-- handle of the actions
-	if current_action == DIR.UP then
-		rotate()
-	elseif current_action == DIR.DOWN then
-		drop()
-	elseif current_action == DIR.LEFT then
-		move(DIR.LEFT)
-	elseif current_action == DIR.RIGHT then
-		move(DIR.RIGHT)
-	end
-	
+    handle_ingame_input()
+
 	-- tick if deltaT > step
 	dt = time_played - game.last_tick
 		
@@ -56,6 +53,45 @@ function update ()
 	
 	-- increase speed based on lines
 	increase_speed()
+end
+
+function handle_menu_input()
+	local current_action = table.remove(actions, 1) -- get the first action
+	
+	if current_action == DIR.UP then
+		if menu_point > 5 then
+		    menu_point = 1
+		else
+		    menu_point = menu_point + 1
+	    end
+	elseif current_action == DIR.DOWN then
+		if menu_point <= 0 then
+		    menu_point = 5
+		else
+		    menu_point = menu_point - 1
+	    end
+	end
+end
+
+-- handle ingame controls
+function handle_ingame_input()
+    
+	local current_action = table.remove(actions, 1) -- get the first action
+	
+	if current_action == DIR.UP then
+		rotate()
+	elseif current_action == DIR.DOWN then
+		drop()
+	elseif current_action == DIR.LEFT then
+		move(DIR.LEFT)
+	elseif current_action == DIR.RIGHT then
+		move(DIR.RIGHT)
+	end
+end
+
+-- handle menu input
+function handle_menu_input()
+    
 end
 
 -- increase speed based on lines
@@ -338,6 +374,9 @@ function game_start()
 	vscore = 0
 	line_count = 0
 	new_highscore_flag = false
+	
+	-- no double down before start
+	double_down_speed = 0
 	
 	-- clear field
 	clear_field()

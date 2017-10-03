@@ -32,6 +32,7 @@ line_count = 0 -- line count is used in the step calculation
 double_down_speed = 0 -- flag drop piece
 new_highscore_flag = false -- new high score
 draw_new_version = false -- new version polled
+menu_point = 0 -- where is the menu marked
 
 -- load functions
 
