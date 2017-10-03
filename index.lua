@@ -5,6 +5,9 @@
 DISPLAY_WIDTH = 960
 DISPLAY_HEIGHT = 544
 
+-- application variables
+VERSION = "0.4"
+
 -- screen bg
 background = Graphics.loadImage("app0:/assets/background.png")
 battery_icon = Graphics.loadImage("app0:/assets/power.png")
@@ -52,6 +55,7 @@ vscore = 0 -- visual score
 line_count = 0
 double_down_speed = 0
 new_highscore_flag = false
+draw_new_version = false
 
 -- pieces
 i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -514,6 +518,11 @@ function draw_frame()
 	-- show help
 	draw_show_help()
 	
+	-- in case a new version is there
+	if draw_new_version then
+		new_version()
+	end
+	
 	-- Terminating drawing phase
 	Graphics.termBlend()
 	Screen.flip()
@@ -693,6 +702,12 @@ function draw_box(x1, x2, y1, y2, width, color)
 	
 end
 
+-- new version available
+function new_version()
+	Font.setPixelSizes(main_font, 20)
+	Font.print(main_font, 800, 300, "New version available", red)
+end
+
 -- help
 function draw_show_help()
 	Font.setPixelSizes(main_font, 16)
@@ -773,6 +788,9 @@ function main()
 	-- initiate game variables
 	game_start()
 	
+	-- verify game version
+	version_check()
+	
 	-- gameloop
 	while true do
 		
@@ -799,6 +817,27 @@ function clean_exit()
 	Font.unload(main_font)
 	System.exit()
 	
+end
+
+
+-- version check
+function version_check()
+	-- initialize network
+	Network.init()
+
+	-- Checking if connection is available
+	if Network.isWifiEnabled() then
+
+		-- sync send a request for the content
+		local uplink_version = Network.requestString("https://raw.githubusercontent.com/svennd/vita-tetromino/master/VERSION.md")
+
+		if uplink_version ~= VERSION then
+			draw_new_version = true
+		end
+	end
+
+	-- Terminating network
+	Network.term()
 end
 
 -- run the code
