@@ -239,51 +239,10 @@ end
 
 -- interface menu
 function draw_interface()
-    
-    local button = { width = 150, height = 50 }
-    local margin = { x = 15, y = 5 }
-    
     -- menu
-    -- start tetronimo
-    draw_text("START CLASSIC TETRIS", (DISPLAY_WIDTH/2)-(button.width/2)+margin.x, 300+button.height-margin.y, white, 28)
-    Graphics.fillRect(
-                (DISPLAY_WIDTH/2)-(button.width/2),
-                (DISPLAY_WIDTH/2)+(button.width/2),
-                (300-(button.height/2)),
-                (300+(button.height/2)),
-                ((menu_point == 1) ? grey_3 : grey_1)
-            )
-            
-    -- credits
-    draw_text("CREDITS", (DISPLAY_WIDTH/2)-(button.width/2)+margin.x, 350+button.height-margin.y, white, 28)
-    Graphics.fillRect(
-                (DISPLAY_WIDTH/2)-(button.width/2),
-                (DISPLAY_WIDTH/2)+(button.width/2),
-                (350-(button.height/2)),
-                (350+(button.height/2)),
-                ((menu_point == 2) ? grey_3 : grey_1)
-            )
-            
-    -- check for update
-    draw_text("CHECK FOR UPDATES", (DISPLAY_WIDTH/2)-(button.width/2)+margin.x, 350+button.height-margin.y, white, 28)
-    Graphics.fillRect(
-                (DISPLAY_WIDTH/2)-(button.width/2),
-                (DISPLAY_WIDTH/2)+(button.width/2),
-                (400-(button.height/2)),
-                (400+(button.height/2)),
-                ((menu_point == 3) ? grey_3 : grey_1)
-            )
-            
-    -- exit
-    draw_text("I HATE TETRIS", (DISPLAY_WIDTH/2)-(button.width/2)+margin.x, 350+button.height-margin.y, white, 28)
-    Graphics.fillRect(
-                (DISPLAY_WIDTH/2)-(button.width/2),
-                (DISPLAY_WIDTH/2)+(button.width/2),
-                (450-(button.height/2)),
-                (450+(button.height/2)),
-                ((menu_point == 4) ? grey_3 : grey_1)
-            )
+    --draw_box()
 end
+
 
 -- draw a box
 -- untill fillEmptyRect is fixed
