@@ -660,12 +660,22 @@ end
 
 -- draw battery
 function draw_battery()
-    local margin = 50
+    local margin = 60
 	local y_offset = 5
     local life = System.getBatteryPercentage()
 	
 	-- icon
-	Graphics.drawImage(DISPLAY_WIDTH - margin, y_offset, battery_icon)
+	-- ok
+	if life > 70 then
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 0, 50, 25)
+	elseif life > 50 then
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 26, 50, 25)
+	elseif life > 30 then
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 53, 50, 25)
+	else life > 10 then
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 79, 50, 25)
+	end
+	
 	
 	-- decrease font size
 	Font.setPixelSizes(main_font, 16)

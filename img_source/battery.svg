@@ -17,7 +17,8 @@
    inkscape:export-filename="C:\Users\svenn\Desktop\power.png"
    inkscape:export-xdpi="7.4929576"
    inkscape:export-ydpi="7.4929576"
-   inkscape:version="0.92.1 r15371">
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="battery.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -28,16 +29,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="379.37389"
-     inkscape:cy="995.59037"
+     inkscape:cx="160.8991"
+     inkscape:cy="503.66459"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="958"
-     inkscape:window-height="1018"
-     inkscape:window-x="953"
-     inkscape:window-y="0"
-     inkscape:window-maximized="0" />
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -46,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -54,27 +55,95 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="opacity:1;fill:#00ff00;stroke-width:0.81508774;stroke-miterlimit:4;stroke-dasharray:none"
-       id="rect4485"
-       width="124.35417"
-       height="59.342262"
-       x="17.00893"
-       y="17.297619"
-       ry="11.717262" />
-    <rect
-       ry="13.209908"
-       y="13.517857"
-       x="12.851192"
-       height="66.901787"
-       width="133.04762"
-       id="rect4487"
-       style="opacity:1;fill:none;stroke-width:0.89518869;stroke-miterlimit:4;stroke-dasharray:none;stroke:#00ff00;stroke-opacity:1" />
-    <path
-       style="opacity:1;fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:0.79374999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 146.334,35.295885 c 1.77681,0 3.20723,1.430427 3.20723,3.207234 V 54.53929 c 0,1.776808 -1.43042,3.207235 -3.20723,3.207235 -0.6736,-6.876974 -0.35022,-15.599881 0,-22.45064 z"
-       id="rect4491"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="csscc" />
+    <g
+       id="g4598"
+       inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetromino\assets\power.png"
+       inkscape:export-xdpi="9.2600002"
+       inkscape:export-ydpi="9.2600002">
+      <g
+         transform="translate(-2.3951739,-11.22532)"
+         id="g4488">
+        <rect
+           style="opacity:1;fill:#00ff00;stroke-width:0.69313556;stroke-miterlimit:4;stroke-dasharray:none"
+           id="rect4485"
+           width="111.52524"
+           height="47.849674"
+           x="23.612385"
+           y="23.043913"
+           ry="9.4480247" />
+        <rect
+           ry="13.209908"
+           y="13.517857"
+           x="12.851192"
+           height="66.901787"
+           width="133.04762"
+           id="rect4487"
+           style="opacity:1;fill:none;stroke:#808080;stroke-width:0.89518869;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <path
+           style="opacity:1;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.79374999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 146.334,35.295885 c 1.77681,0 3.20723,1.430427 3.20723,3.207234 V 54.53929 c 0,1.776808 -1.43042,3.207235 -3.20723,3.207235 -0.6736,-6.876974 -0.35022,-15.599881 0,-22.45064 z"
+           id="rect4491"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="csscc" />
+      </g>
+      <rect
+         style="opacity:1;fill:none;stroke:#808080;stroke-width:0.89518869;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect4487-7"
+         width="133.04762"
+         height="66.901787"
+         x="10.456018"
+         y="74.88456"
+         ry="13.209908" />
+      <path
+         sodipodi:nodetypes="csscc"
+         inkscape:connector-curvature="0"
+         id="rect4491-5"
+         d="m 143.93883,96.662589 c 1.77681,0 3.20723,1.430427 3.20723,3.207234 v 16.036167 c 0,1.77681 -1.43042,3.20724 -3.20723,3.20724 -0.6736,-6.87697 -0.35022,-15.59988 0,-22.450641 z"
+         style="opacity:1;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.79374999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         ry="9.4480247"
+         y="157.00264"
+         x="21.217211"
+         height="47.849674"
+         width="38.026119"
+         id="rect4485-5-1"
+         style="opacity:1;fill:#ff8080;stroke-width:0.4047367;stroke-miterlimit:4;stroke-dasharray:none" />
+      <rect
+         style="opacity:1;fill:none;stroke:#808080;stroke-width:0.89518869;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect4487-7-7"
+         width="133.04762"
+         height="66.901787"
+         x="10.456018"
+         y="147.47658"
+         ry="13.209908" />
+      <path
+         sodipodi:nodetypes="csscc"
+         inkscape:connector-curvature="0"
+         id="rect4491-5-3"
+         d="m 143.93883,169.2546 c 1.77681,0 3.20723,1.43043 3.20723,3.20724 v 16.03617 c 0,1.77681 -1.43042,3.20723 -3.20723,3.20723 -0.6736,-6.87697 -0.35022,-15.59988 0,-22.45064 z"
+         style="opacity:1;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.79374999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="opacity:1;fill:none;stroke:#808080;stroke-width:0.89518869;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect4487-7-7-8"
+         width="133.04762"
+         height="66.901787"
+         x="10.456018"
+         y="220.06859"
+         ry="13.209908" />
+      <path
+         sodipodi:nodetypes="csscc"
+         inkscape:connector-curvature="0"
+         id="rect4491-5-3-6"
+         d="m 143.93883,241.84661 c 1.77681,0 3.20723,1.43043 3.20723,3.20724 v 16.03617 c 0,1.77681 -1.43042,3.20723 -3.20723,3.20723 -0.6736,-6.87697 -0.35022,-15.59988 0,-22.45064 z"
+         style="opacity:1;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.79374999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         ry="9.4480257"
+         y="84.410606"
+         x="21.217201"
+         height="47.849674"
+         width="88.540077"
+         id="rect4485-5-9"
+         style="opacity:1;fill:#ffd42a;stroke-width:0.61759174;stroke-miterlimit:4;stroke-dasharray:none" />
+    </g>
   </g>
 </svg>
