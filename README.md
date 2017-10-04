@@ -1,7 +1,7 @@
 # Vita-tetromino
 This is a Tetris alike game written in lua for the PS VITA
 
-<img src='https://github.com/svennd/vita-tetromino/blob/master/screenshot.jpg' />
+<img src='https://github.com/svennd/vita-tetromino/blob/master/screenshot_v0.5.jpg' />
 
 # Features
 * endless tetris !
