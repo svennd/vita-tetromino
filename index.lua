@@ -730,11 +730,12 @@ end
 -- help
 function draw_show_help()
 
-	Graphics.drawImage(500,200, control)
-	
 	Font.setPixelSizes(main_font, 16)
-	Font.print(main_font, 800, 410, "START to play", white)
-	Font.print(main_font, 800, 430, "SELECT to exit", white)
+	draw_control(760, 400, BUTTON.START)
+	Font.print(main_font, 850, 410, "PLAY", white)
+	
+	draw_control(760, 440, BUTTON.SELECT)
+	Font.print(main_font, 850, 450, "EXIT", white)
 	-- Font.print(main_font, 800, 390, "< left right >", white)
 	-- Font.print(main_font, 800, 410, "UP/X rotate", white)
 	-- Font.print(main_font, 800, 430, "O drop", white)
@@ -745,43 +746,43 @@ end
 function draw_control(x, y, button_request)
 
 	if button_request == BUTTON.TRIANGLE then
-		Graphics.drawPartialImage(x, y, control, 16, 5, 77, 85)
-		
-	elseif button_request == BUTTON.CROSS then
-		Graphics.drawPartialImage(x, y, control, 187, 5, 77, 85)
+		Graphics.drawPartialImage(x, y, control, 5, 2, 50, 50)
 		
 	elseif button_request == BUTTON.CIRCLE then
-		Graphics.drawPartialImage(x, y, control, 105, 5, 77, 85)
+		Graphics.drawPartialImage(x, y, control, 60, 2, 50, 50)
+		
+	elseif button_request == BUTTON.CROSS then
+		Graphics.drawPartialImage(x, y, control, 115, 2, 50, 50)
 		
 	elseif button_request == BUTTON.SQUARE then
-		Graphics.drawPartialImage(x, y, control, 277, 5, 77, 85)
+		Graphics.drawPartialImage(x, y, control, 170, 2, 50, 50)
 		
 	elseif button_request == BUTTON.LTRIGGER then
-		Graphics.drawPartialImage(x, y, control, 8, 91, 130, 60)
+		Graphics.drawPartialImage(x, y, control, 0, 56, 80, 34)
 		
 	elseif button_request == BUTTON.RTRIGGER then
-		Graphics.drawPartialImage(x, y, control, 370, 15, 130, 60)
+		Graphics.drawPartialImage(x, y, control, 232, 8, 80, 34)
 		
 	elseif button_request == BUTTON.LEFT then
-		Graphics.drawPartialImage(x, y, control, 314, 93, 90, 90)
+		Graphics.drawPartialImage(x, y, control, 197, 54, 60, 45)
 		
 	elseif button_request == BUTTON.RIGHT then
-		Graphics.drawPartialImage(x, y, control, 414, 85, 90, 90)
+		Graphics.drawPartialImage(x, y, control, 260, 54, 60, 45)
 		
 	elseif button_request == BUTTON.UP then
-		Graphics.drawPartialImage(x, y, control, 155, 96, 80, 90)
+		Graphics.drawPartialImage(x, y, control, 97, 59, 40, 54)
 		
 	elseif button_request == BUTTON.DOWN then
-		Graphics.drawPartialImage(x, y, control, 241, 96, 80, 90)
+		Graphics.drawPartialImage(x, y, control, 150, 62, 40, 54)
 		
 	elseif button_request == BUTTON.ANALOG then
-		Graphics.drawPartialImage(x, y, control, 62, 155, 90, 90)
+		Graphics.drawPartialImage(x, y, control, 34, 100, 58, 58)
 	
 	elseif button_request == BUTTON.START then
-		Graphics.drawPartialImage(x, y, control, 443, 179, 77, 36)
+		Graphics.drawPartialImage(x, y, control, 222, 102, 79, 40)
 		
 	elseif button_request == BUTTON.SELECT then
-		Graphics.drawPartialImage(x, y, control, 300, 179, 77, 36)
+		Graphics.drawPartialImage(x, y, control, 105, 119, 79, 40)
 	end
 
 end
