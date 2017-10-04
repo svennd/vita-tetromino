@@ -1,12 +1,12 @@
 -- tetrinomi for vita, by svennd
--- version 0.4
+-- version 0.5
 
 -- vita constants
 DISPLAY_WIDTH = 960
 DISPLAY_HEIGHT = 544
 
 -- application variables
-VERSION = "0.4"
+VERSION = "0.5"
 
 -- screen bg
 background = Graphics.loadImage("app0:/assets/background.png")
