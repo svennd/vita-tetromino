@@ -74,6 +74,13 @@ function update ()
 	
 	-- check if we are playing
 	if game.state ~= STATE.PLAY then
+	    
+	    -- update the score to reflect the reall score after game over
+	    if game.state == STATE.DEAD then
+	        vscore = score
+	    end
+	    
+	    -- stop doing the game mechanics if no play
 		return true
 	end
 	
