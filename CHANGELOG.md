@@ -24,3 +24,4 @@
 # v0.5
 * fixed issue when game over the vscore was stuck below the reall score
 * fixed a bug where user input (left & right) in subsequent game would not be taken
+* sprite power icon

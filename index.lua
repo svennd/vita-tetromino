@@ -11,11 +11,13 @@ VERSION = "0.4"
 -- screen bg
 background = Graphics.loadImage("app0:/assets/background.png")
 battery_icon = Graphics.loadImage("app0:/assets/power.png")
+control = Graphics.loadImage("app0:/assets/control.png")
 
 -- font
 main_font = Font.load("app0:/assets/xolonium.ttf")
 
 -- game constants
+BUTTON = { CROSS = 1, CIRCLE = 2, TRIANGLE = 3, SQUARE = 4, LTRIGGER = 5, RTRIGGER = 6, LEFT = 7, RIGHT = 8, UP = 9, DOWN = 10, ANALOG = 11, START = 12, SELECT = 13 }
 DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
 STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
 MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
@@ -680,14 +682,13 @@ function draw_battery()
 		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 26, 50, 25)
 	elseif life > 30 then
 		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 53, 50, 25)
-	else life > 10 then
-		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 79, 50, 25)
+	elseif life > 10 then
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 78, 50, 25)
 	end
-	
-	
+
 	-- decrease font size
 	Font.setPixelSizes(main_font, 16)
-	Font.print(main_font, DISPLAY_WIDTH - margin, y_offset, life .. "%", black)
+	Font.print(main_font, DISPLAY_WIDTH - margin - 45, y_offset, life .. "%", white)
 end
 
 -- draw highscore
@@ -728,12 +729,61 @@ end
 
 -- help
 function draw_show_help()
+
+	Graphics.drawImage(500,200, control)
+	
 	Font.setPixelSizes(main_font, 16)
 	Font.print(main_font, 800, 410, "START to play", white)
 	Font.print(main_font, 800, 430, "SELECT to exit", white)
 	-- Font.print(main_font, 800, 390, "< left right >", white)
 	-- Font.print(main_font, 800, 410, "UP/X rotate", white)
 	-- Font.print(main_font, 800, 430, "O drop", white)
+end
+
+
+-- generic function to draw control
+function draw_control(x, y, button_request)
+
+	if button_request == BUTTON.TRIANGLE then
+		Graphics.drawPartialImage(x, y, control, 16, 5, 77, 85)
+		
+	elseif button_request == BUTTON.CROSS then
+		Graphics.drawPartialImage(x, y, control, 187, 5, 77, 85)
+		
+	elseif button_request == BUTTON.CIRCLE then
+		Graphics.drawPartialImage(x, y, control, 105, 5, 77, 85)
+		
+	elseif button_request == BUTTON.SQUARE then
+		Graphics.drawPartialImage(x, y, control, 277, 5, 77, 85)
+		
+	elseif button_request == BUTTON.LTRIGGER then
+		Graphics.drawPartialImage(x, y, control, 8, 91, 130, 60)
+		
+	elseif button_request == BUTTON.RTRIGGER then
+		Graphics.drawPartialImage(x, y, control, 370, 15, 130, 60)
+		
+	elseif button_request == BUTTON.LEFT then
+		Graphics.drawPartialImage(x, y, control, 314, 93, 90, 90)
+		
+	elseif button_request == BUTTON.RIGHT then
+		Graphics.drawPartialImage(x, y, control, 414, 85, 90, 90)
+		
+	elseif button_request == BUTTON.UP then
+		Graphics.drawPartialImage(x, y, control, 155, 96, 80, 90)
+		
+	elseif button_request == BUTTON.DOWN then
+		Graphics.drawPartialImage(x, y, control, 241, 96, 80, 90)
+		
+	elseif button_request == BUTTON.ANALOG then
+		Graphics.drawPartialImage(x, y, control, 62, 155, 90, 90)
+	
+	elseif button_request == BUTTON.START then
+		Graphics.drawPartialImage(x, y, control, 443, 179, 77, 36)
+		
+	elseif button_request == BUTTON.SELECT then
+		Graphics.drawPartialImage(x, y, control, 300, 179, 77, 36)
+	end
+
 end
 
 -- user_input
@@ -832,6 +882,8 @@ end
 -- while not strictly necessary, its clean
 function clean_exit()
 
+	Graphics.freeImage(control)
+	Graphics.freeImage(battery_icon)
 	Graphics.freeImage(background)
 	Font.unload(main_font)
 	System.exit()
