@@ -21,7 +21,7 @@ BUTTON = { CROSS = 1, CIRCLE = 2, TRIANGLE = 3, SQUARE = 4, LTRIGGER = 5, RTRIGG
 DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
 STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
 MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
-SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 10, COURT_OFFSET_X = 300, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 180, NEXT_OFFSET_Y = 40 } -- size in px
+SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 10, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
 MIN_INPUT_DELAY = 100
 
 -- color definitions
@@ -130,6 +130,9 @@ end
 -- increase speed based on lines
 function increase_speed()
 	step = 500 - (line_count*5)
+	if step < 30 then
+		step = 30
+	end
 end
 
 -- set upcoming piece and start rotation
@@ -504,9 +507,9 @@ function draw_frame()
 	if game.state == STATE.DEAD then
 		Font.setPixelSizes(main_font, 25)
 	
-		Font.print(main_font, 610, 50, "GAME OVER", white)
+		Font.print(main_font, 570, 180, "GAME OVER", white)
 		if new_highscore_flag then
-			Font.print(main_font, 610, 90, "! NEW HIGHSCORE !", white)
+			Font.print(main_font, 570, 220, "! NEW HIGHSCORE !", white)
 		end
 	end
 	
@@ -609,18 +612,47 @@ function draw_score()
 	-- increase draw size
 	Font.setPixelSizes(main_font, 30)
 	
+	-- high_score
+	Font.print(main_font, 15, 20, "HIGHSCORE", white)
+	Font.print(main_font, 15, 80, current.highscore, white)
+	draw_box(5, 220, 10, 120, 3, white)
+	
 	-- score
-	Font.print(main_font, 110, 270, "SCORE : ", white)
-	Font.print(main_font, 110, 330, vscore, white)
-	draw_box(100, 270, 260, 370, 3, grey_3)
+	Font.print(main_font, 97, 140, "SCORE", white)
+	Font.print(main_font, 15, 200, vscore, white)
+	draw_box(5, 220, 130, 240, 3, grey_3)
 
 	-- lines
-	Font.print(main_font, 110, 390, "LINES : " , white)
-	Font.print(main_font, 110, 450, line_count , white)
-	draw_box(100, 270, 380, 490, 3, grey_3)
+	Font.print(main_font, 105, 260, "LINES" , white)
+	Font.print(main_font, 15, 320, line_count , white)
+	draw_box(5, 220, 250, 360, 3, grey_3)
 	
-	-- high_score
-	draw_high_score()
+	-- speed
+	local level = 0
+	if step < 450 and step > 400 then
+		level = 1
+	elseif step < 400 and step > 350 then
+		level = 2
+	elseif step < 350 and step > 300 then
+		level = 3
+	elseif step < 300 and step > 250 then
+		level = 4
+	elseif step < 250 and step > 200 then
+		level = 5
+	elseif step < 200 and step > 150 then
+		level = 6
+	elseif step < 150 and step > 100 then
+		level = 7
+	elseif step < 100 and step > 50 then
+		level = 8
+	elseif step < 50 then
+		level = 9
+	end
+	
+	Font.print(main_font, 105, 380, "LEVEL" , white)
+	Font.print(main_font, 15, 440, level , white)
+	draw_box(5, 220, 370, 480, 3, grey_3)
+	
 end
 
 -- draw next block
@@ -689,18 +721,6 @@ function draw_battery()
 	-- decrease font size
 	Font.setPixelSizes(main_font, 16)
 	Font.print(main_font, DISPLAY_WIDTH - margin - 45, y_offset, life .. "%", white)
-end
-
--- draw highscore
-function draw_high_score()
-    -- increase draw size
-	Font.setPixelSizes(main_font, 30)
-	
-	-- score
-	Font.print(main_font, 610, 270, "highscore : ", white)
-	Font.print(main_font, 610, 330, current.highscore, white)
-	draw_box(600, 790, 260, 370, 3, white)
-	
 end
 
 -- draw a box
