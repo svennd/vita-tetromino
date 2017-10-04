@@ -418,7 +418,8 @@ function game_start()
 	Timer.reset(game.start)
 	
 	-- reset ticks
-	game.last_tick = 0
+	game.last_tick = 0 -- drop ticks
+	last_user_tick = 0 -- user input
 	
 	-- set state to playing
 	game.state = STATE.PLAY
