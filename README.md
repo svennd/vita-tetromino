@@ -33,3 +33,4 @@ If you wish to 'compile' this game :
 * the tetris implementation is based on the code for [Javascript Tetris](http://codeincomplete.com/posts/javascript-tetris/)
 * used font : [xolonium](https://fontlibrary.org/en/font/xolonium)
 * VITA buttons by [nodeadfolk](https://nodeadfolk.wordpress.com/2014/04/10/free-ps-vita-buttons-more-work/)
+* Thanks, Aurora (@KawaiiAuroraA) for testing 
