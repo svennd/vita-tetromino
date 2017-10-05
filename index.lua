@@ -16,6 +16,15 @@ control = Graphics.loadImage("app0:/assets/control.png")
 -- font
 main_font = Font.load("app0:/assets/xolonium.ttf")
 
+-- sound
+-- this seems to be required outside to load the pieces
+Sound.init()
+
+-- load sound
+snd_background = Sound.openMp3("app0:/assets/bg.mp3")
+snd_gameover = Sound.openWav("app0:/assets/game_over.wav")
+snd_highscore = Sound.openWav("app0:/assets/new_highscore.wav")
+
 -- game constants
 BUTTON = { CROSS = 1, CIRCLE = 2, TRIANGLE = 3, SQUARE = 4, LTRIGGER = 5, RTRIGGER = 6, LEFT = 7, RIGHT = 8, UP = 9, DOWN = 10, ANALOG = 11, START = 12, SELECT = 13 }
 DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
@@ -299,8 +308,9 @@ function drop()
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
 			-- store highscore if needed
-			new_highscore(score)
+			local is_new_high_score = new_highscore(score)
 			game.state = STATE.DEAD
+			sound_game_over(is_new_high_score)
 		end
 		
 		-- cant move further so disable doube speed
@@ -431,6 +441,9 @@ function game_start()
 	
 	-- set current highscore
 	current.highscore = get_high_score()
+	
+	-- start the sound
+	sound_background()
 end
 
 -- get the highscore from file
@@ -481,6 +494,7 @@ function new_highscore(score)
 		if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
 			System.deleteFile("ux0:/data/tetrinomi/tetris_score")
 		end
+		return true
 	end
 	
 	-- create it a new highscore file
@@ -761,7 +775,6 @@ function draw_show_help()
 	-- Font.print(main_font, 800, 430, "O drop", white)
 end
 
-
 -- generic function to draw control
 function draw_control(x, y, button_request)
 
@@ -806,6 +819,7 @@ function draw_control(x, y, button_request)
 	end
 
 end
+
 
 -- user_input
 
@@ -869,11 +883,37 @@ function user_input()
 end
 
 
+-- sound
+function sound_background()
+	if not Sound.isPlaying(snd_background) then
+		Sound.resume(snd_background)
+	end
+end
+
+-- game over sound :D
+function sound_game_over(new_high_score)
+	-- stop background
+	if Sound.isPlaying(snd_background) then
+		Sound.pause(snd_background)
+	end
+	
+	-- happy or sad noise ?
+	if new_high_score then
+		Sound.play(snd_highscore, NO_LOOP)
+	else
+		Sound.play(snd_gameover, NO_LOOP)
+	end
+end
+
+
 -- main
 
 -- main function
 function main()
 
+	-- start sound
+	Sound.play(snd_background, LOOP)
+	
 	-- initiate game variables
 	game_start()
 	
@@ -903,10 +943,24 @@ end
 -- while not strictly necessary, its clean
 function clean_exit()
 
+	-- free images
 	Graphics.freeImage(control)
 	Graphics.freeImage(battery_icon)
 	Graphics.freeImage(background)
+	
+	-- close music files
+	Sound.close(snd_background)
+	Sound.close(snd_gameover)
+	Sound.close(snd_highscore)
+	
+	-- unload font
 	Font.unload(main_font)
+	
+	-- stop sound module
+	-- bugged ?
+	-- Sound.term()
+	
+	-- kill app
 	System.exit()
 	
 end

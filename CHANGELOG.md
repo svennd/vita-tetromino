@@ -28,3 +28,6 @@
 * reworked interface
 * added level guide
 * added buttons as help
+
+# v0.6
+* playing around with sound effects
