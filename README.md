@@ -34,3 +34,4 @@ If you wish to 'compile' this game :
 * used font : [xolonium](https://fontlibrary.org/en/font/xolonium)
 * VITA buttons by [nodeadfolk](https://nodeadfolk.wordpress.com/2014/04/10/free-ps-vita-buttons-more-work/)
 * Thanks, Aurora (@KawaiiAuroraA) for testing 
+* sound : https://freesound.org/people/deleted_user_877451/ https://freesound.org/people/vikuserro/sounds/265549/
