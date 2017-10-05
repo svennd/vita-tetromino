@@ -32,6 +32,7 @@ STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
 MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
 SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 10, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
 MIN_INPUT_DELAY = 100
+ANIMATION_STEP = 30
 
 -- color definitions
 local white 	= Color.new(255, 255, 255)
@@ -67,6 +68,8 @@ line_count = 0
 double_down_speed = 0
 new_highscore_flag = false
 draw_new_version = false
+lremove = { line = {}, state = {}}
+line_removal_time = 0
 
 -- pieces
 i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -130,6 +133,12 @@ function update ()
 		-- drop block and update last tick
 		game.last_tick = time_played
 		drop()
+	end
+	
+	-- animation
+	local dt_animation = time_played - line_removal_time
+	if dt_animation > ANIMATION_STEP then
+		animate_line()
 	end
 	
 	-- increase speed based on lines
@@ -337,7 +346,8 @@ function remove_lines()
 		
 		-- if a full line remove it
 		if full_line then
-			remove_line(y)
+			animate_line_removal(y)
+			-- remove_line(y)
 			-- if its not the first line double score !
 			if (multi_line > 0) then
 				add_score( 100 * ( multi_line + 1 ) )
@@ -351,6 +361,36 @@ function remove_lines()
 	end
 end
 
+
+-- color line
+function animate_line_removal(line)
+	line_removal_time = Timer.getTime(game.start)
+	table.insert(lremove.line, line)
+	table.insert(lremove.state, 1)
+end
+
+function animate_line()
+	local temp_lremove = {}
+	local line
+	local state
+	local count = #remove.line
+	for local i = 0,  count, i + 1 do
+		line = table.remove(lremove.line)
+		state = table.remove(lremove.state)
+		
+		if state > SIZE.WIDTH_FIELD then
+			-- color play
+			set_block(state+1, line, k)
+			table.insert(temp_lremove.line, line)
+			table.insert(temp_lremove.state, state+1)
+		else
+			-- clean up
+			remove_line(line)
+		end
+	end
+	-- patch the new data in
+	lremove = temp_lremove
+end
 -- remove a single line and drop the above
 function remove_line(line)
 
@@ -358,6 +398,7 @@ function remove_line(line)
 	local y = 0
 	local type_block = {}
 	
+	-- start from line, and work the way up
 	for y = line, 0, y - 1 do
 		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
 			if y == 0 then
