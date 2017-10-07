@@ -68,8 +68,8 @@ line_count = 0
 double_down_speed = 0
 new_highscore_flag = false
 draw_new_version = false
-lremove = { line = {}, state = {}}
-line_removal_time = 0
+lremove = {line = {}, position = {}}
+animation = {state = false, last_tick = 0}
 
 -- pieces
 i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -79,7 +79,7 @@ o = { BLOCK = {0xCC00, 0xCC00, 0xCC00, 0xCC00}, COLOR = orange }
 s = { BLOCK = {0x06C0, 0x8C40, 0x6C00, 0x4620}, COLOR = blue }
 t = { BLOCK = {0x0E40, 0x4C40, 0x4E00, 0x4640}, COLOR = seablue }
 z = { BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
-
+k = { BLOCK = {}, COLOR = white }
 
 -- game mechanincs
 
@@ -100,6 +100,7 @@ function update ()
 	
 	local time_played = Timer.getTime(game.start)
 	local dt = 0
+	local dt_animation = 0
 	local current_action = table.remove(actions, 1) -- get the first action
 	
 	-- handle of the actions
@@ -132,13 +133,18 @@ function update ()
 	if dt > step then
 		-- drop block and update last tick
 		game.last_tick = time_played
-		drop()
+		
+		-- if animation is running don't drop
+		if not animation.state then
+			drop()
+		end
 	end
-	
-	-- animation
-	local dt_animation = time_played - line_removal_time
+
+	dt_animation = time_played - animation.last_tick
 	if dt_animation > ANIMATION_STEP then
-		animate_line()
+		-- drop block and update last tick
+		animation.last_tick = time_played
+		animate_remove_line()
 	end
 	
 	-- increase speed based on lines
@@ -333,64 +339,99 @@ function remove_lines()
 	local y = 0
 	local multi_line = 0
 	local full_line = true
+	local already_have_line = false
 	
 	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
-		full_line = true
-		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
-			-- search for a empty spot
-			if not get_block(x, y) then
-				full_line = false
+	
+		-- verify if we did not already have this line
+		for k, v in ipairs(lremove.line) do
+			if v == y then
+				already_have_line = true
 				break
 			end
 		end
 		
-		-- if a full line remove it
-		if full_line then
-			animate_line_removal(y)
-			-- remove_line(y)
-			-- if its not the first line double score !
-			if (multi_line > 0) then
-				add_score( 100 * ( multi_line + 1 ) )
-			else
-				add_score( 100 ) -- scored a line :D
-				multi_line = multi_line + 1
-			end
-				add_line(1)
-			y = y - 1 -- recheck the same line
-		end
-	end
-end
-
-
--- color line
-function animate_line_removal(line)
-	line_removal_time = Timer.getTime(game.start)
-	table.insert(lremove.line, line)
-	table.insert(lremove.state, 1)
-end
-
-function animate_line()
-	local temp_lremove = {}
-	local line
-	local state
-	local count = #remove.line
-	for local i = 0,  count, i + 1 do
-		line = table.remove(lremove.line)
-		state = table.remove(lremove.state)
+		-- be sure we did not already count this line
+		-- happens during animation
+		if not already_have_line then
 		
-		if state > SIZE.WIDTH_FIELD then
-			-- color play
-			set_block(state+1, line, k)
-			table.insert(temp_lremove.line, line)
-			table.insert(temp_lremove.state, state+1)
-		else
-			-- clean up
-			remove_line(line)
+			-- check if this line is full
+			full_line = true
+			for x = 0, SIZE.WIDTH_FIELD, x + 1 do
+				-- search for a empty spot
+				if not get_block(x, y) then
+					full_line = false
+					break
+				end
+			end
+			
+			-- if a full line remove it
+			if full_line then
+
+				table.insert(lremove.line, y)
+				table.insert(lremove.position, 0)
+				
+				-- if its not the first line double score !
+				if (multi_line > 0) then
+					add_score( 100 * ( multi_line + 1 ) )
+				else
+					add_score( 100 ) -- scored a line :D
+					multi_line = multi_line + 1
+				end
+					add_line(1)
+			end
 		end
+		
+		-- reset known line
+		already_have_line = false
 	end
-	-- patch the new data in
-	lremove = temp_lremove
 end
+
+-- animate remove line
+function animate_remove_line()
+
+	local count_lremove = #lremove.line
+	
+	-- check if we need an animation
+	if count_lremove > 0 then	
+		animation.state = true
+	else
+		animation.state = false	
+	end
+
+	-- start animation
+	local x = 0
+	local i = 0
+	
+	-- left to right,
+	for x = 0, SIZE.WIDTH_FIELD, x + 1 do
+	
+		while i < count_lremove do
+		
+			-- get last
+			line = lremove.line[i+1]
+			position = lremove.position[i+1]
+			
+			if position > (SIZE.WIDTH_FIELD + 1) then
+			
+				-- delete from list
+				lremove.line[i+1] = nil
+				lremove.position[i+1] = nil
+				
+				-- remove line
+				remove_line(line)
+			else 
+				-- set block
+				set_block(position, line, k) -- k = special white
+				
+				-- update state
+				lremove.position[i+1] = position + 1
+			end
+			i = i + 1
+		end
+	end	
+end
+
 -- remove a single line and drop the above
 function remove_line(line)
 
