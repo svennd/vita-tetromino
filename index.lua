@@ -1,12 +1,12 @@
 -- tetrinomi for vita, by svennd
--- version 0.5
+-- version 0.6
 
 -- vita constants
 DISPLAY_WIDTH = 960
 DISPLAY_HEIGHT = 544
 
 -- application variables
-VERSION = "0.5"
+VERSION = "0.6"
 
 -- screen bg
 background = Graphics.loadImage("app0:/assets/background.png")
@@ -21,11 +21,11 @@ main_font = Font.load("app0:/assets/xolonium.ttf")
 Sound.init()
 
 -- load sound
-snd_background = Sound.openMp3("app0:/assets/bg.mp3")
-snd_gameover = Sound.openWav("app0:/assets/game_over.wav")
-snd_highscore = Sound.openWav("app0:/assets/new_highscore.wav")
-snd_multi_line = Sound.openWav("app0:/assets/multi_line.wav")
-snd_single_line = Sound.openWav("app0:/assets/single_line.wav")
+snd_background = Sound.open("app0:/assets/bg.mp3")
+snd_gameover = Sound.open("app0:/assets/game_over.wav")
+snd_highscore = Sound.open("app0:/assets/new_highscore.wav")
+snd_multi_line = Sound.open("app0:/assets/multi_line.wav")
+snd_single_line = Sound.open("app0:/assets/single_line.wav")
 
 -- game constants
 BUTTON = { CROSS = 1, CIRCLE = 2, TRIANGLE = 3, SQUARE = 4, LTRIGGER = 5, RTRIGGER = 6, LEFT = 7, RIGHT = 8, UP = 9, DOWN = 10, ANALOG = 11, START = 12, SELECT = 13 }
@@ -85,7 +85,6 @@ k = { COLOR = white }
 -- main game mechanics update
 function update ()
 	
-	debug_log("UPDATE||")
 	-- check if we are playing
 	if game.state ~= STATE.PLAY then
 	    
@@ -139,7 +138,6 @@ end
 -- handle user input to actions
 function handle_input()
 
-	debug_log("handle_input||")
 	local current_action = table.remove(actions, 1) -- get the first action
 	if current_action == DIR.UP then
 		rotate()
@@ -155,7 +153,6 @@ end
 -- increase speed based on lines
 function increase_speed()
 
-	debug_log("increase_speed||")
 	game.step = 500 - (score.line*5)
 	if game.step < SPEED_LIMIT then
 		game.step = SPEED_LIMIT
@@ -194,11 +191,6 @@ function get_block(x, y)
 	else
 		return false
 	end
-end
-
--- clear everything
-function clear_field()
-	field = {}
 end
 
 -- check if a piece can fit into a position in the grid
@@ -293,10 +285,8 @@ end
 -- pseudo random that is usefull for tetris
 function random_piece()
 
-	debug_log("random_piece||")
 	-- no more pieces left
 	if table.getn(pieces) == 0 then
-		debug_log("recreate random||")
 		-- all the pieces in 4 states (note: the state is not defined)
 		pieces = {i,i,i,i,j,j,j,j,l,l,l,l,o,o,o,o,s,s,s,s,t,t,t,t,z,z,z,z}
 		
@@ -347,7 +337,6 @@ end
 -- go through the field to find full lines
 function remove_lines()
 
-	debug_log("remove_lines||")
 	local x = 0
 	local y = 0
 	local multi_line = 0
@@ -406,7 +395,6 @@ end
 -- animate remove line
 function animate_remove_line()
 
-	debug_log("animate_remove_line||")
 	local count_lremove = #lremove.line
 	
 	-- check if we need an animation
@@ -462,7 +450,6 @@ end
 -- remove a single line and drop the above
 function remove_line(line)
 
-	debug_log("remove_line||")
 	local x = 0
 	local y = 0
 	local type_block = {}
@@ -526,7 +513,9 @@ end
 -- start the game
 function game_start()
 	
-	debug_log("game_startx||")
+	-- try to clean bad data ?
+	collectgarbage()
+
 	-- reset the score
 	score.current = 0
 	score.visual = 0
@@ -534,10 +523,13 @@ function game_start()
 	score.new_high = false
 	
 	-- clear field
-	clear_field()
 	
 	-- just in case
 	animation.last_tick = 0
+	lremove.line = {}
+	lremove.position = {}
+	lremove.sound = 0
+	pieces = {}
 	
 	-- set up next and current piece
 	set_next_piece() -- determ next piece
@@ -556,31 +548,24 @@ function game_start()
 	Timer.reset(game.start) -- restart game timer
 	
 	-- start the sound
-	debug_log("sound_background||")
 	sound_background()
 end
 
 -- get the highscore from file
 function get_high_score()
 
-	debug_log("get_high_score||")
-	debug_log("create_dir||")
 	System.createDirectory("ux0:/data/tetrinomi")
 	
     -- check if file exist
-	debug_log("check_file||")
 	if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
 	    
 	    -- open file
-		debug_log("openfile||")
 		score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FREAD)
 		
 		-- read content
-		debug_log("readfile||")
 		local highscore = System.readFile(score_file, System.sizeFile(score_file))
 		
 		-- close file again
-		debug_log("closefile||")
 		System.closeFile(score_file)
 		
 		-- cast to number
@@ -603,7 +588,6 @@ end
 
 -- check if its a new highscore
 function new_highscore()
-		debug_log("new_highscore||")
 		
     -- current score is higher or equal
 	if score.high >= score.current then
@@ -613,14 +597,12 @@ function new_highscore()
 		score.new_high = true
 		score.high = score.current
 		
-		debug_log("remove_score||")
 		if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
 			System.deleteFile("ux0:/data/tetrinomi/tetris_score")
 		end
 	end
 	
 	-- create it a new highscore file
-	debug_log("createnewfile||")
 	new_score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FCREATE)
 	System.writeFile(new_score_file, score.current, string.len(score.current))
 	System.closeFile(new_score_file)
@@ -783,6 +765,7 @@ function draw_score()
 		level = 9
 	end
 	
+	-- level
 	Font.print(main_font, 105, 380, "LEVEL" , white)
 	Font.print(main_font, 15, 440, level , white)
 	draw_box(5, 220, 370, 480, 3, grey_3)
@@ -884,7 +867,9 @@ function draw_show_help()
 	
 	draw_control(760, 440, BUTTON.SELECT)
 	Font.print(main_font, 850, 450, "EXIT", white)
-	-- Font.print(main_font, 800, 390, "< left right >", white)
+	
+	--mem
+	Font.print(main_font, 900, 390, "MEM:" .. collectgarbage("count"), white)
 	-- Font.print(main_font, 800, 410, "UP/X rotate", white)
 	-- Font.print(main_font, 800, 430, "O drop", white)
 end
@@ -999,13 +984,9 @@ end
 
 -- sound
 function sound_background()
-
-	debug_log("in_sound_background||")
 	if not Sound.isPlaying(snd_background) then
 		Sound.resume(snd_background)
-		debug_log("sound_resume_called||")
 	end
-	debug_log("in+sound_background_end||")
 end
 
 -- game over sound :D
@@ -1023,34 +1004,20 @@ function sound_game_over(new_high_score)
 	end
 end
 
-debug_file = System.openFile("ux0:/data/tetrinomi/tetris_debug", FWRITE)
-function debug_log(msg)
-
-	System.writeFile(debug_file, msg, string.len(msg))
-	
-end
-
 -- main
 
 -- main function
 function main()
 
 	-- start sound
-	debug_log("startsound||")
 	Sound.play(snd_background, LOOP)
 	
 	-- set current highscore (file call, don't need to renew every game)
-	debug_log("gethighscore||")
 	get_high_score()
 	
-	debug_log("game_start||")
 	-- initiate game variables
 	game_start()
-	
-	-- verify game version
-	-- not functional
-	--version_check()
-	
+		
 	-- gameloop
 	while true do
 		
