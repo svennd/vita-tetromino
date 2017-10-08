@@ -24,6 +24,8 @@ Sound.init()
 snd_background = Sound.openMp3("app0:/assets/bg.mp3")
 snd_gameover = Sound.openWav("app0:/assets/game_over.wav")
 snd_highscore = Sound.openWav("app0:/assets/new_highscore.wav")
+snd_multi_line = Sound.openWav("app0:/assets/multi_line.wav")
+snd_single_line = Sound.openWav("app0:/assets/single_line.wav")
 
 -- game constants
 BUTTON = { CROSS = 1, CIRCLE = 2, TRIANGLE = 3, SQUARE = 4, LTRIGGER = 5, RTRIGGER = 6, LEFT = 7, RIGHT = 8, UP = 9, DOWN = 10, ANALOG = 11, START = 12, SELECT = 13 }
@@ -33,6 +35,7 @@ MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in m
 SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 10, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
 MIN_INPUT_DELAY = 100
 ANIMATION_STEP = 30
+SPEED_LIMIT = 30
 
 -- color definitions
 local white 	= Color.new(255, 255, 255)
@@ -53,23 +56,19 @@ local grey_2	= Color.new(160, 160, 160)
 local grey_3	= Color.new(96, 96, 96)
 
 -- initialize variables
+game = {start = Timer.new(), last_tick = 0, state = STATE.INIT, step = 500}
+current = {piece = {}, x = 0, y = 0, dir = DIR.UP } -- current active piece
+next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
+input = {prev = SCE_CTRL_CIRCLE, last_tick = 0, double_down = 0}
+score = {current = 0, visual = 0, high = 0, line = 0, new_high = false}
+
+lremove = {line = {}, position = {}, sound = 0}
+animation = {state = false, last_tick = 0}
+
+-- empty var inits
 actions = {} -- table with all user input
 pieces = {} -- fill all the blocks in this
-game = {start = Timer.new(), last_tick = 0, state = STATE.INIT}
-step = 500 -- each step the block drops, will become a more important variable once we start using levels/lines
-current = {piece = {}, x = 0, y = 0, dir = DIR.UP, highscore = 0 } -- current active piece
-next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
 field = {} -- playing field table
-oldpad = SCE_CTRL_CROSS -- user input init
-last_user_tick = 0
-score = 0
-vscore = 0 -- visual score
-line_count = 0
-double_down_speed = 0
-new_highscore_flag = false
-draw_new_version = false
-lremove = {line = {}, position = {}}
-animation = {state = false, last_tick = 0}
 
 -- pieces
 i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -79,19 +78,20 @@ o = { BLOCK = {0xCC00, 0xCC00, 0xCC00, 0xCC00}, COLOR = orange }
 s = { BLOCK = {0x06C0, 0x8C40, 0x6C00, 0x4620}, COLOR = blue }
 t = { BLOCK = {0x0E40, 0x4C40, 0x4E00, 0x4640}, COLOR = seablue }
 z = { BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
-k = { BLOCK = {}, COLOR = white }
+k = { COLOR = white }
 
 -- game mechanincs
 
 -- main game mechanics update
 function update ()
 	
+	debug_log("UPDATE||")
 	-- check if we are playing
 	if game.state ~= STATE.PLAY then
 	    
 	    -- update the score to reflect the reall score after game over
 	    if game.state == STATE.DEAD then
-	        vscore = score
+	        score.visual = score.current
 	    end
 	    
 	    -- stop doing the game mechanics if no play
@@ -99,11 +99,48 @@ function update ()
 	end
 	
 	local time_played = Timer.getTime(game.start)
-	local dt = 0
-	local dt_animation = 0
-	local current_action = table.remove(actions, 1) -- get the first action
+	local dt_game = time_played - game.last_tick
+	local dt_animation = time_played - animation.last_tick
 	
 	-- handle of the actions
+	handle_input()
+
+	-- tick score
+	if score.current > score.visual then
+		score.visual = score.visual + 1
+	end
+	
+	-- if double speed is activated drop extra every step/2
+	if input.double_down == 1 then
+		if dt_game > math.floor(game.step/2) then
+			drop()
+		end
+	end
+	
+	-- normal speed drop
+	if dt_game > game.step then
+		-- drop block and update last tick
+		game.last_tick = time_played
+		
+		-- try to drop it
+		drop()
+		
+		-- increase speed based on lines
+		increase_speed()
+	end
+
+	if dt_animation > ANIMATION_STEP then
+		-- drop block and update last tick
+		animation.last_tick = time_played
+		animate_remove_line()
+	end
+end
+
+-- handle user input to actions
+function handle_input()
+
+	debug_log("handle_input||")
+	local current_action = table.remove(actions, 1) -- get the first action
 	if current_action == DIR.UP then
 		rotate()
 	elseif current_action == DIR.DOWN then
@@ -113,49 +150,15 @@ function update ()
 	elseif current_action == DIR.RIGHT then
 		move(DIR.RIGHT)
 	end
-	
-	-- tick score
-	if score > vscore then
-		vscore = vscore + 1
-	end
-	
-	-- tick if deltaT > step
-	dt = time_played - game.last_tick
-		
-	-- if double speed is activated drop extra every step/2
-	if double_down_speed == 1 then
-		if dt > math.floor(step/2) then
-			drop()
-		end
-	end
-	
-	-- normal speed drop
-	if dt > step then
-		-- drop block and update last tick
-		game.last_tick = time_played
-		
-		-- if animation is running don't drop
-		if not animation.state then
-			drop()
-		end
-	end
-
-	dt_animation = time_played - animation.last_tick
-	if dt_animation > ANIMATION_STEP then
-		-- drop block and update last tick
-		animation.last_tick = time_played
-		animate_remove_line()
-	end
-	
-	-- increase speed based on lines
-	increase_speed()
 end
-
+	
 -- increase speed based on lines
 function increase_speed()
-	step = 500 - (line_count*5)
-	if step < 30 then
-		step = 30
+
+	debug_log("increase_speed||")
+	game.step = 500 - (score.line*5)
+	if game.step < SPEED_LIMIT then
+		game.step = SPEED_LIMIT
 	end
 end
 
@@ -165,7 +168,6 @@ function set_next_piece()
 	next_piece.dir = math.random(DIR.MIN, DIR.MAX)
 end
 
--- current = {piece = {}, x = 0, y = 0, dir = DIR.UP }
 function set_current_piece()
 	current.piece = next_piece.piece
 	-- randomize entry point
@@ -291,13 +293,16 @@ end
 -- pseudo random that is usefull for tetris
 function random_piece()
 
+	debug_log("random_piece||")
 	-- no more pieces left
 	if table.getn(pieces) == 0 then
+		debug_log("recreate random||")
 		-- all the pieces in 4 states (note: the state is not defined)
 		pieces = {i,i,i,i,j,j,j,j,l,l,l,l,o,o,o,o,s,s,s,s,t,t,t,t,z,z,z,z}
 		
 		-- shuffle them, http://gamebuildingtools.com/using-lua/shuffle-table-lua
 		-- might require a better implementation
+		math.randomseed(os.time())
 		local n = table.getn(pieces)
 		while n > 2 do
 			local k = math.random(n) -- get a random number
@@ -311,6 +316,12 @@ end
 
 -- attempt to drop the current piece
 function drop()
+	
+	-- during animations don't drop new blocks
+	if animation.state then
+		return false
+	end
+	
 	-- if its not possible to move the piece down
 	if not move(DIR.DOWN) then
 		drop_pieces() -- split it
@@ -323,18 +334,20 @@ function drop()
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
 			-- store highscore if needed
-			local is_new_high_score = new_highscore(score)
+			local is_new_high_score = new_highscore()
 			game.state = STATE.DEAD
 			sound_game_over(is_new_high_score)
 		end
 		
 		-- cant move further so disable doube speed
-		double_down_speed = 0
+		input.double_down = 0
 	end
 end
 
 -- go through the field to find full lines
 function remove_lines()
+
+	debug_log("remove_lines||")
 	local x = 0
 	local y = 0
 	local multi_line = 0
@@ -370,6 +383,7 @@ function remove_lines()
 
 				table.insert(lremove.line, y)
 				table.insert(lremove.position, 0)
+				lremove.sound = true -- play sound
 				
 				-- if its not the first line double score !
 				if (multi_line > 0) then
@@ -378,7 +392,9 @@ function remove_lines()
 					add_score( 100 ) -- scored a line :D
 					multi_line = multi_line + 1
 				end
-					add_line(1)
+				
+				-- add line score
+				add_line(1)
 			end
 		end
 		
@@ -390,6 +406,7 @@ end
 -- animate remove line
 function animate_remove_line()
 
+	debug_log("animate_remove_line||")
 	local count_lremove = #lremove.line
 	
 	-- check if we need an animation
@@ -399,6 +416,16 @@ function animate_remove_line()
 		animation.state = false	
 	end
 
+	-- let's make some noise !
+	if lremove.sound then
+		if count_lremove > 1 then
+			Sound.play(snd_multi_line, NO_LOOP)
+		else
+			Sound.play(snd_single_line, NO_LOOP)
+		end
+		lremove.sound = false
+	end
+	
 	-- start animation
 	local x = 0
 	local i = 0
@@ -435,6 +462,7 @@ end
 -- remove a single line and drop the above
 function remove_line(line)
 
+	debug_log("remove_line||")
 	local x = 0
 	local y = 0
 	local type_block = {}
@@ -487,62 +515,72 @@ end
 
 -- add score line
 function add_score(n)
-	score = score + n
+	score.current = score.current + n
 end
 
 -- add line score
 function add_line(n)
-	line_count = line_count + n
+	score.line = score.line + n
 end
 
 -- start the game
 function game_start()
+	
+	debug_log("game_startx||")
 	-- reset the score
-	score = 0
-	vscore = 0
-	line_count = 0
-	new_highscore_flag = false
+	score.current = 0
+	score.visual = 0
+	score.line = 0
+	score.new_high = false
 	
 	-- clear field
 	clear_field()
+	
+	-- just in case
+	animation.last_tick = 0
 	
 	-- set up next and current piece
 	set_next_piece() -- determ next piece
 	set_current_piece() -- set next piece as current piece
 	set_next_piece() -- pull the next piece
 
-	-- reset start timer
-	Timer.reset(game.start)
+	-- reset input
+	actions = {}
+	input.last_tick = 0	-- user input
+	input.double_down = 0
 	
-	-- reset ticks
+	-- reset game state
+	game.step = 500
 	game.last_tick = 0 -- drop ticks
-	last_user_tick = 0 -- user input
-	
-	-- set state to playing
 	game.state = STATE.PLAY
-	
-	-- set current highscore
-	current.highscore = get_high_score()
+	Timer.reset(game.start) -- restart game timer
 	
 	-- start the sound
+	debug_log("sound_background||")
 	sound_background()
 end
 
 -- get the highscore from file
 function get_high_score()
-    
+
+	debug_log("get_high_score||")
+	debug_log("create_dir||")
 	System.createDirectory("ux0:/data/tetrinomi")
 	
     -- check if file exist
+	debug_log("check_file||")
 	if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
 	    
 	    -- open file
-		local score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FREAD)
+		debug_log("openfile||")
+		score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FREAD)
 		
 		-- read content
+		debug_log("readfile||")
 		local highscore = System.readFile(score_file, System.sizeFile(score_file))
 		
 		-- close file again
+		debug_log("closefile||")
 		System.closeFile(score_file)
 		
 		-- cast to number
@@ -550,8 +588,11 @@ function get_high_score()
 		
 		-- verify if its a sane number
 		if highscore == nil then
-			return 0
+			return 999
 		end
+		
+		-- put it into score field
+		score.high = highscore
 		
 		return highscore
 		
@@ -561,28 +602,30 @@ function get_high_score()
 end
 
 -- check if its a new highscore
-function new_highscore(score)
-	
-	local highscore = get_high_score()
-	
+function new_highscore()
+		debug_log("new_highscore||")
+		
     -- current score is higher or equal
-	if highscore >= score then
+	if score.high >= score.current then
 		return false
 	else
 		-- its a higher score
-		new_highscore_flag = true
-		current.highscore = score
+		score.new_high = true
+		score.high = score.current
 		
+		debug_log("remove_score||")
 		if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
 			System.deleteFile("ux0:/data/tetrinomi/tetris_score")
 		end
-		return true
 	end
 	
 	-- create it a new highscore file
-	local new_score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FCREATE)
-	System.writeFile(new_score_file, score, string.len(score))
+	debug_log("createnewfile||")
+	new_score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FCREATE)
+	System.writeFile(new_score_file, score.current, string.len(score.current))
 	System.closeFile(new_score_file)
+	
+	return true
 end
 
 -- drawing
@@ -604,7 +647,7 @@ function draw_frame()
 		Font.setPixelSizes(main_font, 25)
 	
 		Font.print(main_font, 570, 180, "GAME OVER", white)
-		if new_highscore_flag then
+		if score.new_high then
 			Font.print(main_font, 570, 220, "! NEW HIGHSCORE !", white)
 		end
 	end
@@ -626,12 +669,7 @@ function draw_frame()
 	
 	-- show help
 	draw_show_help()
-	
-	-- in case a new version is there
-	if draw_new_version then
-		new_version()
-	end
-	
+
 	-- Terminating drawing phase
 	Graphics.termBlend()
 	Screen.flip()
@@ -710,38 +748,38 @@ function draw_score()
 	
 	-- high_score
 	Font.print(main_font, 15, 20, "HIGHSCORE", white)
-	Font.print(main_font, 15, 80, current.highscore, white)
+	Font.print(main_font, 15, 80, score.high, white)
 	draw_box(5, 220, 10, 120, 3, white)
 	
 	-- score
 	Font.print(main_font, 97, 140, "SCORE", white)
-	Font.print(main_font, 15, 200, vscore, white)
+	Font.print(main_font, 15, 200, score.current, white)
 	draw_box(5, 220, 130, 240, 3, grey_3)
 
 	-- lines
 	Font.print(main_font, 105, 260, "LINES" , white)
-	Font.print(main_font, 15, 320, line_count , white)
+	Font.print(main_font, 15, 320, score.line , white)
 	draw_box(5, 220, 250, 360, 3, grey_3)
 	
 	-- speed
 	local level = 0
-	if step < 450 and step > 400 then
+	if game.step < 450 and game.step > 400 then
 		level = 1
-	elseif step < 400 and step > 350 then
+	elseif game.step < 400 and game.step > 350 then
 		level = 2
-	elseif step < 350 and step > 300 then
+	elseif game.step < 350 and game.step > 300 then
 		level = 3
-	elseif step < 300 and step > 250 then
+	elseif game.step < 300 and game.step > 250 then
 		level = 4
-	elseif step < 250 and step > 200 then
+	elseif game.step < 250 and game.step > 200 then
 		level = 5
-	elseif step < 200 and step > 150 then
+	elseif game.step < 200 and game.step > 150 then
 		level = 6
-	elseif step < 150 and step > 100 then
+	elseif game.step < 150 and game.step > 100 then
 		level = 7
-	elseif step < 100 and step > 50 then
+	elseif game.step < 100 and game.step > 50 then
 		level = 8
-	elseif step < 50 then
+	elseif game.step < 50 then
 		level = 9
 	end
 	
@@ -837,12 +875,6 @@ function draw_box(x1, x2, y1, y2, width, color)
 	
 end
 
--- new version available
-function new_version()
-	Font.setPixelSizes(main_font, 20)
-	Font.print(main_font, 800, 300, "New version available", red)
-end
-
 -- help
 function draw_show_help()
 
@@ -912,43 +944,43 @@ function user_input()
 	local time_played = Timer.getTime(game.start)
 	
 	-- last valid input
-	local last_input = time_played - last_user_tick
+	local last_input = time_played - input.last_tick
 
 	-- input data
 	local pad = Controls.read()
 	
 	-- add the action to first
-	if Controls.check(pad, SCE_CTRL_UP) and not Controls.check(oldpad, SCE_CTRL_UP) then
+	if Controls.check(pad, SCE_CTRL_UP) and not Controls.check(input.prev, SCE_CTRL_UP) then
 		table.insert(actions, DIR.UP)
 		
 	-- sticky key support
 	elseif Controls.check(pad, SCE_CTRL_DOWN) and last_input > MIN_INPUT_DELAY then
 		table.insert(actions, DIR.DOWN)
-		last_user_tick = time_played
+		input.last_tick = time_played
 		
 	-- sticky key support
 	elseif Controls.check(pad, SCE_CTRL_LEFT) and last_input > MIN_INPUT_DELAY then
 		table.insert(actions, DIR.LEFT)
-		last_user_tick = time_played
+		input.last_tick = time_played
 		
-	elseif Controls.check(pad, SCE_CTRL_LTRIGGER) and not Controls.check(oldpad, SCE_CTRL_LTRIGGER ) then
+	elseif Controls.check(pad, SCE_CTRL_LTRIGGER) and not Controls.check(input.prev, SCE_CTRL_LTRIGGER ) then
 		table.insert(actions, DIR.LEFT)
 		
 	-- sticky key support
 	elseif Controls.check(pad, SCE_CTRL_RIGHT) and last_input > MIN_INPUT_DELAY then
 		table.insert(actions, DIR.RIGHT)
-		last_user_tick = time_played
+		input.last_tick = time_played
 		
-	elseif Controls.check(pad, SCE_CTRL_RTRIGGER) and not Controls.check(oldpad, SCE_CTRL_RTRIGGER) then
+	elseif Controls.check(pad, SCE_CTRL_RTRIGGER) and not Controls.check(input.prev, SCE_CTRL_RTRIGGER) then
 		table.insert(actions, DIR.RIGHT)
 		
-	elseif Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(oldpad, SCE_CTRL_CROSS) then
+	elseif Controls.check(pad, SCE_CTRL_CROSS) and not Controls.check(input.prev, SCE_CTRL_CROSS) then
 		table.insert(actions, DIR.UP)
 
-	elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(oldpad, SCE_CTRL_CIRCLE) then
-		double_down_speed = 1 -- speed down
+	elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(input.prev, SCE_CTRL_CIRCLE) then
+		input.double_down = 1 -- speed down
 		
-	elseif Controls.check(pad, SCE_CTRL_START) and not Controls.check(oldpad, SCE_CTRL_START) then
+	elseif Controls.check(pad, SCE_CTRL_START) and not Controls.check(input.prev, SCE_CTRL_START) then
 		if game.state == STATE.INIT then
 			-- give option to start
 		elseif game.state == STATE.PLAY then
@@ -961,15 +993,19 @@ function user_input()
 	end
 	
 	-- pepperidge farm remembers
-	oldpad = pad
+	input.prev = pad
 end
 
 
 -- sound
 function sound_background()
+
+	debug_log("in_sound_background||")
 	if not Sound.isPlaying(snd_background) then
 		Sound.resume(snd_background)
+		debug_log("sound_resume_called||")
 	end
+	debug_log("in+sound_background_end||")
 end
 
 -- game over sound :D
@@ -987,6 +1023,12 @@ function sound_game_over(new_high_score)
 	end
 end
 
+debug_file = System.openFile("ux0:/data/tetrinomi/tetris_debug", FWRITE)
+function debug_log(msg)
+
+	System.writeFile(debug_file, msg, string.len(msg))
+	
+end
 
 -- main
 
@@ -994,8 +1036,14 @@ end
 function main()
 
 	-- start sound
+	debug_log("startsound||")
 	Sound.play(snd_background, LOOP)
 	
+	-- set current highscore (file call, don't need to renew every game)
+	debug_log("gethighscore||")
+	get_high_score()
+	
+	debug_log("game_start||")
 	-- initiate game variables
 	game_start()
 	
@@ -1034,6 +1082,8 @@ function clean_exit()
 	Sound.close(snd_background)
 	Sound.close(snd_gameover)
 	Sound.close(snd_highscore)
+	Sound.close(snd_single_line)
+	Sound.close(snd_multi_line)
 	
 	-- unload font
 	Font.unload(main_font)
@@ -1045,61 +1095,6 @@ function clean_exit()
 	-- kill app
 	System.exit()
 	
-end
-
-
--- version check
-function version_check()
-	-- initialize network
-	Network.init()
-
-	-- Checking if connection is available
-	if Network.isWifiEnabled() then
-
-		-- sync send a request for the content
-		local skt = Socket.connect("raw.githubusercontent.com", 443)
-		-- send request
-		Socket.send(skt, "GET /svennd/vita-tetromino/master/VERSION.md HTTP/1.1\r\nHost: raw.githubusercontent.com\r\n\r\n")
-
-		-- Since sockets are non blocking, we wait till at least a byte is received
-		local raw_data = ""
-		while raw_data == "" do
-			raw_data = raw_data .. Socket.receive(skt, 8192)
-		end
-
-		-- Keep downloading till the whole response is received
-		dwnld_data = raw_data
-		retry = 0
-		while dwnld_data ~= "" or retry < 1000 do
-			dwnld_data = Socket.receive(skt, 8192)
-			raw_data = raw_data .. dwnld_data
-			if dwnld_data == "" then
-				retry = retry + 1
-			else
-				retry = 0
-			end
-		end
-	
-		-- Extracting Content-Length value
-		offs1, offs2 = string.find(raw_data, "Length: ")
-		offs3 = string.find(raw_data, "\r", offs2)
-		content_length = tonumber(string.sub(raw_data, offs2, offs3))
-
-		-- getting the version
-		stub, content_offset = string.find(raw_data, "\r\n\r\n")
-		local uplink_version = string.sub(raw_data, content_offset+1)
-		
-		if uplink_version == VERSION then
-			draw_new_version = true
-		end
-		
-		-- Closing socket
-		Socket.close(skt)
-		
-	end
-
-	-- Terminating network
-	Network.term()
 end
 
 -- run the code

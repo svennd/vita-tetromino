@@ -30,4 +30,8 @@
 * added buttons as help
 
 # v0.6
-* playing around with sound effects
+* added sound
+* added simple animation
+* moved increase_speed()
+* cleaned up globals
+* removed code for version polling
