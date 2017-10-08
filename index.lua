@@ -21,11 +21,11 @@ main_font = Font.load("app0:/assets/xolonium.ttf")
 Sound.init()
 
 -- load sound
-snd_background = Sound.open("app0:/assets/bg.mp3")
-snd_gameover = Sound.open("app0:/assets/game_over.wav")
-snd_highscore = Sound.open("app0:/assets/new_highscore.wav")
-snd_multi_line = Sound.open("app0:/assets/multi_line.wav")
-snd_single_line = Sound.open("app0:/assets/single_line.wav")
+snd_background = Sound.open("app0:/assets/bg.ogg")
+snd_gameover = Sound.open("app0:/assets/game_over.ogg")
+snd_highscore = Sound.open("app0:/assets/new_highscore.ogg")
+snd_multi_line = Sound.open("app0:/assets/multi_line.ogg")
+snd_single_line = Sound.open("app0:/assets/single_line.ogg")
 
 -- game constants
 BUTTON = { CROSS = 1, CIRCLE = 2, TRIANGLE = 3, SQUARE = 4, LTRIGGER = 5, RTRIGGER = 6, LEFT = 7, RIGHT = 8, UP = 9, DOWN = 10, ANALOG = 11, START = 12, SELECT = 13 }
