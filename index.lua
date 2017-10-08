@@ -870,7 +870,8 @@ function draw_show_help()
 	Font.print(main_font, 850, 450, "EXIT", white)
 	
 	--mem
-	Font.print(main_font, 900, 390, "MEM:" .. collectgarbage("count"), white)
+	-- about ~200kb
+	-- Font.print(main_font, 875, 200, "MEM:" .. collectgarbage("count"), white)
 	-- Font.print(main_font, 800, 410, "UP/X rotate", white)
 	-- Font.print(main_font, 800, 430, "O drop", white)
 end
