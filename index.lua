@@ -523,6 +523,7 @@ function game_start()
 	score.new_high = false
 	
 	-- clear field
+	field = {}
 	
 	-- just in case
 	animation.last_tick = 0
