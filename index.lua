@@ -1,12 +1,12 @@
 -- tetrinomi for vita, by svennd
--- version 0.6
+-- version 0.6.1
 
 -- vita constants
 DISPLAY_WIDTH = 960
 DISPLAY_HEIGHT = 544
 
 -- application variables
-VERSION = "0.6"
+VERSION = "0.6.1"
 
 -- screen bg
 background = Graphics.loadImage("app0:/assets/background.png")
@@ -860,12 +860,18 @@ end
 -- help
 function draw_show_help()
 
-	Font.setPixelSizes(main_font, 16)
-	draw_control(760, 400, BUTTON.START)
-	Font.print(main_font, 850, 410, "PLAY", white)
+	-- draw_control(760, 330, BUTTON.CIRCLE)
+	-- Font.print(main_font, 850, 355, "DROP", white)
 	
-	draw_control(760, 440, BUTTON.SELECT)
-	Font.print(main_font, 850, 450, "EXIT", white)
+	-- draw_control(760, 380, BUTTON.CROSS)
+	-- Font.print(main_font, 850, 405, "ROTATE", white)
+	
+	Font.setPixelSizes(main_font, 16)
+	draw_control(760, 440, BUTTON.START)
+	Font.print(main_font, 850, 450, "PLAY", white)
+	
+	draw_control(760, 480, BUTTON.SELECT)
+	Font.print(main_font, 850, 490, "EXIT", white)
 	
 	--mem
 	-- about ~200kb

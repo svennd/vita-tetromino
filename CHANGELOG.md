@@ -35,3 +35,8 @@
 * moved increase_speed()
 * cleaned up globals
 * removed code for version polling
+
+# v0.6.1
+* upstream sound fix
+* decreased the amount of increase_speed calls
+* changed startup img
