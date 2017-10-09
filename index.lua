@@ -124,8 +124,6 @@ function update ()
 		-- try to drop it
 		drop()
 		
-		-- increase speed based on lines
-		increase_speed()
 	end
 
 	if dt_animation > ANIMATION_STEP then
@@ -319,7 +317,7 @@ function drop()
 		set_current_piece() -- set next piece as current
 		set_next_piece() -- determ a new piece
 		add_score(10) -- add 10 points for dropping a piece
-		
+		increase_speed() -- increase speed based on lines
 		-- if not possible to find a spot for its current location its overwritten = dead
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
