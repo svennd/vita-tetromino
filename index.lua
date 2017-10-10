@@ -553,7 +553,10 @@ end
 -- get the highscore from file
 function get_high_score()
 
-	System.createDirectory("ux0:/data/tetrinomi")
+	-- check if it does not exist and create it when needed
+	if not System.doesDirExist("ux0:/data/tetrinomi") then
+		System.createDirectory("ux0:/data/tetrinomi")
+	end
 	
     -- check if file exist
 	if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
