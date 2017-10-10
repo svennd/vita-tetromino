@@ -290,7 +290,7 @@ function random_piece()
 		
 		-- shuffle them, http://gamebuildingtools.com/using-lua/shuffle-table-lua
 		-- might require a better implementation
-		math.randomseed(os.time())
+		math.randomseed(os.clock()*1000) -- os.time() is to easy
 		local n = table.getn(pieces)
 		while n > 2 do
 			local k = math.random(n) -- get a random number
