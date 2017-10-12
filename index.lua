@@ -747,21 +747,21 @@ function draw_score()
 	
 	-- speed
 	local level = 0
-	if game.step < 450 and game.step > 400 then
+	if game.step < 450 and game.step => 400 then
 		level = 1
-	elseif game.step < 400 and game.step > 350 then
+	elseif game.step < 400 and game.step => 350 then
 		level = 2
-	elseif game.step < 350 and game.step > 300 then
+	elseif game.step < 350 and game.step => 300 then
 		level = 3
-	elseif game.step < 300 and game.step > 250 then
+	elseif game.step < 300 and game.step => 250 then
 		level = 4
-	elseif game.step < 250 and game.step > 200 then
+	elseif game.step < 250 and game.step => 200 then
 		level = 5
-	elseif game.step < 200 and game.step > 150 then
+	elseif game.step < 200 and game.step => 150 then
 		level = 6
-	elseif game.step < 150 and game.step > 100 then
+	elseif game.step < 150 and game.step => 100 then
 		level = 7
-	elseif game.step < 100 and game.step > 50 then
+	elseif game.step < 100 and game.step => 50 then
 		level = 8
 	elseif game.step < 50 then
 		level = 9
