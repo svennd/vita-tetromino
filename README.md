@@ -5,6 +5,7 @@ This is a Tetris alike game written in lua for the PS VITA
 
 # Features
 * original tetris style
+* "Vadim Gerasimov's Tetris 3.12" style colors
 * sound effects
 * animations
 * endless tetris !
