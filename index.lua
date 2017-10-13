@@ -648,8 +648,8 @@ function draw_frame()
 	-- score
 	draw_score()
 	
-	-- draw battery info
-	draw_battery()
+	-- draw info
+	draw_info()
 	
 	-- show help
 	draw_show_help()
@@ -820,10 +820,12 @@ function draw_next()
 end
 
 -- draw battery
-function draw_battery()
+function draw_info()
     local margin = 60
 	local y_offset = 5
     local life = System.getBatteryPercentage()
+	local ctime = get_time()
+	local playtime = stime(game.start)
 	
 	-- icon
 	-- ok
@@ -840,6 +842,10 @@ function draw_battery()
 	-- decrease font size
 	Font.setPixelSizes(main_font, 16)
 	Font.print(main_font, DISPLAY_WIDTH - margin - 45, y_offset, life .. "%", white)
+	
+	-- draw time
+	Font.print(main_font, 720, y_offset, ctime, grey_2)
+	Font.print(main_font, 720, 36, playtime, grey_2)
 end
 
 -- draw a box
@@ -1071,6 +1077,27 @@ function clean_exit()
 	-- kill app
 	System.exit()
 	
+end
+
+-- simple wrapper
+function get_time()
+	local h,m,s = System.getTime()
+	
+	-- ooh the horror
+	return "" .. h .. ":" .. m;
+end
+
+-- seconds to clock
+function stime(ms)
+	local ms = tonumber(ms)
+	
+	if ms == nil or seconds <= 0 then
+		return "00:00";
+	else
+		mins = string.format("%02.f", math.floor(seconds/60 - (hours*60)));
+		secs = string.format("%02.f", math.floor(seconds - hours*3600 - mins *60));
+		return mins..":"..secs
+	end
 end
 
 -- run the code
