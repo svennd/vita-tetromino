@@ -554,9 +554,9 @@ end
 function get_high_score()
 
 	-- check if it does not exist and create it when needed
-	if not System.doesDirExist("ux0:/data/tetrinomi") then
+	-- if not System.doesDirExist("ux0:/data/tetrinomi") then
 		System.createDirectory("ux0:/data/tetrinomi")
-	end
+	-- end
 	
     -- check if file exist
 	if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
@@ -747,21 +747,21 @@ function draw_score()
 	
 	-- speed
 	local level = 0
-	if game.step < 450 and game.step => 400 then
+	if game.step < 450 and game.step >= 400 then
 		level = 1
-	elseif game.step < 400 and game.step => 350 then
+	elseif game.step < 400 and game.step >= 350 then
 		level = 2
-	elseif game.step < 350 and game.step => 300 then
+	elseif game.step < 350 and game.step >= 300 then
 		level = 3
-	elseif game.step < 300 and game.step => 250 then
+	elseif game.step < 300 and game.step >= 250 then
 		level = 4
-	elseif game.step < 250 and game.step => 200 then
+	elseif game.step < 250 and game.step >= 200 then
 		level = 5
-	elseif game.step < 200 and game.step => 150 then
+	elseif game.step < 200 and game.step >= 150 then
 		level = 6
-	elseif game.step < 150 and game.step => 100 then
+	elseif game.step < 150 and game.step >= 100 then
 		level = 7
-	elseif game.step < 100 and game.step => 50 then
+	elseif game.step < 100 and game.step >= 50 then
 		level = 8
 	elseif game.step < 50 then
 		level = 9
@@ -825,7 +825,7 @@ function draw_info()
 	local y_offset = 5
     local life = System.getBatteryPercentage()
 	local ctime = get_time()
-	local playtime = stime(game.start)
+	local playtime = stime(Timer.getTime(game.start))
 	
 	-- icon
 	-- ok
@@ -1089,13 +1089,13 @@ end
 
 -- seconds to clock
 function stime(ms)
-	local ms = tonumber(ms)
+	local seconds = tonumber(ms)/1000
 	
-	if ms == nil or seconds <= 0 then
+	if seconds <= 0 then
 		return "00:00";
 	else
-		mins = string.format("%02.f", math.floor(seconds/60 - (hours*60)));
-		secs = string.format("%02.f", math.floor(seconds - hours*3600 - mins *60));
+		mins = string.format("%02.f", math.floor(seconds/60 - (math.floor(seconds/3600)*60)));
+		secs = string.format("%02.f", math.floor(seconds - math.floor(seconds/3600)*3600 - mins *60));
 		return mins..":"..secs
 	end
 end
