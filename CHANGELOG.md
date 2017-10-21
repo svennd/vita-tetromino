@@ -41,10 +41,19 @@
 * decreased the amount of increase_speed calls
 * changed startup img
 
-# v7
+# v0.7
 * added a menu
 * added credits screen
-* splitted help buttons into a help screen
-* interface is touch enabled
+* added help screen
+* full interface is now touch enabled
 * made icon0.png white background (transparant does not work)
-* 'redesigned' classical tetris interface
+* 'redesigned' game interface
+* fixed level indication
+* fixed score.visual
+* switched to a better random seed for blocks
+* fixed a score bug, multi lines now count as intended
+* added a statistic overiew after a game
+* added a touch button to restart/exit game
+* new background
+* changed field size with to 9
+* game over now slightly animated

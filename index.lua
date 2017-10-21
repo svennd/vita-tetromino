@@ -50,25 +50,6 @@ end
 -- close all resources
 -- while not strictly necessary, its clean
 function clean_exit()
-
-	-- free images
-	-- Graphics.freeImage(control)
-	-- Graphics.freeImage(battery_icon)
-	-- Graphics.freeImage(background)
-	
-	-- close music files
-	-- Sound.close(snd_background)
-	-- Sound.close(snd_gameover)
-	-- Sound.close(snd_highscore)
-	-- Sound.close(snd_single_line)
-	-- Sound.close(snd_multi_line)
-	
-	-- unload font
-	-- Font.unload(main_font)
-	
-	-- stop sound module
-	-- bugged ?
-	-- Sound.term()
 	
 	-- kill app
 	System.exit()

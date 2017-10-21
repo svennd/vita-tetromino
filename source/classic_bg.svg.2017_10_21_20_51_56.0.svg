@@ -108,11 +108,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="624.99566"
-     inkscape:cy="989.86859"
+     inkscape:zoom="2"
+     inkscape:cx="471.13343"
+     inkscape:cy="874.36022"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer7"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
@@ -127,7 +127,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -135,7 +135,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="backlayer"
-     style="display:none"
+     style="display:inline"
      sodipodi:insensitive="true">
     <rect
        style="opacity:1;fill:url(#radialGradient4542);fill-opacity:1;stroke:none;stroke-width:10.09439087;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -152,7 +152,7 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="noise"
-     style="display:none"
+     style="display:inline"
      sodipodi:insensitive="true">
     <g
        id="g4646"
@@ -218,7 +218,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="temp"
-     style="display:none"
+     style="display:inline"
      sodipodi:insensitive="true">
     <image
        style="display:inline;opacity:1"
@@ -253,16 +253,6 @@
      inkscape:label="top"
      style="display:inline">
     <rect
-       style="opacity:0.5;fill:#5fbcd3;fill-opacity:1;stroke:#00005f;stroke-width:1.45536184;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-       id="rect3225"
-       width="18.488474"
-       height="6.7887325"
-       x="6.6856298"
-       y="23.967737"
-       inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\assets\classic.png"
-       inkscape:export-xdpi="120"
-       inkscape:export-ydpi="120" />
-    <rect
        style="display:inline;opacity:0.5;fill:#5fbcd3;fill-opacity:1;stroke:#00005f;stroke-width:1.45536184;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
        id="rect3085"
        width="40.825794"
@@ -285,7 +275,7 @@
            height="23.571428"
            x="272.85715"
            y="158.94826" /></flowRegion><flowPara
-         id="flowPara3221" /></flowRoot>    <text
+         id="flowPara3221"></flowPara></flowRoot>    <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#bee5ed;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        x="120.89528"
@@ -300,7 +290,7 @@
          y="13.503038"
          style="fill:#bee5ed;fill-opacity:1;stroke-width:0.26458332">NEXT</tspan></text>
     <rect
-       style="opacity:0.5;fill:#5fbcd3;fill-opacity:1;stroke:#00005f;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="opacity:0.5;fill:#5fbcd3;fill-opacity:1;stroke:#00005f;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
        id="rect3249"
        width="27.528765"
        height="27.395124"
@@ -310,36 +300,38 @@
        inkscape:export-xdpi="120"
        inkscape:export-ydpi="120" />
     <rect
-       style="display:inline;opacity:0.5;fill:#5fbcd3;fill-opacity:1;stroke:#00005f;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect3085-3"
-       width="27.528765"
-       height="13.343486"
-       x="121.50707"
-       y="43.741974"
+       style="display:inline;opacity:0.5;fill:#5fbcd3;fill-opacity:1;stroke:#00005f;stroke-width:1.45536184;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect3225-2"
+       width="18.488476"
+       height="6.7887325"
+       x="6.6856298"
+       y="37.689369"
        inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\assets\classic.png"
        inkscape:export-xdpi="120"
        inkscape:export-ydpi="120" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#bee5ed;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="121.99297"
-       y="46.575737"
-       id="text3247-6"
+    <rect
+       style="display:inline;opacity:0.5;fill:#5fbcd3;fill-opacity:1;stroke:#00005f;stroke-width:1.455;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect3085-0"
+       width="40.825794"
+       height="13.081941"
+       x="6.6856298"
+       y="23.945961"
        inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\assets\classic.png"
        inkscape:export-xdpi="120"
-       inkscape:export-ydpi="120"><tspan
-         sodipodi:role="line"
-         id="tspan3245-2"
-         x="121.99297"
-         y="46.575737"
-         style="font-size:2.82222223px;fill:#bee5ed;fill-opacity:1;stroke-width:0.26458332">BEST</tspan></text>
+       inkscape:export-ydpi="120" />
+    <path
+       style="display:inline;opacity:0.5;fill:none;fill-opacity:1;stroke:#00005f;stroke-width:1.45500004;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 10.146477,40.758511 h 40.825794 v 13.08194 H 10.146477 Z"
+       id="rect3085-0-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="stats"
      transform="translate(9.0873919,-5.2364698)"
-     style="display:none">
+     style="display:inline">
     <g
        id="g12152"
        transform="translate(5.2774207,15.162834)">
@@ -975,7 +967,7 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="game_over_touch"
-     style="display:none">
+     style="display:inline">
     <rect
        style="display:inline;opacity:0.5;fill:#5fbcd3;fill-opacity:1;stroke:#00005f;stroke-width:0.77419508;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
        id="rect3249-6"

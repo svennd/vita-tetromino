@@ -1,9 +1,11 @@
 -- classic tetris
 
--- screen bg
+-- load images
 local img_inteface = Graphics.loadImage("app0:/assets/classic.png")
 local img_background = Graphics.loadImage("app0:/assets/bg_menu.png")
 local img_battery_icon = Graphics.loadImage("app0:/assets/power.png")
+local img_button = Graphics.loadImage("app0:/assets/ingame_button.png")
+local img_stats = Graphics.loadImage("app0:/assets/stats.png")
 
 -- font
 local main_font = Font.load("app0:/assets/xolonium.ttf")
@@ -23,7 +25,7 @@ local snd_single_line = Sound.open("app0:/assets/single_line.ogg")
 local DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
 local STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
 local MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
-local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 10, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
+local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 9, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
 local MIN_INPUT_DELAY = 100
 local ANIMATION_STEP = 30
 local SPEED_LIMIT = 30
@@ -46,7 +48,7 @@ local grey_1	= Color.new(244, 244, 244)
 local grey_2	= Color.new(160, 160, 160)
 local grey_3	= Color.new(96, 96, 96)
 
-local text_color = Color.new(136, 145, 230)
+local text_color_score = Color.new(249, 255, 255)
 
 -- initialize variables
 local game = {start = Timer.new(), last_tick = 0, state = STATE.INIT, step = 500}
@@ -56,7 +58,7 @@ local input = {prev = SCE_CTRL_CIRCLE, last_tick = 0, double_down = 0}
 local score = {current = 0, visual = 0, high = 0, line = 0, new_high = false}
 
 local lremove = {line = {}, position = {}, sound = 0}
-local animation = {state = false, last_tick = 0}
+local animation = {state = false, last_tick = 0, game_over = 1, game_over_direction = 1}
 
 -- empty var inits
 local actions = {} -- table with all user input
@@ -64,18 +66,21 @@ local pieces = {} -- fill all the blocks in this
 local field = {} -- playing field table
 
 -- pieces
-local i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
-local j = { BLOCK = {0x44C0, 0x8E00, 0x6440, 0x0E20}, COLOR = red }
-local l = { BLOCK = {0x4460, 0x0E80, 0xC440, 0x2E00}, COLOR = green }
-local o = { BLOCK = {0xCC00, 0xCC00, 0xCC00, 0xCC00}, COLOR = orange }
-local s = { BLOCK = {0x06C0, 0x8C40, 0x6C00, 0x4620}, COLOR = blue }
-local t = { BLOCK = {0x0E40, 0x4C40, 0x4E00, 0x4640}, COLOR = seablue }
-local z = { BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
+local i = { ID = 1, BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
+local j = { ID = 2, BLOCK = {0x44C0, 0x8E00, 0x6440, 0x0E20}, COLOR = red }
+local l = { ID = 3, BLOCK = {0x4460, 0x0E80, 0xC440, 0x2E00}, COLOR = green }
+local o = { ID = 4, BLOCK = {0xCC00, 0xCC00, 0xCC00, 0xCC00}, COLOR = orange }
+local s = { ID = 5, BLOCK = {0x06C0, 0x8C40, 0x6C00, 0x4620}, COLOR = blue }
+local t = { ID = 6, BLOCK = {0x0E40, 0x4C40, 0x4E00, 0x4640}, COLOR = seablue }
+local z = { ID = 7, BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
 local k = { COLOR = white }
 
+-- statics
+local stats_played_pieces = {}
+local stats_lines = {single = 0, double = 0, triple = 0, tetro = 0}
 
 -- killswitch for this file
-local break_loop = false;
+local break_loop = false
 
 -- game mechanincs
 
@@ -89,6 +94,16 @@ function update ()
 	    if game.state == STATE.DEAD then
 	        score.visual = score.current
 	    end
+		
+		if game.state == STATE.DEAD then
+			if 70 < animation.game_over then
+				animation.game_over_direction = -1
+			elseif animation.game_over < 1 then
+				animation.game_over_direction = 1
+			
+			end
+			animation.game_over = animation.game_over + animation.game_over_direction
+		end
 	    
 	    -- stop doing the game mechanics if no play
 		return true
@@ -128,6 +143,7 @@ function update ()
 		animation.last_tick = time_played
 		animate_remove_line()
 	end
+
 end
 
 -- handle user input to actions
@@ -167,6 +183,13 @@ function set_current_piece()
 	current.x = math.random(0, SIZE.WIDTH_FIELD - 4)
 	current.y = 0
 	current.dir = next_piece.dir
+	
+	-- for statics if we get here we assume its played
+	if stats_played_pieces[current.piece.ID] == nil then
+		stats_played_pieces[current.piece.ID] = 1
+	else
+		stats_played_pieces[current.piece.ID] = stats_played_pieces[current.piece.ID] + 1
+	end
 end
 
 -- set block
@@ -361,7 +384,7 @@ function remove_lines()
 					break
 				end
 			end
-			
+
 			-- if a full line remove it
 			if full_line then
 
@@ -371,10 +394,30 @@ function remove_lines()
 				
 				-- if its not the first line double score !
 				if (multi_line > 0) then
+					
 					add_score( 100 * ( multi_line + 1 ) )
+					multi_line = multi_line + 1
+					
+					-- stats (its a double)
+					if multi_line == 2 then
+						-- remove the single we just counted
+						stats_lines.single = stats_lines.single - 1
+						stats_lines.double = stats_lines.double + 1
+					-- its a triple
+					elseif multi_line == 3 then
+						-- remove the double we just counted
+						stats_lines.double = stats_lines.double - 1
+						stats_lines.triple = stats_lines.triple + 1
+					-- TETRO !!!!
+					elseif multi_line == 4 then
+						-- remove the triple we just counted
+						stats_lines.triple = stats_lines.triple - 1
+						stats_lines.tetro = stats_lines.tetro + 1
+					end
 				else
 					add_score( 100 ) -- scored a line :D
 					multi_line = multi_line + 1
+					stats_lines.single = stats_lines.single + 1
 				end
 				
 				-- add line score
@@ -543,6 +586,10 @@ function game_start()
 	game.state = STATE.PLAY
 	Timer.reset(game.start) -- restart game timer
 	
+	-- clear stats
+	stats_played_pieces = {0, 0, 0, 0, 0, 0, 0} -- nil might be issue
+	stats_lines = {single = 0, double = 0, triple = 0, tetro = 0}
+	
 	-- start the sound
 	sound_background()
 end
@@ -617,22 +664,9 @@ function draw_frame()
 	-- Starting drawing phase
 	Graphics.initBlend()
 	
-	-- background
-	Graphics.fillRect(0, DISPLAY_WIDTH, 0, DISPLAY_HEIGHT, black)
-	
 	-- background image
 	Graphics.drawImage(0, 0, img_background)
 	Graphics.drawImage(5, 10, img_inteface)
-	
-	-- temp
-	if game.state == STATE.DEAD then
-		Font.setPixelSizes(main_font, 25)
-	
-		Font.print(main_font, 570, 180, "GAME OVER", white)
-		if score.new_high then
-			Font.print(main_font, 570, 220, "! NEW HIGHSCORE !", white)
-		end
-	end
 	
 	-- draw court
 	draw_court()
@@ -649,9 +683,55 @@ function draw_frame()
 	-- draw battery info
 	draw_battery()
 	
+	-- game over
+	if game.state == STATE.DEAD then
+		draw_game_over()
+	end
+	
 	-- Terminating drawing phase
 	Graphics.termBlend()
 	Screen.flip()
+end
+
+function draw_game_over()
+	Font.setPixelSizes(main_font, 35)
+
+	Font.print(main_font, 270, 180, "GAME OVER", Color.new(255,255,255, 180 + math.floor(animation.game_over)))
+	
+	-- new high score ?
+	if score.new_high then
+		Font.setPixelSizes(main_font, 25)
+		Font.print(main_font, 570, 220, "! NEW HIGHSCORE !", white)
+	end
+	
+	-- post game stats
+	Font.setPixelSizes(main_font, 20)
+	Font.print(main_font, 570, 260, "single : x".. stats_lines.single, white)
+	Font.print(main_font, 570, 290, "double : x".. stats_lines.double, white)
+	Font.print(main_font, 570, 320, "triple : x".. stats_lines.triple, white)
+	Font.print(main_font, 570, 350, "tetro : x".. stats_lines.tetro, white)
+	Font.print(main_font, 570, 380, "total : ".. score.line .. " lines", white)
+	
+	-- could be cleaner
+	Font.setPixelSizes(main_font, 20)
+	
+	Graphics.drawImage(786, 204, img_stats)
+	Font.print(main_font, 894, 215, "x".. stats_played_pieces[1], white)
+	Font.print(main_font, 894, 265, "x".. stats_played_pieces[2], white)
+	Font.print(main_font, 894, 315, "x".. stats_played_pieces[3], white) -- square
+	Font.print(main_font, 894, 360, "x".. stats_played_pieces[4], white) -- 4long
+	Font.print(main_font, 894, 400, "x".. stats_played_pieces[5], white)
+	Font.print(main_font, 894, 450, "x".. stats_played_pieces[6], white)
+	Font.print(main_font, 894, 500, "x".. stats_played_pieces[7], white)
+	
+	-- buttons to restart or exit
+	Font.setPixelSizes(main_font, 25)
+	
+	Graphics.drawImage(733, 37, img_button)
+	Font.print(main_font, 758, 51, "NEW GAME", white)
+	
+	Graphics.drawImage(733, 101, img_button)
+	Font.print(main_font, 758, 115, "  EXIT  ", white)
 end
 
 -- draw current block
@@ -725,20 +805,11 @@ function draw_score()
 	-- increase draw size
 	Font.setPixelSizes(main_font, 32)
 	
-	-- high_score
-	-- Font.print(main_font, 15, 20, "HIGHSCORE", white)
-	-- Font.print(main_font, 15, 80, score.high, white)
-	-- draw_box(5, 220, 10, 120, 3, white)
-	
 	-- score
-	-- Font.print(main_font, 97, 140, "SCORE", white)
-	Font.print(main_font, 25, 25, score.visual, text_color)
-	-- draw_box(5, 220, 130, 240, 3, grey_3)
+	Font.print(main_font, 25, 25, score.visual, text_color_score)
 
-	-- lines
-	-- Font.print(main_font, 105, 260, "LINES" , white)
-	-- Font.print(main_font, 15, 320, score.line , white)
-	-- draw_box(5, 220, 250, 360, 3, grey_3)
+	-- best
+	Font.print(main_font, 565, 185, score.high, text_color_score)
 	
 	-- speed
 	local level = 0
@@ -763,8 +834,8 @@ function draw_score()
 	end
 	
 	-- level
-	Font.setPixelSizes(main_font, 14)
-	Font.print(main_font, 15, 75, "LEVEL " .. level, text_color)
+	Font.setPixelSizes(main_font, 16)
+	Font.print(main_font, 15, 85, "LEVEL " .. level, text_color_score)
 	
 end
 
@@ -798,19 +869,6 @@ function draw_next()
 		-- shift it
 		bitx = bit.rshift(bitx, 1)
 	end
-	
-	-- draw frame around
-	-- draw_box(
-			-- SIZE.NEXT_OFFSET_X - margin,
-			-- SIZE.NEXT_OFFSET_X+(4*SIZE.X) + margin,
-			-- SIZE.NEXT_OFFSET_Y - margin,
-			-- SIZE.NEXT_OFFSET_Y+(4*SIZE.Y) + margin,
-			-- 3,
-			-- red)
-			
-	-- text
-	-- Font.setPixelSizes(main_font, 25)
-	-- Font.print(main_font, SIZE.NEXT_OFFSET_X-margin, SIZE.NEXT_OFFSET_Y-(margin*3), "upcoming" , white)
 end
 
 -- draw battery
@@ -912,6 +970,25 @@ function user_input()
 		ct_clean_exit()
 	end
 	
+	-- if game dead, offer restart and exit in interface
+	if game.state == STATE.DEAD then
+		-- read touch control
+		local x, y = Controls.readTouch()
+
+		-- first input only
+		if x ~= nil then
+			
+			-- within bounds of buttons (big hitbox around)
+			if x > 720 and x < 940 then
+				if y > 25 and y < 95 then
+					game_start()
+				elseif y > 95 and y < 160 then
+					ct_clean_exit() 
+				end
+			end
+		end
+	end
+	
 	-- pepperidge farm remembers
 	input.prev = pad
 end
@@ -947,6 +1024,8 @@ function ct_clean_exit()
 	Graphics.freeImage(img_inteface)
 	Graphics.freeImage(img_background)
 	Graphics.freeImage(img_battery_icon)
+	Graphics.freeImage(img_stats)
+	Graphics.freeImage(img_button)
 
 	-- close music files
 	Sound.close(snd_background)
@@ -986,8 +1065,8 @@ function main()
 		update()
 		
 		-- in case exit was called
-		if not break_loop then
-			break;
+		if break_loop then
+			break
 		end
 		
 		-- draw game

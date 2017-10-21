@@ -26,13 +26,13 @@ local function menu_draw()
 	Graphics.drawImage(341,85, img_menu)
 	
 	if current_menu == 1 then
-		Graphics.drawImage(357,94, img_pointer) -- start
+		Graphics.drawImage(357,94, img_pointer, Color.new(255,255,255, 70 + math.floor(animate_touch/3))) -- start
 	elseif current_menu == 2 then
-		Graphics.drawImage(357,192, img_pointer) -- help
+		Graphics.drawImage(357,192, img_pointer, Color.new(255,255,255, 70 + math.floor(animate_touch/3))) -- help
 	elseif current_menu == 3 then
-		Graphics.drawImage(357,290, img_pointer) -- credits
+		Graphics.drawImage(357,290, img_pointer, Color.new(255,255,255, 70 + math.floor(animate_touch/3))) -- credits
 	elseif current_menu == 4 then
-		Graphics.drawImage(357,388, img_pointer) -- exit
+		Graphics.drawImage(357,388, img_pointer, Color.new(255,255,255, 70 + math.floor(animate_touch/3))) -- exit
 	end
 	
 	-- draw version
