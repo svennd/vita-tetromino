@@ -2,7 +2,7 @@
 
 -- load background
 local img_background = Graphics.loadImage("app0:/assets/bg_menu.png") -- lazy :D
-local img_touch = Graphics.loadImage("app0:/assets/touch.png")
+local img_touch = Graphics.loadImage("app0:/assets/touch_negative.png")
 local img_control = Graphics.loadImage("app0:/assets/control.png")
 local img_version = Graphics.loadImage("app0:/assets/version.png")
 

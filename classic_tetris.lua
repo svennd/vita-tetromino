@@ -1,9 +1,9 @@
 -- classic tetris
 
 -- screen bg
-local background = Graphics.loadImage("app0:/assets/background.png")
-local battery_icon = Graphics.loadImage("app0:/assets/power.png")
-local control = Graphics.loadImage("app0:/assets/control.png")
+local img_inteface = Graphics.loadImage("app0:/assets/classic.png")
+local img_background = Graphics.loadImage("app0:/assets/bg_menu.png")
+local img_battery_icon = Graphics.loadImage("app0:/assets/power.png")
 
 -- font
 local main_font = Font.load("app0:/assets/xolonium.ttf")
@@ -20,13 +20,13 @@ local snd_multi_line = Sound.open("app0:/assets/multi_line.ogg")
 local snd_single_line = Sound.open("app0:/assets/single_line.ogg")
 
 -- game constants
-DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
-STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
-MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
-SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 10, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
-MIN_INPUT_DELAY = 100
-ANIMATION_STEP = 30
-SPEED_LIMIT = 30
+local DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
+local STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
+local MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
+local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 10, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
+local MIN_INPUT_DELAY = 100
+local ANIMATION_STEP = 30
+local SPEED_LIMIT = 30
 
 -- color definitions
 local white 	= Color.new(255, 255, 255)
@@ -46,30 +46,36 @@ local grey_1	= Color.new(244, 244, 244)
 local grey_2	= Color.new(160, 160, 160)
 local grey_3	= Color.new(96, 96, 96)
 
--- initialize variables
-game = {start = Timer.new(), last_tick = 0, state = STATE.INIT, step = 500}
-current = {piece = {}, x = 0, y = 0, dir = DIR.UP } -- current active piece
-next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
-input = {prev = SCE_CTRL_CIRCLE, last_tick = 0, double_down = 0}
-score = {current = 0, visual = 0, high = 0, line = 0, new_high = false}
+local text_color = Color.new(136, 145, 230)
 
-lremove = {line = {}, position = {}, sound = 0}
-animation = {state = false, last_tick = 0}
+-- initialize variables
+local game = {start = Timer.new(), last_tick = 0, state = STATE.INIT, step = 500}
+local current = {piece = {}, x = 0, y = 0, dir = DIR.UP } -- current active piece
+local next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
+local input = {prev = SCE_CTRL_CIRCLE, last_tick = 0, double_down = 0}
+local score = {current = 0, visual = 0, high = 0, line = 0, new_high = false}
+
+local lremove = {line = {}, position = {}, sound = 0}
+local animation = {state = false, last_tick = 0}
 
 -- empty var inits
-actions = {} -- table with all user input
-pieces = {} -- fill all the blocks in this
-field = {} -- playing field table
+local actions = {} -- table with all user input
+local pieces = {} -- fill all the blocks in this
+local field = {} -- playing field table
 
 -- pieces
-i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
-j = { BLOCK = {0x44C0, 0x8E00, 0x6440, 0x0E20}, COLOR = red }
-l = { BLOCK = {0x4460, 0x0E80, 0xC440, 0x2E00}, COLOR = green }
-o = { BLOCK = {0xCC00, 0xCC00, 0xCC00, 0xCC00}, COLOR = orange }
-s = { BLOCK = {0x06C0, 0x8C40, 0x6C00, 0x4620}, COLOR = blue }
-t = { BLOCK = {0x0E40, 0x4C40, 0x4E00, 0x4640}, COLOR = seablue }
-z = { BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
-k = { COLOR = white }
+local i = { BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
+local j = { BLOCK = {0x44C0, 0x8E00, 0x6440, 0x0E20}, COLOR = red }
+local l = { BLOCK = {0x4460, 0x0E80, 0xC440, 0x2E00}, COLOR = green }
+local o = { BLOCK = {0xCC00, 0xCC00, 0xCC00, 0xCC00}, COLOR = orange }
+local s = { BLOCK = {0x06C0, 0x8C40, 0x6C00, 0x4620}, COLOR = blue }
+local t = { BLOCK = {0x0E40, 0x4C40, 0x4E00, 0x4640}, COLOR = seablue }
+local z = { BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
+local k = { COLOR = white }
+
+
+-- killswitch for this file
+local break_loop = false;
 
 -- game mechanincs
 
@@ -615,7 +621,8 @@ function draw_frame()
 	Graphics.fillRect(0, DISPLAY_WIDTH, 0, DISPLAY_HEIGHT, black)
 	
 	-- background image
-	Graphics.drawImage(0,0, background)
+	Graphics.drawImage(0, 0, img_background)
+	Graphics.drawImage(5, 10, img_inteface)
 	
 	-- temp
 	if game.state == STATE.DEAD then
@@ -716,22 +723,22 @@ function draw_score()
 	local margin = 15
 	
 	-- increase draw size
-	Font.setPixelSizes(main_font, 30)
+	Font.setPixelSizes(main_font, 32)
 	
 	-- high_score
-	Font.print(main_font, 15, 20, "HIGHSCORE", white)
-	Font.print(main_font, 15, 80, score.high, white)
-	draw_box(5, 220, 10, 120, 3, white)
+	-- Font.print(main_font, 15, 20, "HIGHSCORE", white)
+	-- Font.print(main_font, 15, 80, score.high, white)
+	-- draw_box(5, 220, 10, 120, 3, white)
 	
 	-- score
-	Font.print(main_font, 97, 140, "SCORE", white)
-	Font.print(main_font, 15, 200, score.current, white)
-	draw_box(5, 220, 130, 240, 3, grey_3)
+	-- Font.print(main_font, 97, 140, "SCORE", white)
+	Font.print(main_font, 25, 25, score.visual, text_color)
+	-- draw_box(5, 220, 130, 240, 3, grey_3)
 
 	-- lines
-	Font.print(main_font, 105, 260, "LINES" , white)
-	Font.print(main_font, 15, 320, score.line , white)
-	draw_box(5, 220, 250, 360, 3, grey_3)
+	-- Font.print(main_font, 105, 260, "LINES" , white)
+	-- Font.print(main_font, 15, 320, score.line , white)
+	-- draw_box(5, 220, 250, 360, 3, grey_3)
 	
 	-- speed
 	local level = 0
@@ -756,9 +763,8 @@ function draw_score()
 	end
 	
 	-- level
-	Font.print(main_font, 105, 380, "LEVEL" , white)
-	Font.print(main_font, 15, 440, level , white)
-	draw_box(5, 220, 370, 480, 3, grey_3)
+	Font.setPixelSizes(main_font, 14)
+	Font.print(main_font, 15, 75, "LEVEL " .. level, text_color)
 	
 end
 
@@ -794,17 +800,17 @@ function draw_next()
 	end
 	
 	-- draw frame around
-	draw_box(
-			SIZE.NEXT_OFFSET_X - margin,
-			SIZE.NEXT_OFFSET_X+(4*SIZE.X) + margin,
-			SIZE.NEXT_OFFSET_Y - margin,
-			SIZE.NEXT_OFFSET_Y+(4*SIZE.Y) + margin,
-			3,
-			red)
+	-- draw_box(
+			-- SIZE.NEXT_OFFSET_X - margin,
+			-- SIZE.NEXT_OFFSET_X+(4*SIZE.X) + margin,
+			-- SIZE.NEXT_OFFSET_Y - margin,
+			-- SIZE.NEXT_OFFSET_Y+(4*SIZE.Y) + margin,
+			-- 3,
+			-- red)
 			
 	-- text
-	Font.setPixelSizes(main_font, 25)
-	Font.print(main_font, SIZE.NEXT_OFFSET_X-margin, SIZE.NEXT_OFFSET_Y-(margin*3), "upcoming" , white)
+	-- Font.setPixelSizes(main_font, 25)
+	-- Font.print(main_font, SIZE.NEXT_OFFSET_X-margin, SIZE.NEXT_OFFSET_Y-(margin*3), "upcoming" , white)
 end
 
 -- draw battery
@@ -816,13 +822,13 @@ function draw_battery()
 	-- icon
 	-- ok
 	if life > 70 then
-		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 0, 50, 25)
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 0, 50, 25)
 	elseif life > 50 then
-		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 26, 50, 25)
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 26, 50, 25)
 	elseif life > 30 then
-		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 53, 50, 25)
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 53, 50, 25)
 	elseif life > 10 then
-		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, battery_icon, 0, 78, 50, 25)
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 78, 50, 25)
 	end
 
 	-- decrease font size
@@ -903,7 +909,7 @@ function user_input()
 			game_start()
 		end
 	elseif Controls.check(pad, SCE_CTRL_SELECT) then
-		clean_exit()
+		ct_clean_exit()
 	end
 	
 	-- pepperidge farm remembers
@@ -933,6 +939,29 @@ function sound_game_over(new_high_score)
 	end
 end
 
+-- close all resources
+-- while not strictly necessary, its clean
+function ct_clean_exit()
+
+	-- free images
+	Graphics.freeImage(img_inteface)
+	Graphics.freeImage(img_background)
+	Graphics.freeImage(img_battery_icon)
+
+	-- close music files
+	Sound.close(snd_background)
+	Sound.close(snd_gameover)
+	Sound.close(snd_highscore)
+	Sound.close(snd_single_line)
+	Sound.close(snd_multi_line)
+	
+	-- unload font
+	Font.unload(main_font)
+	
+	-- kill this loop
+	break_loop = true
+end
+
 -- main
 
 -- main function
@@ -946,7 +975,7 @@ function main()
 	
 	-- initiate game variables
 	game_start()
-		
+
 	-- gameloop
 	while true do
 		
@@ -956,40 +985,17 @@ function main()
 		-- update game procs
 		update()
 		
+		-- in case exit was called
+		if not break_loop then
+			break;
+		end
+		
 		-- draw game
 		draw_frame()
 		
 		-- wait for black start
 		Screen.waitVblankStart()
 	end
-	
-end
-
--- close all resources
--- while not strictly necessary, its clean
-function clean_exit()
-
-	-- free images
-	Graphics.freeImage(control)
-	Graphics.freeImage(battery_icon)
-	Graphics.freeImage(background)
-	
-	-- close music files
-	Sound.close(snd_background)
-	Sound.close(snd_gameover)
-	Sound.close(snd_highscore)
-	Sound.close(snd_single_line)
-	Sound.close(snd_multi_line)
-	
-	-- unload font
-	Font.unload(main_font)
-	
-	-- stop sound module
-	-- bugged ?
-	-- Sound.term()
-	
-	-- kill app
-	System.exit()
 	
 end
 

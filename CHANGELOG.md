@@ -40,3 +40,11 @@
 * upstream sound fix
 * decreased the amount of increase_speed calls
 * changed startup img
+
+# v7
+* added a menu
+* added credits screen
+* splitted help buttons into a help screen
+* interface is touch enabled
+* made icon0.png white background (transparant does not work)
+* 'redesigned' classical tetris interface
