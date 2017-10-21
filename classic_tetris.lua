@@ -51,14 +51,14 @@ local grey_3	= Color.new(96, 96, 96)
 local text_color_score = Color.new(249, 255, 255)
 
 -- initialize variables
-local game = {start = Timer.new(), last_tick = 0, state = STATE.INIT, step = 500}
+local game = {start = Timer.new(), level = 0, last_tick = 0, state = STATE.INIT, step = 500}
 local current = {piece = {}, x = 0, y = 0, dir = DIR.UP } -- current active piece
 local next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
 local input = {prev = SCE_CTRL_CIRCLE, last_tick = 0, double_down = 0}
 local score = {current = 0, visual = 0, high = 0, line = 0, new_high = false}
 
 local lremove = {line = {}, position = {}, sound = 0}
-local animation = {state = false, last_tick = 0, game_over = 1, game_over_direction = 1}
+local animation = {state = false, last_tick = 0, game_over = 1, game_over_direction = 1, level_up = false, level_up_y = 1}
 
 -- empty var inits
 local actions = {} -- table with all user input
@@ -85,7 +85,7 @@ local break_loop = false
 -- game mechanincs
 
 -- main game mechanics update
-function update ()
+function update()
 	
 	-- check if we are playing
 	if game.state ~= STATE.PLAY then
@@ -143,7 +143,15 @@ function update ()
 		animation.last_tick = time_played
 		animate_remove_line()
 	end
-
+	
+	if animation.level_up then
+		if animation.level_up_y > 150 then
+			animation.level_up = false
+			animation.level_up_y = 0
+		else
+			animation.level_up_y = animation.level_up_y + 1
+		end
+	end
 end
 
 -- handle user input to actions
@@ -338,6 +346,7 @@ function drop()
 		set_next_piece() -- determ a new piece
 		add_score(10) -- add 10 points for dropping a piece
 		increase_speed() -- increase speed based on lines
+		set_level() -- set level 
 		-- if not possible to find a spot for its current location its overwritten = dead
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
@@ -582,6 +591,7 @@ function game_start()
 	
 	-- reset game state
 	game.step = 500
+	game.level = 0 -- bound to step
 	game.last_tick = 0 -- drop ticks
 	game.state = STATE.PLAY
 	Timer.reset(game.start) -- restart game timer
@@ -682,6 +692,9 @@ function draw_frame()
 	
 	-- draw battery info
 	draw_battery()
+	
+	-- level up :D
+	draw_level_up()
 	
 	-- game over
 	if game.state == STATE.DEAD then
@@ -811,6 +824,13 @@ function draw_score()
 	-- best
 	Font.print(main_font, 565, 185, score.high, text_color_score)
 	
+	-- level
+	Font.setPixelSizes(main_font, 16)
+	Font.print(main_font, 15, 85, "LEVEL " .. game.level, text_color_score)
+	
+end
+
+function set_level()
 	-- speed
 	local level = 0
 	if game.step < 450 and game.step > 400 then
@@ -832,11 +852,20 @@ function draw_score()
 	elseif game.step < 50 then
 		level = 9
 	end
-	
-	-- level
-	Font.setPixelSizes(main_font, 16)
-	Font.print(main_font, 15, 85, "LEVEL " .. level, text_color_score)
-	
+	-- new level
+	if game.level ~= level then
+		animation.level_up = true
+		game.level = level
+	end
+end
+
+-- level up text
+function draw_level_up()
+
+	if animation.level_up then
+		Font.setPixelSizes(main_font, 25)
+		Font.print(main_font, 26+math.floor(animation.level_up_y/3), 120, "LEVEL UP !", Color.new(255,255,255))
+	end
 end
 
 -- draw next block

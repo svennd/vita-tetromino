@@ -52,8 +52,9 @@
 * fixed score.visual
 * switched to a better random seed for blocks
 * fixed a score bug, multi lines now count as intended
-* added a statistic overiew after a game
+* added a statistic overview after a game
 * added a touch button to restart/exit game
 * new background
 * changed field size with to 9
 * game over now slightly animated
+* added animation to level up :)
