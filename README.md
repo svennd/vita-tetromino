@@ -1,7 +1,7 @@
 # Vita-tetromino
 This is a Tetris alike game written in lua for the PS VITA
 
-<img src='https://github.com/svennd/vita-tetromino/blob/master/screenshot_v0.5.jpg' />
+<img src='https://github.com/svennd/vita-tetromino/blob/master/screenshot_v0.7.png' />
 
 # Features
 * original tetris style
@@ -34,3 +34,9 @@ If you wish to 'compile' this game :
 * Thanks, Aurora ([@KawaiiAuroraA](https://twitter.com/KawaiiAuroraA)) for testing 
 * font : [xolonium](https://fontlibrary.org/en/font/xolonium)
 * sound : [game over](https://freesound.org/people/deleted_user_877451/), [background sound](https://freesound.org/people/vikuserro/sounds/265549/), [new high score](https://freesound.org/people/rhodesmas/sounds/320653/), [multi line](https://freesound.org/people/Mativve/sounds/391539/), [single line](https://freesound.org/people/Scrampunk/sounds/345299/)
+
+# img
+
+<img src='https://github.com/svennd/vita-tetromino/blob/master/screenshot_v0.7.png' />
+<img src='https://github.com/svennd/vita-tetromino/blob/master/menu.png' />
+<img src='https://github.com/svennd/vita-tetromino/blob/master/level_up.png' />
