@@ -40,7 +40,7 @@ local function credits_draw()
 	Font.setPixelSizes(main_font, 22)
 	
 	-- credit
-	Font.print(main_font, 190, 140, "Lua Player Plus Vita by Rinnegatamante\n(http://rinnegatamante.it)\n\nPeople from #henkaku irc\nVITA buttons by nodeadfolk\Xolomium font (fontlibrary.com)\nsounds : freesound.org\n(see github for latest version)\n\n\n\nBy Svennd (svennd.be)", black)
+	Font.print(main_font, 190, 140, "Lua Player Plus Vita by Rinnegatamante\n(rinnegatamante.it)\n\nVITA buttons by nodeadfolk\n\nXolomium font from fontlibrary.com\n\nsounds by freesound.org\n\n\n\n\nBy Svennd (svennd.be)", black)
 
 	-- touch tip
 	Graphics.drawImage(5, 470, img_touch, Color.new(255,255,255, 50 + math.floor(animate_touch/3)))
