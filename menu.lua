@@ -118,6 +118,9 @@ function menu()
 	Graphics.freeImage(img_pointer)
 	Graphics.freeImage(img_version)
 	
+	-- unload font
+	Font.unload(main_font)
+	
 	-- return
 	state = return_value
 end

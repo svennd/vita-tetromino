@@ -91,6 +91,9 @@ function credits()
 	Graphics.freeImage(img_touch)
 	Graphics.freeImage(img_background)
 	
+	-- unload font
+	Font.unload(main_font)
+	
 	-- return
 	state = return_value
 end
