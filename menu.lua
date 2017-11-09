@@ -68,6 +68,10 @@ local function menu_user_input()
 		if current_menu < MENU.MIN then
 			current_menu = MENU.MAX
 		end
+		
+	-- emergency exit
+	elseif Controls.check(pad, SCE_CTRL_SELECT) then
+		current_menu = MENU.EXIT
 	end
 	
 	-- read touch control
