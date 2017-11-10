@@ -98,6 +98,42 @@ local function menu_user_input()
 	oldpad = pad
 end
 
+local swipe_start = 0
+local swipe_x1 = nil
+
+-- check if a swipe is detected (only horizontal)
+-- based on the implementation of VitaHEX 
+local function swipe_check()
+	-- touch input
+	local x1, y1 = Controls.readTouch()
+	
+	-- data
+	if x1 ~= nil then
+		-- start position
+		if swipe_start == 0 and swipe_dt < 5 then
+			swipe_start = 1
+			swipe_x1 = x1
+			swipe_dt = 100
+		end
+		
+		-- swipe started
+		if swipe_start == 1 and swipe_dt > 5 then
+			if x1 > swipe_x1 + 80 then
+				--right swipe
+			elseif x1 < swipe_x1 - 80 then
+				--left swipe
+			end
+		end
+	end
+	
+	if swipe_dt > 0 then
+		swipe_dt = swipe_dt - 1
+	elseif
+		-- swipe_dt = 0
+		swipe_start = 0
+	end
+end
+
 -- main menu call
 function menu()
 	-- gameloop
