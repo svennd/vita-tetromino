@@ -367,59 +367,74 @@ function drop()
 	end
 end
 
+function set_match_field(x, y, match_field)
+	if match_field[x] then
+		match_field[x][y] = 1
+	else
+		match_field[x] = {}
+		match_field[x][y] = 1
+	end
+end
+	
+-- send the position
+function find_match(x, y, color, match_count, match_field)
+
+	-- right one
+	if get_block(x-1, y) == color then
+		set_match_field(x-1, y, match_field)
+		match_count = match_count + 1
+		find_match(x-1, y, color, match_count, match_field)
+	end
+	
+	-- bot
+	if get_block(x, y+1) == color then
+		set_match_field(x, y+1, match_field)
+		match_count = match_count + 1
+		find_match(x, y+1, color, match_count, match_field)
+	end
+	
+	-- last time return the count
+	return match_count, match_field
+end
+
 -- go through the field to find full lines
 function remove_lines()
 
 	local x = 0
 	local y = 0
-	local block = nil
-	local right_block = nil
-	local down_block = nil
-	local remove_list = {}
 	
 	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
-	
-			for x = 0, SIZE.WIDTH_FIELD, x + 1 do
+		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
+			local current_color = get_block(x, y);
+			
+			if current_color ~= nil then
+				-- match x, y, color match_count, match_field
+				local match_count, match_field = find_match(x, y, current_color, 0, {})
 				
-				-- if there is a block, search for next
-				block = get_block(x, y)
-				if block then
-					-- get block
-					right_block = get_block(x + 1, y)
-					
-					-- insert point
-					-- table.insert(remove_list, {x, y})
-					
-					-- same block
-					if block == right_block then
-						-- current block and block right side is color
-						table.insert(remove_list, {x, y})
-						table.insert(remove_list, {x + 1, y})
-						
-						local i = 2
-						while (block == get_block(x + i, y)) do
-							table.insert(remove_list, {x + i, y})
-							i = i + 1						
-						end
-					end
-					
-					down_block = get_block(x, y + 1)
-					if block == down_block then
-						-- current block and block right side is color
-						table.insert(remove_list, {x, y})
-						table.insert(remove_list, {x + 1, y})
-						
-						local i = 2
-						while (block == get_block(x, y + i)) do
-							table.insert(remove_list, {x, y + i})
-							i = i + 1						
-						end
-					end
+				if (match_count > 3) then
+					--remove from field
+					nillify(match_field)
 				end
 			end
+			
+		end
 	end
 end
 
+function nillify(match_field)
+
+	local x = 0
+	local y = 0
+	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
+		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
+			if match_field[x] then
+				if match_field[x][y] then
+					set_block(x, y, nil)
+				end
+			end
+		end
+	end
+end
 
 -- remove a single line and drop the above
 function remove_line(line)
