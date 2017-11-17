@@ -87,6 +87,8 @@ local BSTATE = {0x0011, 0x0030, 0x0022, 0x0003}
 local break_loop = false
 
 -- game mechanincs
+local match_count = 0
+local count_match = 0
 
 -- main game mechanics update
 function update()
@@ -346,8 +348,9 @@ function drop()
 	
 	-- if its not possible to move the piece down
 	if not move(DIR.DOWN) then
-		drop_pieces() -- split it
-		remove_lines() -- find full lines
+		local x1, y1, x2, y2 = drop_pieces() -- split it
+		match_count= x1 .. y1
+		-- remove_lines(x1, y1, x2, y2) -- find full lines
 		set_current_piece() -- set next piece as current
 		set_next_piece() -- determ a new piece
 		add_score(10) -- add 10 points for dropping a piece
@@ -367,94 +370,55 @@ function drop()
 	end
 end
 
-function set_match_field(x, y, match_field)
-	if match_field[x] then
-		match_field[x][y] = 1
-	else
-		match_field[x] = {}
-		match_field[x][y] = 1
-	end
-end
+-- go through field where we added them (only 2 blocks)
+function remove_lines(x1, y1, x2, y2)
 	
--- send the position
-function find_match(x, y, color, match_count, match_field)
-
-	-- right one
-	if get_block(x-1, y) == color then
-		set_match_field(x-1, y, match_field)
-		match_count = match_count + 1
-		find_match(x-1, y, color, match_count, match_field)
-	end
+	local current_color = get_block(x1, y1)
+	count_match = 0
 	
-	-- bot
-	if get_block(x, y+1) == color then
-		set_match_field(x, y+1, match_field)
-		match_count = match_count + 1
-		find_match(x, y+1, color, match_count, match_field)
-	end
+	check_match(x1, y2, current_color)
 	
-	-- last time return the count
-	return match_count, match_field
-end
-
--- go through the field to find full lines
-function remove_lines()
-
-	local x = 0
-	local y = 0
-	
-	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
-		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
-			local current_color = get_block(x, y);
-			
-			if current_color ~= nil then
-				-- match x, y, color match_count, match_field
-				local match_count, match_field = find_match(x, y, current_color, 0, {})
-				
-				if (match_count > 3) then
-					--remove from field
-					nillify(match_field)
-				end
-			end
-			
-		end
+	if count_match > 3 then
+		match_count = 1
 	end
 end
 
-function nillify(match_field)
 
-	local x = 0
-	local y = 0
-	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
-		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
-			if match_field[x] then
-				if match_field[x][y] then
-					set_block(x, y, nil)
-				end
-			end
-		end
+-- 
+function check_match (x, y, color)
+	if color == nil then
+		return 0
 	end
-end
-
--- remove a single line and drop the above
-function remove_line(line)
-
-	local x = 0
-	local y = 0
-	local type_block = {}
 	
-	-- start from line, and work the way up
-	for y = line, 0, y - 1 do
-		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
-			if y == 0 then
-				type_block = nil
-			else
-				type_block = get_block(x, y-1)
-			end
-			set_block(x, y, type_block)
-		end
+	--
+	count_match = count_match + 1
+	
+	-- right
+	if (get_block(x+1, y) == color) then
+		-- it matches
+		check_match(x+1, y)
 	end
+	
+	-- left
+	if (get_block(x-1, y) == color) then
+		-- it matches
+		check_match(x-1, y)
+	end
+	
+	-- up
+	if (get_block(x, y+1) == color) then
+		-- it matches
+		check_match(x, y+1)
+	end
+	
+	-- down
+	if (get_block(x, y-1) == color) then
+		-- it matches
+		check_match(x, y-1)
+	end
+	
 end
+
 
 
 function free_below(x, y)
@@ -481,11 +445,18 @@ function drop_pieces()
 	local x = 0
 	local y = 0
 
+	
+	local block_1_x = 0
+	local block_1_y = 0
+	local block_2_x = 0
+	local block_2_y = 0
+	
 	-- for each block in the piece
 	-- bit
 	local bitx = 0x040
 	local i = 0
 	local flap = 0
+	local block_count = 0
 	while bitx > 0 do
 		-- in every position where there is a block in our 8x8
 		if bit.band(BSTATE[current.dir], bitx) > 0 then
@@ -521,6 +492,15 @@ function drop_pieces()
 			end
 			
 			set_block(x, y, color)
+			if (block_count == 0) then
+				local block_1_x = x
+				local block_1_y = y
+				block_count = block_count + 1
+			else
+				local block_2_x = x
+				local block_2_y = y
+			end
+			
 		end
 		
 		col = col + 1
@@ -532,6 +512,7 @@ function drop_pieces()
 		-- shift it
 		bitx = bit.rshift(bitx, 1)
 	end
+	return block_1_x, block_1_y, block_2_x, block_2_y
 end
 
 -- add score line
@@ -829,7 +810,8 @@ function draw_score()
 	Font.print(main_font, 25, 25, score.visual, text_color_score)
 
 	-- best
-	Font.print(main_font, 565, 185, score.high, text_color_score)
+	-- Font.print(main_font, 565, 185, score.high, text_color_score)
+	Font.print(main_font, 565, 185, match_count, text_color_score)
 	
 	-- level
 	Font.setPixelSizes(main_font, 16)
