@@ -25,7 +25,7 @@ local snd_single_line = Sound.open("app0:/assets/single_line.ogg")
 local DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
 local STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
 local MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
-local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 9, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
+local SIZE = { X = 35, Y = 35, HEIGHT_FIELD = 11, WIDTH_FIELD = 5, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
 local MIN_INPUT_DELAY = 100
 local ANIMATION_STEP = 30
 local SPEED_LIMIT = 30
@@ -39,10 +39,10 @@ local red 		= Color.new(255, 0, 0)
 local green 	= Color.new(0, 255, 0)
 local blue 		= Color.new(0, 0, 255)
 
-local pink 		= Color.new(255, 204, 204)
+-- local pink 		= Color.new(255, 204, 204)
 local orange	= Color.new(255, 128, 0)
-local seablue	= Color.new(0, 255, 255)
-local purple	= Color.new(255, 0, 255)
+-- local seablue	= Color.new(0, 255, 255)
+-- local purple	= Color.new(255, 0, 255)
 
 local grey_1	= Color.new(244, 244, 244)
 local grey_2	= Color.new(160, 160, 160)
@@ -57,7 +57,7 @@ local next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
 local input = {prev = SCE_CTRL_CIRCLE, last_tick = 0, double_down = 0}
 local score = {current = 0, visual = 0, high = 0, line = 0, new_high = false}
 
-local lremove = {line = {}, position = {}, sound = 0}
+-- local lremove = {line = {}, position = {}, sound = 0}
 local animation = {state = false, last_tick = 0, game_over = 1, game_over_direction = 1, level_up = false, level_up_y = 1}
 
 -- empty var inits
@@ -65,24 +65,30 @@ local actions = {} -- table with all user input
 local pieces = {} -- fill all the blocks in this
 local field = {} -- playing field table
 
--- pieces
-local i = { ID = 1, BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
-local j = { ID = 2, BLOCK = {0x44C0, 0x8E00, 0x6440, 0x0E20}, COLOR = red }
-local l = { ID = 3, BLOCK = {0x4460, 0x0E80, 0xC440, 0x2E00}, COLOR = green }
-local o = { ID = 4, BLOCK = {0xCC00, 0xCC00, 0xCC00, 0xCC00}, COLOR = orange }
-local s = { ID = 5, BLOCK = {0x06C0, 0x8C40, 0x6C00, 0x4620}, COLOR = blue }
-local t = { ID = 6, BLOCK = {0x0E40, 0x4C40, 0x4E00, 0x4640}, COLOR = seablue }
-local z = { ID = 7, BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
-local k = { COLOR = white }
+-- direction
+local BSTATE = {0x0011, 0x0030, 0x0022, 0x0003}
+-- 0x0011 = top first
+--  *
+--  *
 
--- statics
-local stats_played_pieces = {}
-local stats_lines = {single = 0, double = 0, triple = 0, tetro = 0}
+-- 0x0030 = top first
+-- 
+-- **
+
+-- 0x0022 = top last
+-- *
+-- *
+
+-- 0x0003 = top last
+-- **
+-- 
 
 -- killswitch for this file
 local break_loop = false
 
 -- game mechanincs
+local match_count = 0
+local count_match = 0
 
 -- main game mechanics update
 function update()
@@ -141,7 +147,7 @@ function update()
 	if dt_animation > ANIMATION_STEP then
 		-- drop block and update last tick
 		animation.last_tick = time_played
-		animate_remove_line()
+		-- animate_remove_line()
 	end
 	
 	if animation.level_up then
@@ -159,6 +165,22 @@ function handle_input()
 
 	local current_action = table.remove(actions, 1) -- get the first action
 	if current_action == DIR.UP then
+		-- rotate a block
+		local function rotate ()
+
+			local new_dir
+			-- take the next rotation, or first at the end
+			if current.dir == DIR.MAX then
+				new_dir = DIR.MIN
+			else
+				new_dir = current.dir + 1
+			end
+			
+			-- verify that this rotation is possible
+			if not occupied(current.x, current.y, new_dir) then
+				current.dir = new_dir
+			end
+		end
 		rotate()
 	elseif current_action == DIR.DOWN then
 		drop()
@@ -188,29 +210,29 @@ function set_current_piece()
 	current.piece = next_piece.piece
 	-- randomize entry point
 	-- 4 : 4x4 size for blocks
-	current.x = math.random(0, SIZE.WIDTH_FIELD - 4)
+	current.x = math.random(0, SIZE.WIDTH_FIELD - 2)
 	current.y = 0
 	current.dir = next_piece.dir
 	
 	-- for statics if we get here we assume its played
-	if stats_played_pieces[current.piece.ID] == nil then
-		stats_played_pieces[current.piece.ID] = 1
-	else
-		stats_played_pieces[current.piece.ID] = stats_played_pieces[current.piece.ID] + 1
-	end
+	-- if stats_played_pieces[current.piece.ID] == nil then
+		-- stats_played_pieces[current.piece.ID] = 1
+	-- else
+		-- stats_played_pieces[current.piece.ID] = stats_played_pieces[current.piece.ID] + 1
+	-- end
 end
 
 -- set block
-function set_block(x, y, block)
+function set_block(x, y, color)
 	if field[x] then
-		field[x][y] = block
+		field[x][y] = color
 	else
 		field[x] = {}
-		field[x][y] = block
+		field[x][y] = color
 	end
 end
 
--- get block
+-- get color for location
 function get_block(x, y)
 	if field[x] then
 		return field[x][y]
@@ -220,17 +242,17 @@ function get_block(x, y)
 end
 
 -- check if a piece can fit into a position in the grid
-function occupied(piece, x_arg, y_arg, dir)
+function occupied(x_arg, y_arg, dir)
 	local row = 0
 	local col = 0
 	local x = 0
 	local y = 0
 
 	-- for each block in the piece
-	local bitx = 0x8000
+	local bitx = 0x0040
 	while bitx > 0 do
 		-- in every position where there is a block in our 8x8
-		if bit.band(piece.BLOCK[dir], bitx) > 0 then
+		if bit.band(BSTATE[dir], bitx) > 0 then
 			-- determ new position
 			x = x_arg + col
 			y = y_arg + row
@@ -265,23 +287,6 @@ function occupied(piece, x_arg, y_arg, dir)
 	return false
 end
 
--- rotate a block
-function rotate ()
-
-	local new_dir
-	-- take the next rotation, or first at the end
-	if current.dir == DIR.MAX then
-		new_dir = DIR.MIN
-	else
-		new_dir = current.dir + 1
-	end
-	
-	-- verify that this rotation is possible
-	if not occupied(current.piece, current.x, current.y, new_dir) then
-		current.dir = new_dir
-	end
-end
-
 -- move current piece in certain direction
 function move(dir)
 	local x = current.x
@@ -296,7 +301,7 @@ function move(dir)
 	end
 	
 	-- check if move is possible
-	if not occupied(current.piece, x, y, current.dir) then
+	if not occupied(x, y, current.dir) then
 		current.x = x
 		current.y = y
 	else
@@ -314,7 +319,7 @@ function random_piece()
 	-- no more pieces left
 	if table.getn(pieces) == 0 then
 		-- all the pieces in 4 states (note: the state is not defined)
-		pieces = {i,i,i,i,j,j,j,j,l,l,l,l,o,o,o,o,s,s,s,s,t,t,t,t,z,z,z,z}
+		pieces = {yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green}
 		
 		-- shuffle them, http://gamebuildingtools.com/using-lua/shuffle-table-lua
 		-- might require a better implementation
@@ -327,7 +332,10 @@ function random_piece()
 		end
 	end
 	
-	return table.remove(pieces) -- remove and return piece
+	-- return block
+	local block = {top = table.remove(pieces), bot = table.remove(pieces)}
+	
+	return block
 end
 
 -- attempt to drop the current piece
@@ -340,15 +348,16 @@ function drop()
 	
 	-- if its not possible to move the piece down
 	if not move(DIR.DOWN) then
-		drop_pieces() -- split it
-		remove_lines() -- find full lines
+		local x1, y1, x2, y2 = drop_pieces() -- split it
+		match_count= x1 .. y1
+		-- remove_lines(x1, y1, x2, y2) -- find full lines
 		set_current_piece() -- set next piece as current
 		set_next_piece() -- determ a new piece
 		add_score(10) -- add 10 points for dropping a piece
 		increase_speed() -- increase speed based on lines
 		set_level() -- set level 
 		-- if not possible to find a spot for its current location its overwritten = dead
-		if occupied(current.piece, current.x, current.y, current.dir) then
+		if occupied(current.x, current.y, current.dir) then
 			-- lose()
 			-- store highscore if needed
 			local is_new_high_score = new_highscore()
@@ -361,157 +370,72 @@ function drop()
 	end
 end
 
--- go through the field to find full lines
-function remove_lines()
-
-	local x = 0
-	local y = 0
-	local multi_line = 0
-	local full_line = true
-	local already_have_line = false
+-- go through field where we added them (only 2 blocks)
+function remove_lines(x1, y1, x2, y2)
 	
-	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
+	local current_color = get_block(x1, y1)
+	count_match = 0
 	
-		-- verify if we did not already have this line
-		for k, v in ipairs(lremove.line) do
-			if v == y then
-				already_have_line = true
-				break
-			end
-		end
-		
-		-- be sure we did not already count this line
-		-- happens during animation
-		if not already_have_line then
-		
-			-- check if this line is full
-			full_line = true
-			for x = 0, SIZE.WIDTH_FIELD, x + 1 do
-				-- search for a empty spot
-				if not get_block(x, y) then
-					full_line = false
-					break
-				end
-			end
-
-			-- if a full line remove it
-			if full_line then
-
-				table.insert(lremove.line, y)
-				table.insert(lremove.position, 0)
-				lremove.sound = true -- play sound
-				
-				-- if its not the first line double score !
-				if (multi_line > 0) then
-					
-					add_score( 100 * ( multi_line + 1 ) )
-					multi_line = multi_line + 1
-					
-					-- stats (its a double)
-					if multi_line == 2 then
-						-- remove the single we just counted
-						stats_lines.single = stats_lines.single - 1
-						stats_lines.double = stats_lines.double + 1
-					-- its a triple
-					elseif multi_line == 3 then
-						-- remove the double we just counted
-						stats_lines.double = stats_lines.double - 1
-						stats_lines.triple = stats_lines.triple + 1
-					-- TETRO !!!!
-					elseif multi_line == 4 then
-						-- remove the triple we just counted
-						stats_lines.triple = stats_lines.triple - 1
-						stats_lines.tetro = stats_lines.tetro + 1
-					end
-				else
-					add_score( 100 ) -- scored a line :D
-					multi_line = multi_line + 1
-					stats_lines.single = stats_lines.single + 1
-				end
-				
-				-- add line score
-				add_line(1)
-			end
-		end
-		
-		-- reset known line
-		already_have_line = false
+	check_match(x1, y2, current_color)
+	
+	if count_match > 3 then
+		match_count = 1
 	end
 end
 
--- animate remove line
-function animate_remove_line()
 
-	local count_lremove = #lremove.line
-	
-	-- check if we need an animation
-	if count_lremove > 0 then	
-		animation.state = true
-	else
-		animation.state = false	
-	end
-
-	-- let's make some noise !
-	if lremove.sound then
-		if count_lremove > 1 then
-			Sound.play(snd_multi_line, NO_LOOP)
-		else
-			Sound.play(snd_single_line, NO_LOOP)
-		end
-		lremove.sound = false
+-- 
+function check_match (x, y, color)
+	if color == nil then
+		return 0
 	end
 	
-	-- start animation
-	local x = 0
-	local i = 0
+	--
+	count_match = count_match + 1
 	
-	-- left to right,
-	for x = 0, SIZE.WIDTH_FIELD, x + 1 do
+	-- right
+	if (get_block(x+1, y) == color) then
+		-- it matches
+		check_match(x+1, y)
+	end
 	
-		while i < count_lremove do
-		
-			-- get last
-			line = lremove.line[i+1]
-			position = lremove.position[i+1]
-			
-			if position > (SIZE.WIDTH_FIELD + 1) then
-			
-				-- delete from list
-				lremove.line[i+1] = nil
-				lremove.position[i+1] = nil
-				
-				-- remove line
-				remove_line(line)
-			else 
-				-- set block
-				set_block(position, line, k) -- k = special white
-				
-				-- update state
-				lremove.position[i+1] = position + 1
-			end
-			i = i + 1
-		end
-	end	
+	-- left
+	if (get_block(x-1, y) == color) then
+		-- it matches
+		check_match(x-1, y)
+	end
+	
+	-- up
+	if (get_block(x, y+1) == color) then
+		-- it matches
+		check_match(x, y+1)
+	end
+	
+	-- down
+	if (get_block(x, y-1) == color) then
+		-- it matches
+		check_match(x, y-1)
+	end
+	
 end
 
--- remove a single line and drop the above
-function remove_line(line)
 
-	local x = 0
-	local y = 0
-	local type_block = {}
-	
-	-- start from line, and work the way up
-	for y = line, 0, y - 1 do
-		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
-			if y == 0 then
-				type_block = nil
-			else
-				type_block = get_block(x, y-1)
-			end
-			set_block(x, y, type_block)
-		end
+
+function free_below(x, y)
+	if x < 0 or x > SIZE.WIDTH_FIELD then
+		return false
 	end
+	
+	-- in case our y would be out of bounds
+	if y < 0 or y > SIZE.HEIGHT_FIELD then
+		return false
+	end
+	
+	if get_block(x, y) then
+		return false
+	end
+	
+	return true
 end
 
 -- drop the piece into blocks in field table
@@ -521,19 +445,62 @@ function drop_pieces()
 	local x = 0
 	local y = 0
 
+	
+	local block_1_x = 0
+	local block_1_y = 0
+	local block_2_x = 0
+	local block_2_y = 0
+	
 	-- for each block in the piece
 	-- bit
-	local bitx = 0x8000
-	-- local i = 0
+	local bitx = 0x040
+	local i = 0
+	local flap = 0
+	local block_count = 0
 	while bitx > 0 do
 		-- in every position where there is a block in our 8x8
-		if bit.band(current.piece.BLOCK[current.dir], bitx) > 0 then
+		if bit.band(BSTATE[current.dir], bitx) > 0 then
 			
 			-- current end position
 			x = current.x + col
-			y = current.y + row
 			
-			set_block(x, y, current.piece)
+			-- try to drop it if its flat
+			if (current.dir == 2 or current.dir == 4) then
+				local test_y = current.y + row + 1
+				while free_below(x, test_y) do 
+					test_y = test_y + 1
+				end
+				y = test_y - 1
+			else
+				y = current.y + row 
+			end
+			
+			if current.dir == 1 or current.dir == 2 then
+				if flap == 0 then
+					color = current.piece.top
+					flap = 1
+				else
+					color = current.piece.bot
+				end
+			else
+				if flap == 0 then
+					color = current.piece.bot
+					flap = 1
+				else
+					color = current.piece.top
+				end
+			end
+			
+			set_block(x, y, color)
+			if (block_count == 0) then
+				local block_1_x = x
+				local block_1_y = y
+				block_count = block_count + 1
+			else
+				local block_2_x = x
+				local block_2_y = y
+			end
+			
 		end
 		
 		col = col + 1
@@ -545,6 +512,7 @@ function drop_pieces()
 		-- shift it
 		bitx = bit.rshift(bitx, 1)
 	end
+	return block_1_x, block_1_y, block_2_x, block_2_y
 end
 
 -- add score line
@@ -574,9 +542,9 @@ function game_start()
 	
 	-- just in case
 	animation.last_tick = 0
-	lremove.line = {}
-	lremove.position = {}
-	lremove.sound = 0
+	-- lremove.line = {}
+	-- lremove.position = {}
+	-- lremove.sound = 0
 	pieces = {}
 	
 	-- set up next and current piece
@@ -753,12 +721,28 @@ function draw_current ()
 	local col = 0
 	
 	-- 8x8
-	local bitx = 0x8000
+	local bitx = 0x0040
+	local flap = 0
 	while bitx > 0 do
 		
 		-- if current.piece bit is set are draw block
-		if bit.band(current.piece.BLOCK[current.dir], bitx) > 0 then
-			draw_block((current.x + col), (current.y + row), current.piece.COLOR)
+		if bit.band(BSTATE[current.dir], bitx) > 0 then
+			if current.dir == 1 or current.dir == 2 then
+				if flap == 0 then
+					color = current.piece.top
+					flap = 1
+				else
+					color = current.piece.bot
+				end
+			else
+				if flap == 0 then
+					color = current.piece.bot
+					flap = 1
+				else
+					color = current.piece.top
+				end
+			end
+			draw_block((current.x + col), (current.y + row), color)
 		end
 		
 		col = col + 1
@@ -791,7 +775,7 @@ function draw_court()
 		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
 			if get_block(x, y) then
 				local block = get_block(x, y)
-				draw_block( x, y, block.COLOR)
+				draw_block( x, y, block)
 			else
 				draw_block( x, y, grey_3)
 			end
@@ -803,6 +787,10 @@ end
 -- draw a single block
 function draw_block(x, y, color)
 
+	if color == nil then
+		color = Color.new(255, 0, 255)
+	end
+	
 	Graphics.fillRect(
 		SIZE.COURT_OFFSET_X+(x*SIZE.X) + x,
 		SIZE.COURT_OFFSET_X+((x+1)*SIZE.X) + x,
@@ -822,7 +810,8 @@ function draw_score()
 	Font.print(main_font, 25, 25, score.visual, text_color_score)
 
 	-- best
-	Font.print(main_font, 565, 185, score.high, text_color_score)
+	-- Font.print(main_font, 565, 185, score.high, text_color_score)
+	Font.print(main_font, 565, 185, match_count, text_color_score)
 	
 	-- level
 	Font.setPixelSizes(main_font, 16)
@@ -875,18 +864,29 @@ function draw_next()
 	local margin = 15 -- margin around next box
 	
 	-- 8x8
-	local bitx = 0x8000
+	local bitx = 0x0040
 	while bitx > 0 do
 		
 		-- if current.piece bit is set are draw block
-		if bit.band(next_piece.piece.BLOCK[next_piece.dir], bitx) > 0 then
+		if bit.band(BSTATE[next_piece.dir], bitx) > 0 then
 			-- draw_block uses SIZE.COURT_OFFSET by default
+			
+			if next_piece.dir > 3 then
+				local c = next_piece.piece.top
+			else
+				local c = next_piece.piece.bot
+			end
+			
+	if c == nil then
+		c = Color.new(255, 0, 255)
+	end
 			Graphics.fillRect(
 					SIZE.NEXT_OFFSET_X + (x*SIZE.X) + x,
 					SIZE.NEXT_OFFSET_X + ((x+1)*SIZE.X) + x,
 					SIZE.NEXT_OFFSET_Y + (y*SIZE.Y) + y,
 					SIZE.NEXT_OFFSET_Y + ((y+1)*SIZE.Y) + y,
-					next_piece.piece.COLOR)
+					c
+					)
 		end
 		
 		x = x + 1
