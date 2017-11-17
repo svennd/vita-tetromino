@@ -64,6 +64,7 @@ local animation = {state = false, last_tick = 0, game_over = 1, game_over_direct
 local actions = {} -- table with all user input
 local pieces = {} -- fill all the blocks in this
 local field = {} -- playing field table
+local match_field = {} -- matching blocks
 
 -- direction
 local BSTATE = {0x0011, 0x0030, 0x0022, 0x0003}
@@ -89,6 +90,7 @@ local break_loop = false
 -- game mechanincs
 local match_count = 0
 local count_match = 0
+local stuff = 0
 
 -- main game mechanics update
 function update()
@@ -319,8 +321,8 @@ function random_piece()
 	-- no more pieces left
 	if table.getn(pieces) == 0 then
 		-- all the pieces in 4 states (note: the state is not defined)
-		pieces = {yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green}
-		
+		-- pieces = {yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green}
+		pieces = {yellow, red}
 		-- shuffle them, http://gamebuildingtools.com/using-lua/shuffle-table-lua
 		-- might require a better implementation
 		math.randomseed(os.clock()*1000) -- os.time() is to easy
@@ -349,8 +351,8 @@ function drop()
 	-- if its not possible to move the piece down
 	if not move(DIR.DOWN) then
 		local x1, y1, x2, y2 = drop_pieces() -- split it
-		match_count= x1 .. y1
-		-- remove_lines(x1, y1, x2, y2) -- find full lines
+		stuff = x1 .. y1 .. x2 .. y2
+		remove_lines(x1, y1, x2, y2) -- find full lines
 		set_current_piece() -- set next piece as current
 		set_next_piece() -- determ a new piece
 		add_score(10) -- add 10 points for dropping a piece
@@ -375,14 +377,44 @@ function remove_lines(x1, y1, x2, y2)
 	
 	local current_color = get_block(x1, y1)
 	count_match = 0
+	check_match(x1, y1, current_color)
+	match_count = count_match
+	debug_msg("end of matching" .. x1 .. " " .. y1 .. " " .. count_match ..  "|" )
+
+	if count_match > 3 then
+		-- remove matching
+		clear_match()
+	end
+	-- reset matching
+	match_field = {}
 	
-	check_match(x1, y2, current_color)
+	count_match = 0
+	current_color = get_block(x2, y2)
+	check_match(x2, y2, current_color)
+	match_count = count_match
+	debug_msg("end of matching" .. x2 .. " " .. y2 .. " " .. count_match ..  "|" )
 	
 	if count_match > 3 then
-		match_count = 1
+		-- remove matching
+		clear_match()
 	end
+	-- reset matching
+	match_field = {}
 end
 
+-- clear matching table
+function clear_match()
+	local x = 0
+	local y = 0
+	
+	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
+		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
+			if get_match(x, y) then
+				set_block(x, y, nil)
+			end
+		end
+	end
+end
 
 -- 
 function check_match (x, y, color)
@@ -390,36 +422,58 @@ function check_match (x, y, color)
 		return 0
 	end
 	
+	debug_msg("check_match :".. x .. ",".. y .. " ".. count_match .. "|")
 	--
 	count_match = count_match + 1
+	set_match(x, y)
 	
 	-- right
-	if (get_block(x+1, y) == color) then
+	if (get_block(x+1, y) == color) and (not get_match(x+1, y)) then
 		-- it matches
-		check_match(x+1, y)
+		check_match(x+1, y, color)
+		debug_msg("right :".. x+1 .. ",".. y .. " ".. count_match .. "|")
 	end
 	
 	-- left
-	if (get_block(x-1, y) == color) then
+	if (get_block(x-1, y) == color) and (not get_match(x-1, y)) then
 		-- it matches
-		check_match(x-1, y)
+		check_match(x-1, y, color)
+		debug_msg("left :".. x-1 .. ",".. y .. " ".. count_match .. "|")
 	end
 	
 	-- up
-	if (get_block(x, y+1) == color) then
+	-- not sure how up could ever match tho...
+	if (get_block(x, y+1) == color) and (not get_match(x, y+1)) then
 		-- it matches
-		check_match(x, y+1)
+		check_match(x, y+1, color)
+		debug_msg("up :".. x .. ",".. y+1 .. " ".. count_match .. "|")
 	end
 	
 	-- down
-	if (get_block(x, y-1) == color) then
+	if (get_block(x, y-1) == color) and (not get_match(x, y-1)) then
 		-- it matches
-		check_match(x, y-1)
+		check_match(x, y-1, color)
+		debug_msg("down :".. x .. ",".. y-1 .. " ".. count_match .. "|")
 	end
 	
 end
 
+function set_match(x, y)
+	if match_field[x] then
+		match_field[x][y] = 1
+	else
+		match_field[x] = {}
+		match_field[x][y] = 1
+	end
+end
 
+function get_match(x, y)
+	if match_field[x] then
+		return match_field[x][y]
+	else
+		return false
+	end
+end
 
 function free_below(x, y)
 	if x < 0 or x > SIZE.WIDTH_FIELD then
@@ -445,7 +499,7 @@ function drop_pieces()
 	local x = 0
 	local y = 0
 
-	
+	local block_count = 0
 	local block_1_x = 0
 	local block_1_y = 0
 	local block_2_x = 0
@@ -456,7 +510,6 @@ function drop_pieces()
 	local bitx = 0x040
 	local i = 0
 	local flap = 0
-	local block_count = 0
 	while bitx > 0 do
 		-- in every position where there is a block in our 8x8
 		if bit.band(BSTATE[current.dir], bitx) > 0 then
@@ -492,13 +545,15 @@ function drop_pieces()
 			end
 			
 			set_block(x, y, color)
+			
+			-- block match
 			if (block_count == 0) then
-				local block_1_x = x
-				local block_1_y = y
+				block_1_x = x
+				block_1_y = y
 				block_count = block_count + 1
 			else
-				local block_2_x = x
-				local block_2_y = y
+				block_2_x = x
+				block_2_y = y
 			end
 			
 		end
@@ -807,7 +862,8 @@ function draw_score()
 	Font.setPixelSizes(main_font, 32)
 	
 	-- score
-	Font.print(main_font, 25, 25, score.visual, text_color_score)
+	-- Font.print(main_font, 25, 25, score.visual, text_color_score)
+	Font.print(main_font, 25, 25, stuff, text_color_score)
 
 	-- best
 	-- Font.print(main_font, 565, 185, score.high, text_color_score)
@@ -941,6 +997,10 @@ function draw_box(x1, x2, y1, y2, width, color)
 	
 end
 
+handle = System.openFile("ux0:/data/tetris_debug.txt", FCREATE)
+function debug_msg(msg)
+System.writeFile(handle, msg, string.len(msg))
+end
 
 -- user_input
 
@@ -1111,4 +1171,4 @@ end
 main()
 
 -- return to menu
-state = MENU.MENU 
+state = MENU.MENU
