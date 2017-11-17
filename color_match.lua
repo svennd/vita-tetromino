@@ -400,6 +400,25 @@ function remove_lines(x1, y1, x2, y2)
 	end
 	-- reset matching
 	match_field = {}
+	
+	-- drop all the floating blocks
+	drop_floaters()
+end
+
+function drop_floaters()
+	local x = 0
+	local y = 0
+	
+	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
+		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
+			if free_below(x, y+1) then
+				local color = get_block(x, y)
+				set_block(x, y, nil)
+				set_block(x, y+1, color)
+			end
+		end
+	end
+
 end
 
 -- clear matching table
@@ -455,7 +474,6 @@ function check_match (x, y, color)
 		check_match(x, y-1, color)
 		debug_msg("down :".. x .. ",".. y-1 .. " ".. count_match .. "|")
 	end
-	
 end
 
 function set_match(x, y)
@@ -1171,4 +1189,4 @@ end
 main()
 
 -- return to menu
-state = MENU.MENU
+state = MENU.MENU 
