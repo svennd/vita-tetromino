@@ -12,6 +12,8 @@ This is a Tetris alike game written in lua for the PS VITA
 * no scoreboard, but there is a high-score :) 
 * fully open source
 
+[![Coverage Status](https://coveralls.io/repos/github/svennd/vita-tetromino/badge.svg?branch=master)](https://coveralls.io/github/svennd/vita-tetromino?branch=master)
+
 # Installation
 A release is made every so often and can be downloaded directly from the [releases](https://github.com/svennd/vita-tetromino/releases) this can be installed using molecularshell (Team Molecule) or [vitashell](https://github.com/TheOfficialFloW/VitaShell) (TheFlow).
 
