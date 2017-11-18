@@ -1,15 +1,27 @@
 -- menu file for tetromino
 
--- load background
-local img_background = Graphics.loadImage("app0:/assets/bg_menu.png")
-local img_menu = Graphics.loadImage("app0:/assets/menu.png")
-local img_touch = Graphics.loadImage("app0:/assets/touch_negative.png")
-local img_pointer = Graphics.loadImage("app0:/assets/pointer.png")
-local img_version = Graphics.loadImage("app0:/assets/version.png")
+-- save power
+System.setCpuSpeed(41) -- default : 333
+System.setGpuSpeed(41) -- default : 111
+System.setBusSpeed(41) -- default : 222
+
+-- load images
+local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
+local img_touch 		= Graphics.loadImage("app0:/assets/img/touch_negative.png")
+local img_version 		= Graphics.loadImage("app0:/assets/img/version.png")
+local img_awesome 		= Graphics.loadImage("app0:/assets/img/awesome_header.png")
+local img_highscore		= Graphics.loadImage("app0:/assets/img/highscore.png")
+local img_box 			= Graphics.loadImage("app0:/assets/img/box.png")
+local img_box_select 	= Graphics.loadImage("app0:/assets/img/box_select.png")
+
+-- load font
+local fnt_main 	= Font.load("app0:/assets/xolonium.ttf")
 
 -- menu vars
 local oldpad = SCE_CTRL_RTRIGGER -- input init
 local current_menu = 1 -- menu position
+local max_menu = 2
+local min_menu = 1
 local return_value = false
 local animate_touch = 1
 local animate_touch_direction = 1
@@ -21,18 +33,28 @@ local function menu_draw()
 	
 	-- plot the background
 	Graphics.drawImage(0,0, img_background)
+		
+	-- credits help and exit
+	Graphics.drawImage(710, 5, img_awesome)
+	Graphics.drawImage(10, 5, img_highscore)
 	
-	-- the lazy method
-	Graphics.drawImage(341,85, img_menu)
+	-- set font size
+	Font.setPixelSizes(fnt_main, 20)
 	
+	-- show box background slightly selected (when using buttons)
 	if current_menu == 1 then
-		Graphics.drawImage(357,94, img_pointer, Color.new(255,255,255, 70 + math.floor(animate_touch/3))) -- start
+		Font.print(fnt_main, 270, 155, "CLASSIC", Color.new(255, 255, 255, 140))
+		Graphics.drawImage(220, 149, img_box, Color.new(255, 255, 255, 140))
+		
+		Font.print(fnt_main, 520, 155, "COLOR MATCH", Color.new(255, 255, 255))
+		Graphics.drawImage(476, 120, img_box_select)
+		
 	elseif current_menu == 2 then
-		Graphics.drawImage(357,192, img_pointer, Color.new(255,255,255, 70 + math.floor(animate_touch/3))) -- help
-	elseif current_menu == 3 then
-		Graphics.drawImage(357,290, img_pointer, Color.new(255,255,255, 70 + math.floor(animate_touch/3))) -- credits
-	elseif current_menu == 4 then
-		Graphics.drawImage(357,388, img_pointer, Color.new(255,255,255, 70 + math.floor(animate_touch/3))) -- exit
+		Font.print(fnt_main, 270, 155, "CLASSIC", Color.new(255, 255, 255))
+		Graphics.drawImage(191, 120, img_box_select)
+		
+		Font.print(fnt_main, 520, 155, "COLOR MATCH", Color.new(255, 255, 255, 140))
+		Graphics.drawImage(505, 149, img_box, Color.new(255, 255, 255, 140))
 	end
 	
 	-- draw version
@@ -58,15 +80,15 @@ local function menu_user_input()
 	-- down
 	elseif Controls.check(pad, SCE_CTRL_DOWN) and not Controls.check(oldpad, SCE_CTRL_DOWN) then
 		current_menu = current_menu + 1
-		if current_menu > MENU.MAX then
-			current_menu = MENU.MIN
+		if current_menu > max_menu then
+			current_menu = min_menu
 		end
 		
 	-- up
 	elseif Controls.check(pad, SCE_CTRL_UP) and not Controls.check(oldpad, SCE_CTRL_UP) then
 		current_menu = current_menu - 1
-		if current_menu < MENU.MIN then
-			current_menu = MENU.MAX
+		if current_menu < min_menu then
+			current_menu = max_menu
 		end
 		
 	-- emergency exit
@@ -80,58 +102,33 @@ local function menu_user_input()
 	-- first input only
 	if x ~= nil then
 		
-		-- within bounds of buttons (big hitbox around)
-		if x > 340 and x < 580 then
-			if y > 80 and y < 150 then
-				return_value = 1 -- start
-			elseif y > 170 and y < 250 then
-				return_value = 2 -- help
-			elseif y > 275 and y < 345 then
-				return_value = 3 -- credits
-			elseif y > 375 and y < 450 then
-				return_value = 4 -- quit
+		-- game buttons
+		if y > 110 and y < 410 then
+			if x > 210 and x < 450 then
+				-- first
+			elseif x > 490 and x < 730 then
+				-- second
 			end
+			
+		-- awesome buttons
+		elseif y < 75 then
+		
+			if x > 0 and x < 50 then
+				-- highscore
+			elseif x > 700 and x < 793 then
+				-- credits
+			elseif x > 793 and x < 877 then
+				-- help
+			elseif x > 877 and x < 960 then
+				-- exit
+			end
+		
 		end
+		
 	end
 	
 	-- remember
 	oldpad = pad
-end
-
-local swipe_start = 0
-local swipe_x1 = nil
-
--- check if a swipe is detected (only horizontal)
--- based on the implementation of VitaHEX 
-local function swipe_check()
-	-- touch input
-	local x1, y1 = Controls.readTouch()
-	
-	-- data
-	if x1 ~= nil then
-		-- start position
-		if swipe_start == 0 and swipe_dt < 5 then
-			swipe_start = 1
-			swipe_x1 = x1
-			swipe_dt = 100
-		end
-		
-		-- swipe started
-		if swipe_start == 1 and swipe_dt > 5 then
-			if x1 > swipe_x1 + 80 then
-				--right swipe
-			elseif x1 < swipe_x1 - 80 then
-				--left swipe
-			end
-		end
-	end
-	
-	if swipe_dt > 0 then
-		swipe_dt = swipe_dt - 1
-	elseif
-		-- swipe_dt = 0
-		swipe_start = 0
-	end
 end
 
 -- main menu call
@@ -154,12 +151,13 @@ function menu()
 	-- free it again
 	Graphics.freeImage(img_background)
 	Graphics.freeImage(img_touch)
-	Graphics.freeImage(img_menu)
-	Graphics.freeImage(img_pointer)
 	Graphics.freeImage(img_version)
+	Graphics.freeImage(img_awesome)
+	Graphics.freeImage(img_box)
+	Graphics.freeImage(img_box_select)
 	
-	-- unload font
-	Font.unload(main_font)
+	-- release font
+	Font.unload(fnt_main)
 	
 	-- return
 	state = return_value

@@ -1,15 +1,12 @@
 -- tetrinomi for vita, by svennd
--- version 0.7
+-- version 0.8
 
 -- vita constants
 DISPLAY_WIDTH = 960
 DISPLAY_HEIGHT = 544
 
--- application variables
-VERSION = "0.7"
-
 -- script constant
-MENU = {MENU = 0, START = 1, HELP = 2, CREDIT = 3, QUIT = 4, MIN = 1, MAX = 4}
+MENU = {MENU = 0, START_CLASSIC = 1, START_COLOR = 2, HELP = 3, CREDIT = 4, QUIT = 5, MIN = 1, MAX = 5}
 
 -- script variables
 state = MENU.MENU 
@@ -24,7 +21,11 @@ function main()
 			-- adapts game.state
 			dofile("app0:/menu.lua")
 			
-		elseif state == MENU.START then
+		elseif state == MENU.START_CLASSIC then
+			-- game start
+			dofile("app0:/classic_tetris.lua")
+			
+		elseif state == MENU.START_COLOR then
 			-- game start
 			dofile("app0:/classic_tetris.lua")
 		
