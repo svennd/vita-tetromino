@@ -27,7 +27,7 @@ local STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
 local MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
 local SIZE = { X = 35, Y = 35, HEIGHT_FIELD = 11, WIDTH_FIELD = 5, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
 local MIN_INPUT_DELAY = 100
-local ANIMATION_STEP = 30
+local ANIMATION_STEP = 100
 local SPEED_LIMIT = 30
 
 -- color definitions
@@ -68,29 +68,12 @@ local match_field = {} -- matching blocks
 
 -- direction
 local BSTATE = {0x0011, 0x0030, 0x0022, 0x0003}
--- 0x0011 = top first
---  *
---  *
-
--- 0x0030 = top first
--- 
--- **
-
--- 0x0022 = top last
--- *
--- *
-
--- 0x0003 = top last
--- **
--- 
 
 -- killswitch for this file
 local break_loop = false
 
 -- game mechanincs
-local match_count = 0
 local count_match = 0
-local stuff = 0
 
 -- main game mechanics update
 function update()
@@ -144,12 +127,14 @@ function update()
 		-- try to drop it
 		drop()
 		
+
 	end
 
 	if dt_animation > ANIMATION_STEP then
 		-- drop block and update last tick
 		animation.last_tick = time_played
-		-- animate_remove_line()
+		-- drop floaters
+		drop_floaters()
 	end
 	
 	if animation.level_up then
@@ -216,12 +201,6 @@ function set_current_piece()
 	current.y = 0
 	current.dir = next_piece.dir
 	
-	-- for statics if we get here we assume its played
-	-- if stats_played_pieces[current.piece.ID] == nil then
-		-- stats_played_pieces[current.piece.ID] = 1
-	-- else
-		-- stats_played_pieces[current.piece.ID] = stats_played_pieces[current.piece.ID] + 1
-	-- end
 end
 
 -- set block
@@ -239,7 +218,7 @@ function get_block(x, y)
 	if field[x] then
 		return field[x][y]
 	else
-		return false
+		return nil
 	end
 end
 
@@ -321,8 +300,8 @@ function random_piece()
 	-- no more pieces left
 	if table.getn(pieces) == 0 then
 		-- all the pieces in 4 states (note: the state is not defined)
-		-- pieces = {yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green}
-		pieces = {yellow, red}
+		pieces = {yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green, yellow, red, blue, orange, green}
+		-- pieces = {yellow, red}
 		-- shuffle them, http://gamebuildingtools.com/using-lua/shuffle-table-lua
 		-- might require a better implementation
 		math.randomseed(os.clock()*1000) -- os.time() is to easy
@@ -350,9 +329,8 @@ function drop()
 	
 	-- if its not possible to move the piece down
 	if not move(DIR.DOWN) then
-		local x1, y1, x2, y2 = drop_pieces() -- split it
-		stuff = x1 .. y1 .. x2 .. y2
-		remove_lines(x1, y1, x2, y2) -- find full lines
+		drop_pieces() -- split it
+		remove_lines() -- find full lines
 		set_current_piece() -- set next piece as current
 		set_next_piece() -- determ a new piece
 		add_score(10) -- add 10 points for dropping a piece
@@ -373,48 +351,53 @@ function drop()
 end
 
 -- go through field where we added them (only 2 blocks)
-function remove_lines(x1, y1, x2, y2)
-	
-	local current_color = get_block(x1, y1)
-	count_match = 0
-	check_match(x1, y1, current_color)
-	match_count = count_match
-	debug_msg("end of matching" .. x1 .. " " .. y1 .. " " .. count_match ..  "|" )
+function remove_lines()
 
-	if count_match > 3 then
-		-- remove matching
-		clear_match()
-	end
-	-- reset matching
-	match_field = {}
-	
-	count_match = 0
-	current_color = get_block(x2, y2)
-	check_match(x2, y2, current_color)
-	match_count = count_match
-	debug_msg("end of matching" .. x2 .. " " .. y2 .. " " .. count_match ..  "|" )
-	
-	if count_match > 3 then
-		-- remove matching
-		clear_match()
-	end
-	-- reset matching
-	match_field = {}
-	
-	-- drop all the floating blocks
-	drop_floaters()
-end
-
-function drop_floaters()
 	local x = 0
 	local y = 0
 	
 	for y = 0, SIZE.HEIGHT_FIELD, y + 1 do
 		for x = 0, SIZE.WIDTH_FIELD, x + 1 do
-			if free_below(x, y+1) then
-				local color = get_block(x, y)
-				set_block(x, y, nil)
-				set_block(x, y+1, color)
+			
+			-- verify that its not empty
+			local color = get_block(x, y)
+			if color ~= nil and color ~= false then
+				-- clear field
+				match_field = {}
+				count_match = 0
+				
+				-- count_match will increase
+				check_match(x, y, color)
+				
+				-- 3 or more matches
+				if count_match >= 3 then
+					-- remove matching blocks
+					clear_match()
+				end
+			end
+			
+		end
+	end
+end
+
+function drop_floaters()
+	local x, y = 0, 0
+	
+	for y = SIZE.HEIGHT_FIELD, 0, y - 1 do
+		for x = SIZE.WIDTH_FIELD, 0, x - 1 do
+		
+			local color = get_block(x, y)
+			if color ~= nil and color ~= false then
+			
+				-- do a check to see if its even possible
+				if free_below(x, y + 1) then 
+				
+					-- set block
+					set_block(x, y + 1, color)
+					
+					-- unset block
+					set_block(x, y, nil)
+				end
 			end
 		end
 	end
@@ -437,12 +420,11 @@ end
 
 -- 
 function check_match (x, y, color)
-	if color == nil then
+	if color == nil or color == false then
 		return 0
 	end
 	
-	debug_msg("check_match :".. x .. ",".. y .. " ".. count_match .. "|")
-	--
+	-- count match
 	count_match = count_match + 1
 	set_match(x, y)
 	
@@ -450,14 +432,12 @@ function check_match (x, y, color)
 	if (get_block(x+1, y) == color) and (not get_match(x+1, y)) then
 		-- it matches
 		check_match(x+1, y, color)
-		debug_msg("right :".. x+1 .. ",".. y .. " ".. count_match .. "|")
 	end
 	
 	-- left
 	if (get_block(x-1, y) == color) and (not get_match(x-1, y)) then
 		-- it matches
 		check_match(x-1, y, color)
-		debug_msg("left :".. x-1 .. ",".. y .. " ".. count_match .. "|")
 	end
 	
 	-- up
@@ -465,14 +445,12 @@ function check_match (x, y, color)
 	if (get_block(x, y+1) == color) and (not get_match(x, y+1)) then
 		-- it matches
 		check_match(x, y+1, color)
-		debug_msg("up :".. x .. ",".. y+1 .. " ".. count_match .. "|")
 	end
 	
 	-- down
 	if (get_block(x, y-1) == color) and (not get_match(x, y-1)) then
 		-- it matches
 		check_match(x, y-1, color)
-		debug_msg("down :".. x .. ",".. y-1 .. " ".. count_match .. "|")
 	end
 end
 
@@ -517,12 +495,6 @@ function drop_pieces()
 	local x = 0
 	local y = 0
 
-	local block_count = 0
-	local block_1_x = 0
-	local block_1_y = 0
-	local block_2_x = 0
-	local block_2_y = 0
-	
 	-- for each block in the piece
 	-- bit
 	local bitx = 0x040
@@ -534,18 +506,8 @@ function drop_pieces()
 			
 			-- current end position
 			x = current.x + col
-			
-			-- try to drop it if its flat
-			if (current.dir == 2 or current.dir == 4) then
-				local test_y = current.y + row + 1
-				while free_below(x, test_y) do 
-					test_y = test_y + 1
-				end
-				y = test_y - 1
-			else
-				y = current.y + row 
-			end
-			
+			y = current.y + row
+					
 			if current.dir == 1 or current.dir == 2 then
 				if flap == 0 then
 					color = current.piece.top
@@ -563,17 +525,7 @@ function drop_pieces()
 			end
 			
 			set_block(x, y, color)
-			
-			-- block match
-			if (block_count == 0) then
-				block_1_x = x
-				block_1_y = y
-				block_count = block_count + 1
-			else
-				block_2_x = x
-				block_2_y = y
-			end
-			
+		
 		end
 		
 		col = col + 1
@@ -585,7 +537,6 @@ function drop_pieces()
 		-- shift it
 		bitx = bit.rshift(bitx, 1)
 	end
-	return block_1_x, block_1_y, block_2_x, block_2_y
 end
 
 -- add score line
@@ -880,12 +831,12 @@ function draw_score()
 	Font.setPixelSizes(main_font, 32)
 	
 	-- score
-	-- Font.print(main_font, 25, 25, score.visual, text_color_score)
-	Font.print(main_font, 25, 25, stuff, text_color_score)
+	Font.print(main_font, 25, 25, score.visual, text_color_score)
+	-- Font.print(main_font, 25, 25, stuff, text_color_score)
 
 	-- best
-	-- Font.print(main_font, 565, 185, score.high, text_color_score)
-	Font.print(main_font, 565, 185, match_count, text_color_score)
+	Font.print(main_font, 565, 185, score.high, text_color_score)
+	-- Font.print(main_font, 565, 185, match_count, text_color_score)
 	
 	-- level
 	Font.setPixelSizes(main_font, 16)
