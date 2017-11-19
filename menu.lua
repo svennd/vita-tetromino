@@ -1,10 +1,5 @@
 -- menu file for tetromino
 
--- save power
-System.setCpuSpeed(41) -- default : 333
-System.setGpuSpeed(41) -- default : 111
-System.setBusSpeed(41) -- default : 222
-
 -- load images
 local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
 local img_touch 		= Graphics.loadImage("app0:/assets/img/touch_negative.png")
@@ -15,7 +10,7 @@ local img_box 			= Graphics.loadImage("app0:/assets/img/box.png")
 local img_box_select 	= Graphics.loadImage("app0:/assets/img/box_select.png")
 
 -- load font
-local fnt_main 	= Font.load("app0:/assets/xolonium.ttf")
+local fnt_main 	= Font.load("app0:/assets/font/xolonium.ttf")
 
 -- menu vars
 local oldpad = SCE_CTRL_RTRIGGER -- input init
@@ -42,19 +37,20 @@ local function menu_draw()
 	Font.setPixelSizes(fnt_main, 20)
 	
 	-- show box background slightly selected (when using buttons)
+	local color_white = Color.new(255, 255, 255)
 	if current_menu == 1 then
-		Font.print(fnt_main, 270, 155, "CLASSIC", Color.new(255, 255, 255, 140))
 		Graphics.drawImage(220, 149, img_box, Color.new(255, 255, 255, 140))
+		Font.print(fnt_main, 270, 155, "CLASSIC", Color.new(255, 255, 255, 140))
 		
-		Font.print(fnt_main, 520, 155, "COLOR MATCH", Color.new(255, 255, 255))
 		Graphics.drawImage(476, 120, img_box_select)
+		Font.print(fnt_main, 520, 155, "COLOR MATCH", color_white)
 		
 	elseif current_menu == 2 then
-		Font.print(fnt_main, 270, 155, "CLASSIC", Color.new(255, 255, 255))
 		Graphics.drawImage(191, 120, img_box_select)
+		Font.print(fnt_main, 270, 155, "CLASSIC", color_white)
 		
+		Graphics.drawImage(505, 149, img_box)
 		Font.print(fnt_main, 520, 155, "COLOR MATCH", Color.new(255, 255, 255, 140))
-		Graphics.drawImage(505, 149, img_box, Color.new(255, 255, 255, 140))
 	end
 	
 	-- draw version
@@ -93,7 +89,7 @@ local function menu_user_input()
 		
 	-- emergency exit
 	elseif Controls.check(pad, SCE_CTRL_SELECT) then
-		current_menu = MENU.EXIT
+		return_value = MENU.QUIT
 	end
 	
 	-- read touch control
@@ -105,22 +101,22 @@ local function menu_user_input()
 		-- game buttons
 		if y > 110 and y < 410 then
 			if x > 210 and x < 450 then
-				-- first
+				return_value = MENU.START_CLASSIC
 			elseif x > 490 and x < 730 then
-				-- second
+				return_value = MENU.START_COLOR
 			end
 			
 		-- awesome buttons
 		elseif y < 75 then
 		
 			if x > 0 and x < 50 then
-				-- highscore
+				return_value = MENU.HIGHSCORE				
 			elseif x > 700 and x < 793 then
-				-- credits
+				return_value = MENU.CREDIT		
 			elseif x > 793 and x < 877 then
-				-- help
+				return_value = MENU.HELP		
 			elseif x > 877 and x < 960 then
-				-- exit
+				return_value = MENU.QUIT		
 			end
 		
 		end
@@ -129,6 +125,20 @@ local function menu_user_input()
 	
 	-- remember
 	oldpad = pad
+end
+
+-- clean up loaded resources
+local function cleanup ()
+	-- free it again
+	Graphics.freeImage(img_background)
+	Graphics.freeImage(img_touch)
+	Graphics.freeImage(img_version)
+	Graphics.freeImage(img_awesome)
+	Graphics.freeImage(img_box)
+	Graphics.freeImage(img_box_select)
+	
+	-- release font
+	Font.unload(fnt_main)
 end
 
 -- main menu call
@@ -148,16 +158,8 @@ function menu()
 		animate_touch = animate_touch + animate_touch_direction
 	end
 	
-	-- free it again
-	Graphics.freeImage(img_background)
-	Graphics.freeImage(img_touch)
-	Graphics.freeImage(img_version)
-	Graphics.freeImage(img_awesome)
-	Graphics.freeImage(img_box)
-	Graphics.freeImage(img_box_select)
-	
-	-- release font
-	Font.unload(fnt_main)
+	-- unload resouces
+	cleanup()
 	
 	-- return
 	state = return_value

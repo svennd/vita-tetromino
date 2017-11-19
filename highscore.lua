@@ -1,9 +1,10 @@
--- credits screen for tetris
+-- highscore screen for tetris
 
 -- load background
 local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
 local img_touch 		= Graphics.loadImage("app0:/assets/img/touch_negative.png")
 local img_version 		= Graphics.loadImage("app0:/assets/img/version.png")
+local img_highscore		= Graphics.loadImage("app0:/assets/img/highscore.png")
 
 -- font
 local fnt_main 	= Font.load("app0:/assets/font/xolonium.ttf")
@@ -20,7 +21,7 @@ local black 	= Color.new(0, 0, 0)
 -- credits
 
 -- draw function
-local function credits_draw()
+local function highscore_draw()
 	-- init
 	Graphics.initBlend()
 	
@@ -52,7 +53,7 @@ local function credits_draw()
 	Screen.flip()
 end
 
-local function credits_user_input()
+local function highscore_user_input()
 	local pad = Controls.read()
 	
 	-- select
@@ -77,6 +78,7 @@ local function cleanup ()
 	Graphics.freeImage(img_background)
 	Graphics.freeImage(img_touch)
 	Graphics.freeImage(img_version)
+	Graphics.freeImage(img_highscore)
 	
 	-- unload font
 	Font.unload(fnt_main)
@@ -84,11 +86,11 @@ local function cleanup ()
 end
 
 -- main menu call
-function credits()
+function highscore()
 	-- gameloop
 	while not return_value do
-		credits_draw()
-		credits_user_input()
+		highscore_draw()
+		highscore_user_input()
 		-- we get about 180 fps (not essential)
 		if 150*3 < animate_touch then
 			animate_touch_direction = -1
@@ -106,4 +108,4 @@ function credits()
 	state = return_value
 end
 
-credits()
+highscore()

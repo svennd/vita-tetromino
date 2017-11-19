@@ -1,12 +1,17 @@
 -- tetrinomi for vita, by svennd
 -- version 0.8
 
+-- save power
+System.setCpuSpeed(41) -- default : 333
+System.setGpuSpeed(41) -- default : 111
+System.setBusSpeed(41) -- default : 222
+
 -- vita constants
 DISPLAY_WIDTH = 960
 DISPLAY_HEIGHT = 544
 
 -- script constant
-MENU = {MENU = 0, START_CLASSIC = 1, START_COLOR = 2, HELP = 3, CREDIT = 4, QUIT = 5, MIN = 1, MAX = 5}
+MENU = {MENU = 0, START_CLASSIC = 1, START_COLOR = 2, HELP = 3, CREDIT = 4, HIGHSCORE = 5, QUIT = 6, MIN = 1, MAX = 5}
 
 -- script variables
 state = MENU.MENU 
@@ -27,7 +32,7 @@ function main()
 			
 		elseif state == MENU.START_COLOR then
 			-- game start
-			dofile("app0:/classic_tetris.lua")
+			dofile("app0:/color_match.lua")
 		
 		elseif state == MENU.HELP then
 			-- help returns to game.state = 0
@@ -36,6 +41,10 @@ function main()
 		elseif state == MENU.CREDIT then
 			-- credit screen
 			dofile("app0:/credits.lua")
+			
+		elseif state == MENU.HIGHSCORE then
+			-- credit screen
+			dofile("app0:/highscore.lua")
 			
 		elseif state == MENU.QUIT then
 			-- exit

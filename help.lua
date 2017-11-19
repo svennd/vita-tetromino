@@ -1,13 +1,13 @@
 -- help screen for tetris
 
 -- load background
-local img_background = Graphics.loadImage("app0:/assets/bg_menu.png") -- lazy :D
-local img_touch = Graphics.loadImage("app0:/assets/touch_negative.png")
-local img_control = Graphics.loadImage("app0:/assets/control.png")
-local img_version = Graphics.loadImage("app0:/assets/version.png")
+local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
+local img_touch 		= Graphics.loadImage("app0:/assets/img/touch_negative.png")
+local img_control 		= Graphics.loadImage("app0:/assets/img/control.png")
+local img_version		= Graphics.loadImage("app0:/assets/img/version.png")
 
 -- font
-local main_font = Font.load("app0:/assets/xolonium.ttf")
+local fnt_main = Font.load("app0:/assets/font/xolonium.ttf")
 
 -- constants
 BUTTON = { CROSS = 1, CIRCLE = 2, TRIANGLE = 3, SQUARE = 4, LTRIGGER = 5, RTRIGGER = 6, LEFT = 7, RIGHT = 8, UP = 9, DOWN = 10, ANALOG = 11, START = 12, SELECT = 13 }
@@ -22,7 +22,6 @@ local white 	= Color.new(255, 255, 255)
 local black 	= Color.new(0, 0, 0)
 
 -- help
-
 local function help_draw_control(x, y, button_request)
 
 	if button_request == BUTTON.TRIANGLE then
@@ -79,40 +78,40 @@ local function help_draw()
 	Graphics.fillRect(140, 840, 60, 440, Color.new(255, 255, 255, 70))
 		
 	-- set font size
-	Font.setPixelSizes(main_font, 26)
+	Font.setPixelSizes(fnt_main, 26)
 	
 	-- input
-	Font.print(main_font, 170, 90, "INPUT : ", black)
+	Font.print(fnt_main, 170, 90, "INPUT : ", black)
 	
 	-- reduce font size
-	Font.setPixelSizes(main_font, 16)
+	Font.setPixelSizes(fnt_main, 16)
 	
 	-- large wide buttons
 	help_draw_control(220, 140, BUTTON.START)
-	Font.print(main_font, 310, 150, "RESTART", black)
+	Font.print(fnt_main, 310, 150, "RESTART", black)
 	
 	help_draw_control(220, 190, BUTTON.SELECT)
-	Font.print(main_font, 310, 200, "EXIT", black)
+	Font.print(fnt_main, 310, 200, "EXIT", black)
 	
 	-- left and right
 	help_draw_control(220, 240, BUTTON.LEFT)
 	help_draw_control(360, 240, BUTTON.LTRIGGER)
-	Font.print(main_font, 310, 250, "LEFT", black)
+	Font.print(fnt_main, 310, 250, "LEFT", black)
 	
 	help_draw_control(220, 290, BUTTON.RIGHT)
 	help_draw_control(360, 290, BUTTON.RTRIGGER)
-	Font.print(main_font, 310, 300, "RIGHT", black)
+	Font.print(fnt_main, 310, 300, "RIGHT", black)
 	
 	-- right side : rotate buttons
 	help_draw_control(550, 140, BUTTON.UP)
 	help_draw_control(680, 140, BUTTON.CROSS)
-	Font.print(main_font, 600, 150, "ROTATE", black)
+	Font.print(fnt_main, 600, 150, "ROTATE", black)
 	
 	help_draw_control(550, 210, BUTTON.CIRCLE)
-	Font.print(main_font, 610, 220, "INSTANT DROP", black)
+	Font.print(fnt_main, 610, 220, "INSTANT DROP", black)
 	
 	help_draw_control(550, 270, BUTTON.DOWN)
-	Font.print(main_font, 610, 280, "DROP", black)
+	Font.print(fnt_main, 610, 280, "DROP", black)
 	
 	-- touch tip
 	Graphics.drawImage(5, 470, img_touch, Color.new(255,255,255, 50 + math.floor(animate_touch/3)))
@@ -139,6 +138,21 @@ local function help_user_input()
 	end
 end
 
+
+-- clean up loaded resources
+local function cleanup ()
+
+	-- free it again
+	Graphics.freeImage(img_background)
+	Graphics.freeImage(img_touch)
+	Graphics.freeImage(img_control)
+	Graphics.freeImage(img_version)
+	
+	-- unload font
+	Font.unload(fnt_main)
+	
+end
+
 -- main menu call
 function help()
 	-- gameloop
@@ -155,14 +169,8 @@ function help()
 		animate_touch = animate_touch + animate_touch_direction
 	end
 	
-	-- free it again
-	Graphics.freeImage(img_control)
-	Graphics.freeImage(img_version)
-	Graphics.freeImage(img_touch)
-	Graphics.freeImage(img_background)
-	
-	-- unload font
-	Font.unload(main_font)
+	-- clear the loaded resources
+	cleanup()
 	
 	-- return
 	state = return_value
