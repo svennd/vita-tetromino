@@ -1,25 +1,25 @@
 -- classic tetris
 
 -- load images
-local img_inteface = Graphics.loadImage("app0:/assets/classic.png")
-local img_background = Graphics.loadImage("app0:/assets/bg_menu.png")
-local img_battery_icon = Graphics.loadImage("app0:/assets/power.png")
-local img_button = Graphics.loadImage("app0:/assets/ingame_button.png")
-local img_stats = Graphics.loadImage("app0:/assets/stats.png")
+local img_inteface 		= Graphics.loadImage("app0:/assets/img/classic.png")
+local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
+local img_battery_icon 	= Graphics.loadImage("app0:/assets/img/power.png")
+local img_button 		= Graphics.loadImage("app0:/assets/img/ingame_button.png")
+local img_stats 		= Graphics.loadImage("app0:/assets/img/stats.png")
 
 -- font
-local main_font = Font.load("app0:/assets/xolonium.ttf")
+local fnt_main = Font.load("app0:/assets/xolonium.ttf")
 
 -- sound
 -- this seems to be required outside to load the pieces
 Sound.init()
 
 -- load sound
-local snd_background = Sound.open("app0:/assets/bg.ogg")
-local snd_gameover = Sound.open("app0:/assets/game_over.ogg")
-local snd_highscore = Sound.open("app0:/assets/new_highscore.ogg")
-local snd_multi_line = Sound.open("app0:/assets/multi_line.ogg")
-local snd_single_line = Sound.open("app0:/assets/single_line.ogg")
+local snd_background 	= Sound.open("app0:/assets/sound/bg.ogg")
+local snd_gameover 		= Sound.open("app0:/assets/sound/game_over.ogg")
+local snd_highscore 	= Sound.open("app0:/assets/sound/new_highscore.ogg")
+local snd_multi_line 	= Sound.open("app0:/assets/sound/multi_line.ogg")
+local snd_single_line 	= Sound.open("app0:/assets/sound/single_line.ogg")
 
 -- game constants
 local DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
@@ -81,6 +81,34 @@ local stats_lines = {single = 0, double = 0, triple = 0, tetro = 0}
 
 -- killswitch for this file
 local break_loop = false
+
+
+-- household
+
+-- close all resources
+-- while not strictly necessary, its clean
+local function ct_clean_exit()
+
+	-- free images
+	Graphics.freeImage(img_inteface)
+	Graphics.freeImage(img_background)
+	Graphics.freeImage(img_battery_icon)
+	Graphics.freeImage(img_button)
+	Graphics.freeImage(img_stats)
+
+	-- close music files
+	Sound.close(snd_background)
+	Sound.close(snd_gameover)
+	Sound.close(snd_highscore)
+	Sound.close(snd_multi_line)
+	Sound.close(snd_single_line)
+	
+	-- unload font
+	Font.unload(fnt_main)
+	
+	-- kill this loop
+	break_loop = true
+end
 
 -- game mechanincs
 
@@ -707,44 +735,44 @@ function draw_frame()
 end
 
 function draw_game_over()
-	Font.setPixelSizes(main_font, 35)
+	Font.setPixelSizes(fnt_main, 35)
 
-	Font.print(main_font, 270, 180, "GAME OVER", Color.new(255,255,255, 180 + math.floor(animation.game_over)))
+	Font.print(fnt_main, 270, 180, "GAME OVER", Color.new(255,255,255, 180 + math.floor(animation.game_over)))
 	
 	-- new high score ?
 	if score.new_high then
-		Font.setPixelSizes(main_font, 25)
-		Font.print(main_font, 570, 220, "! NEW HIGHSCORE !", white)
+		Font.setPixelSizes(fnt_main, 25)
+		Font.print(fnt_main, 570, 220, "! NEW HIGHSCORE !", white)
 	end
 	
 	-- post game stats
-	Font.setPixelSizes(main_font, 20)
-	Font.print(main_font, 570, 260, "single : x".. stats_lines.single, white)
-	Font.print(main_font, 570, 290, "double : x".. stats_lines.double, white)
-	Font.print(main_font, 570, 320, "triple : x".. stats_lines.triple, white)
-	Font.print(main_font, 570, 350, "tetro : x".. stats_lines.tetro, white)
-	Font.print(main_font, 570, 380, "total : ".. score.line .. " lines", white)
+	Font.setPixelSizes(fnt_main, 20)
+	Font.print(fnt_main, 570, 260, "single : x".. stats_lines.single, white)
+	Font.print(fnt_main, 570, 290, "double : x".. stats_lines.double, white)
+	Font.print(fnt_main, 570, 320, "triple : x".. stats_lines.triple, white)
+	Font.print(fnt_main, 570, 350, "tetro : x".. stats_lines.tetro, white)
+	Font.print(fnt_main, 570, 380, "total : ".. score.line .. " lines", white)
 	
 	-- could be cleaner
-	Font.setPixelSizes(main_font, 20)
+	Font.setPixelSizes(fnt_main, 20)
 	
 	Graphics.drawImage(786, 204, img_stats)
-	Font.print(main_font, 894, 215, "x".. stats_played_pieces[1], white)
-	Font.print(main_font, 894, 265, "x".. stats_played_pieces[2], white)
-	Font.print(main_font, 894, 315, "x".. stats_played_pieces[3], white) -- square
-	Font.print(main_font, 894, 360, "x".. stats_played_pieces[4], white) -- 4long
-	Font.print(main_font, 894, 400, "x".. stats_played_pieces[5], white)
-	Font.print(main_font, 894, 450, "x".. stats_played_pieces[6], white)
-	Font.print(main_font, 894, 500, "x".. stats_played_pieces[7], white)
+	Font.print(fnt_main, 894, 215, "x".. stats_played_pieces[1], white)
+	Font.print(fnt_main, 894, 265, "x".. stats_played_pieces[2], white)
+	Font.print(fnt_main, 894, 315, "x".. stats_played_pieces[3], white) -- square
+	Font.print(fnt_main, 894, 360, "x".. stats_played_pieces[4], white) -- 4long
+	Font.print(fnt_main, 894, 400, "x".. stats_played_pieces[5], white)
+	Font.print(fnt_main, 894, 450, "x".. stats_played_pieces[6], white)
+	Font.print(fnt_main, 894, 500, "x".. stats_played_pieces[7], white)
 	
 	-- buttons to restart or exit
-	Font.setPixelSizes(main_font, 25)
+	Font.setPixelSizes(fnt_main, 25)
 	
 	Graphics.drawImage(733, 37, img_button)
-	Font.print(main_font, 758, 51, "NEW GAME", white)
+	Font.print(fnt_main, 758, 51, "NEW GAME", white)
 	
 	Graphics.drawImage(733, 101, img_button)
-	Font.print(main_font, 758, 115, "  EXIT  ", white)
+	Font.print(fnt_main, 758, 115, "  EXIT  ", white)
 end
 
 -- draw current block
@@ -816,17 +844,17 @@ function draw_score()
 	local margin = 15
 	
 	-- increase draw size
-	Font.setPixelSizes(main_font, 32)
+	Font.setPixelSizes(fnt_main, 32)
 	
 	-- score
-	Font.print(main_font, 25, 25, score.visual, text_color_score)
+	Font.print(fnt_main, 25, 25, score.visual, text_color_score)
 
 	-- best
-	Font.print(main_font, 565, 185, score.high, text_color_score)
+	Font.print(fnt_main, 565, 185, score.high, text_color_score)
 	
 	-- level
-	Font.setPixelSizes(main_font, 16)
-	Font.print(main_font, 15, 85, "LEVEL " .. game.level, text_color_score)
+	Font.setPixelSizes(fnt_main, 16)
+	Font.print(fnt_main, 15, 85, "LEVEL " .. game.level, text_color_score)
 	
 end
 
@@ -863,8 +891,8 @@ end
 function draw_level_up()
 
 	if animation.level_up then
-		Font.setPixelSizes(main_font, 25)
-		Font.print(main_font, 26+math.floor(animation.level_up_y/3), 120, "LEVEL UP !", Color.new(255,255,255))
+		Font.setPixelSizes(fnt_main, 25)
+		Font.print(fnt_main, 26+math.floor(animation.level_up_y/3), 120, "LEVEL UP !", Color.new(255,255,255))
 	end
 end
 
@@ -919,8 +947,8 @@ function draw_battery()
 	end
 
 	-- decrease font size
-	Font.setPixelSizes(main_font, 16)
-	Font.print(main_font, DISPLAY_WIDTH - margin - 45, y_offset, life .. "%", white)
+	Font.setPixelSizes(fnt_main, 16)
+	Font.print(fnt_main, DISPLAY_WIDTH - margin - 45, y_offset, life .. "%", white)
 end
 
 -- draw a box
@@ -1043,31 +1071,6 @@ function sound_game_over(new_high_score)
 	else
 		Sound.play(snd_gameover, NO_LOOP)
 	end
-end
-
--- close all resources
--- while not strictly necessary, its clean
-function ct_clean_exit()
-
-	-- free images
-	Graphics.freeImage(img_inteface)
-	Graphics.freeImage(img_background)
-	Graphics.freeImage(img_battery_icon)
-	Graphics.freeImage(img_stats)
-	Graphics.freeImage(img_button)
-
-	-- close music files
-	Sound.close(snd_background)
-	Sound.close(snd_gameover)
-	Sound.close(snd_highscore)
-	Sound.close(snd_single_line)
-	Sound.close(snd_multi_line)
-	
-	-- unload font
-	Font.unload(main_font)
-	
-	-- kill this loop
-	break_loop = true
 end
 
 -- main

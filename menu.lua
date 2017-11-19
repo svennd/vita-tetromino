@@ -22,7 +22,7 @@ local animate_touch = 1
 local animate_touch_direction = 1
 
 -- draw function
-local function menu_draw()
+function menu_draw()
 	-- init
 	Graphics.initBlend()
 	
@@ -64,7 +64,7 @@ local function menu_draw()
 	Screen.flip()
 end
 
-local function menu_user_input()
+function menu_user_input()
 	local pad = Controls.read()
 	
 	-- select
@@ -74,14 +74,14 @@ local function menu_user_input()
 			return_value = current_menu
 		end
 	-- down
-	elseif Controls.check(pad, SCE_CTRL_DOWN) and not Controls.check(oldpad, SCE_CTRL_DOWN) then
+	elseif Controls.check(pad, SCE_CTRL_LEFT) and not Controls.check(oldpad, SCE_CTRL_LEFT) then
 		current_menu = current_menu + 1
 		if current_menu > max_menu then
 			current_menu = min_menu
 		end
 		
 	-- up
-	elseif Controls.check(pad, SCE_CTRL_UP) and not Controls.check(oldpad, SCE_CTRL_UP) then
+	elseif Controls.check(pad, SCE_CTRL_RIGHT) and not Controls.check(oldpad, SCE_CTRL_RIGHT) then
 		current_menu = current_menu - 1
 		if current_menu < min_menu then
 			current_menu = max_menu
@@ -128,7 +128,7 @@ local function menu_user_input()
 end
 
 -- clean up loaded resources
-local function cleanup ()
+function cleanup ()
 	-- free it again
 	Graphics.freeImage(img_background)
 	Graphics.freeImage(img_touch)
