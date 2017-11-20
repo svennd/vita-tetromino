@@ -597,10 +597,10 @@ function get_high_score()
 	end
 	
     -- check if file exist
-	if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
+	if System.doesFileExist("ux0:/data/tetrinomi/tetris_color_score") then
 	    
 	    -- open file
-		score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FREAD)
+		score_file = System.openFile("ux0:/data/tetrinomi/tetris_color_score", FREAD)
 		
 		-- read content
 		local highscore = System.readFile(score_file, System.sizeFile(score_file))
@@ -637,13 +637,13 @@ function new_highscore()
 		score.new_high = true
 		score.high = score.current
 		
-		if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
-			System.deleteFile("ux0:/data/tetrinomi/tetris_score")
+		if System.doesFileExist("ux0:/data/tetrinomi/tetris_color_score") then
+			System.deleteFile("ux0:/data/tetrinomi/tetris_color_score")
 		end
 	end
 	
 	-- create it a new highscore file
-	new_score_file = System.openFile("ux0:/data/tetrinomi/tetris_score", FCREATE)
+	new_score_file = System.openFile("ux0:/data/tetrinomi/tetris_color_score", FCREATE)
 	System.writeFile(new_score_file, score.current, string.len(score.current))
 	System.closeFile(new_score_file)
 	

@@ -10,7 +10,7 @@ local img_box 			= Graphics.loadImage("app0:/assets/img/box.png")
 local img_box_select 	= Graphics.loadImage("app0:/assets/img/box_select.png")
 
 -- load font
-local fnt_main 	= Font.load("app0:/assets/font/xolonium.ttf")
+local fnt_main 	= Font.load("app0:/assets/xolonium.ttf")
 
 -- menu vars
 local oldpad = SCE_CTRL_RTRIGGER -- input init
@@ -39,18 +39,20 @@ function menu_draw()
 	-- show box background slightly selected (when using buttons)
 	local color_white = Color.new(255, 255, 255)
 	if current_menu == 1 then
+		-- classic
+		Graphics.drawImage(191, 120, img_box_select)
+		Font.print(fnt_main, 270, 155, "CLASSIC", color_white)
+		
+		Graphics.drawImage(505, 149, img_box, Color.new(255, 255, 255, 140))
+		Font.print(fnt_main, 520, 155, "COLOR MATCH", Color.new(255, 255, 255, 140))
+		
+	elseif current_menu == 2 then
+		-- color
 		Graphics.drawImage(220, 149, img_box, Color.new(255, 255, 255, 140))
 		Font.print(fnt_main, 270, 155, "CLASSIC", Color.new(255, 255, 255, 140))
 		
 		Graphics.drawImage(476, 120, img_box_select)
 		Font.print(fnt_main, 520, 155, "COLOR MATCH", color_white)
-		
-	elseif current_menu == 2 then
-		Graphics.drawImage(191, 120, img_box_select)
-		Font.print(fnt_main, 270, 155, "CLASSIC", color_white)
-		
-		Graphics.drawImage(505, 149, img_box)
-		Font.print(fnt_main, 520, 155, "COLOR MATCH", Color.new(255, 255, 255, 140))
 	end
 	
 	-- draw version
