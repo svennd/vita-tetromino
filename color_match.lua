@@ -587,44 +587,6 @@ function game_start()
 	sound_background()
 end
 
--- get the highscore from file
-function get_high_score()
-
-	-- check if it does not exist and create it when needed
-	if not System.doesDirExist("ux0:/data/tetrinomi") then
-		System.createDirectory("ux0:/data/tetrinomi")
-	end
-	
-    -- check if file exist
-	if System.doesFileExist("ux0:/data/tetrinomi/tetris_color_score") then
-	    
-	    -- open file
-		score_file = System.openFile("ux0:/data/tetrinomi/tetris_color_score", FREAD)
-		
-		-- read content
-		local highscore = System.readFile(score_file, System.sizeFile(score_file))
-		
-		-- close file again
-		System.closeFile(score_file)
-		
-		-- cast to number
-		highscore = tonumber(highscore)
-		
-		-- verify if its a sane number
-		if highscore == nil then
-			return 999
-		end
-		
-		-- put it into score field
-		score.high = highscore
-		
-		return highscore
-		
-	else
-	    return 0
-	end
-end
-
 -- check if its a new highscore
 function new_highscore()
 		
@@ -673,7 +635,7 @@ function draw_frame()
 	-- score
 	draw_score()
 	
-	-- draw battery info
+	-- (global) draw battery info
 	draw_battery()
 	
 	-- level up :D
@@ -934,13 +896,6 @@ function draw_box(x1, x2, y1, y2, width, color)
 	
 end
 
-
--- debug function
-handle = System.openFile("ux0:/data/tetris_debug.txt", FCREATE)
-function debug_msg(msg)
-System.writeFile(handle, msg, string.len(msg))
-end
-
 -- user_input
 
 -- work through user input
@@ -1077,7 +1032,10 @@ function main()
 	Sound.play(snd_background, LOOP)
 	
 	-- set current highscore (file call, don't need to renew every game)
-	get_high_score()
+	local highscore = get_high_score(2)
+	
+	-- set highscore to local value
+	score.high = highscore
 	
 	-- initiate game variables
 	game_start()

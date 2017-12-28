@@ -630,48 +630,6 @@ function game_start()
 	sound_background()
 end
 
--- get the highscore from file
-function get_high_score()
-
-	-- check if it does not exist and create it when needed
-	if not System.doesDirExist("ux0:/data/tetrinomi") then
-		System.createDirectory("ux0:/data/tetrinomi")
-	end
-	
-	-- 'convert' the legacy format to the new format of highscore format
-	if System.doesFileExist("ux0:/data/tetrinomi/tetris_score") then
-		System.rename("ux0:/data/tetrinomi/tetris_score", "ux0:/data/tetrinomi/tetris_classic_score")
-	end
-	
-    -- check if file exist
-	if System.doesFileExist("ux0:/data/tetrinomi/tetris_classic_score") then
-	    
-	    -- open file
-		score_file = System.openFile("ux0:/data/tetrinomi/tetris_classic_score", FREAD)
-		
-		-- read content
-		local highscore = System.readFile(score_file, System.sizeFile(score_file))
-		
-		-- close file again
-		System.closeFile(score_file)
-		
-		-- cast to number
-		highscore = tonumber(highscore)
-		
-		-- verify if its a sane number
-		if highscore == nil then
-			return 999
-		end
-		
-		-- put it into score field
-		score.high = highscore
-		
-		return highscore
-		
-	else
-	    return 0
-	end
-end
 
 -- check if its a new highscore
 function new_highscore()
@@ -1062,7 +1020,10 @@ function main()
 	Sound.play(snd_background, LOOP)
 	
 	-- set current highscore (file call, don't need to renew every game)
-	get_high_score()
+	local highscore = get_high_score(1) -- global f(x) call
+	
+	-- set highscore to local value
+	score.high = highscore
 	
 	-- initiate game variables
 	game_start()
