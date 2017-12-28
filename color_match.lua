@@ -1,4 +1,7 @@
--- classic tetris
+-- color match tetris
+
+-- color match game mode
+GAME_MODE = 2
 
 -- load images
 local img_inteface 		= Graphics.loadImage("app0:/assets/img/classic.png")
@@ -331,9 +334,14 @@ function drop()
 		if occupied(current.x, current.y, current.dir) then
 			-- lose()
 			-- store highscore if needed
-			local is_new_high_score = new_highscore()
+			local is_new_high_score = new_highscore(GAME_MODE, score.current, score.high)
 			game.state = STATE.DEAD
 			sound_game_over(is_new_high_score)
+			
+			if is_new_high_score then
+				score.new_high = true
+				score.high = score.current
+			end
 		end
 		
 		-- cant move further so disable doube speed
@@ -585,30 +593,6 @@ function game_start()
 	
 	-- start the sound
 	sound_background()
-end
-
--- check if its a new highscore
-function new_highscore()
-		
-    -- current score is higher or equal
-	if score.high >= score.current then
-		return false
-	else
-		-- its a higher score
-		score.new_high = true
-		score.high = score.current
-		
-		if System.doesFileExist("ux0:/data/tetrinomi/tetris_color_score") then
-			System.deleteFile("ux0:/data/tetrinomi/tetris_color_score")
-		end
-	end
-	
-	-- create it a new highscore file
-	new_score_file = System.openFile("ux0:/data/tetrinomi/tetris_color_score", FCREATE)
-	System.writeFile(new_score_file, score.current, string.len(score.current))
-	System.closeFile(new_score_file)
-	
-	return true
 end
 
 -- drawing

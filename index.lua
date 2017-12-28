@@ -146,6 +146,26 @@ function get_high_score(mode)
 	return highscore
 end
 
+-- make a new highscore entry
+function new_highscore(mode, current_score, high_score)
+
+    -- current score is higher or equal 
+	if high_score >= current_score then
+		return false
+	end
+	
+	-- create it a new highscore file
+	if mode == MENU.START_CLASSIC then
+		new_score_file = System.openFile("ux0:/data/tetrinomi/tetris_classic_score", FCREATE)
+	else
+		new_score_file = System.openFile("ux0:/data/tetrinomi/tetris_color_score", FCREATE)
+	end
+	System.writeFile(new_score_file, current_score, string.len(current_score))
+	System.closeFile(new_score_file)
+	
+	return true
+end
+
 -- debug function
 if DEBUG_MODE then
 	handle = System.openFile("ux0:/data/tetris_debug.txt", FCREATE)
