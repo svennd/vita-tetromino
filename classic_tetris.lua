@@ -7,7 +7,6 @@ GAME_MODE = 1
 local img_inteface 		= Graphics.loadImage("app0:/assets/img/classic.png")
 local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
 local img_button 		= Graphics.loadImage("app0:/assets/img/ingame_button.png")
-local img_stats 		= Graphics.loadImage("app0:/assets/img/stats.png")
 
 -- font
 local fnt_main = Font.load("app0:/assets/xolonium.ttf")
@@ -78,7 +77,6 @@ local z = { ID = 7, BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
 local k = { COLOR = white }
 
 -- statics
-local stats_played_pieces = {}
 local stats_lines = {single = 0, double = 0, triple = 0, tetro = 0}
 
 -- killswitch for this file
@@ -95,7 +93,6 @@ local function ct_clean_exit()
 	Graphics.freeImage(img_inteface)
 	Graphics.freeImage(img_background)
 	Graphics.freeImage(img_button)
-	Graphics.freeImage(img_stats)
 
 	-- close music files
 	Sound.close(snd_background)
@@ -220,13 +217,6 @@ function set_current_piece()
 	current.x = math.random(0, SIZE.WIDTH_FIELD - 4)
 	current.y = 0
 	current.dir = next_piece.dir
-	
-	-- for statics if we get here we assume its played
-	if stats_played_pieces[current.piece.ID] == nil then
-		stats_played_pieces[current.piece.ID] = 1
-	else
-		stats_played_pieces[current.piece.ID] = stats_played_pieces[current.piece.ID] + 1
-	end
 end
 
 -- set block
@@ -631,7 +621,6 @@ function game_start()
 	Timer.reset(game.start) -- restart game timer
 	
 	-- clear stats
-	stats_played_pieces = {0, 0, 0, 0, 0, 0, 0} -- nil might be issue
 	stats_lines = {single = 0, double = 0, triple = 0, tetro = 0}
 	
 	-- start the sound
@@ -696,19 +685,7 @@ function draw_game_over()
 	Font.print(fnt_main, 570, 320, "triple : x".. stats_lines.triple, white)
 	Font.print(fnt_main, 570, 350, "tetro : x".. stats_lines.tetro, white)
 	Font.print(fnt_main, 570, 380, "total : ".. score.line .. " lines", white)
-	
-	-- could be cleaner
-	Font.setPixelSizes(fnt_main, 20)
-	
-	Graphics.drawImage(786, 204, img_stats)
-	Font.print(fnt_main, 894, 215, "x".. stats_played_pieces[1], white)
-	Font.print(fnt_main, 894, 265, "x".. stats_played_pieces[2], white)
-	Font.print(fnt_main, 894, 315, "x".. stats_played_pieces[3], white) -- square
-	Font.print(fnt_main, 894, 360, "x".. stats_played_pieces[4], white) -- 4long
-	Font.print(fnt_main, 894, 400, "x".. stats_played_pieces[5], white)
-	Font.print(fnt_main, 894, 450, "x".. stats_played_pieces[6], white)
-	Font.print(fnt_main, 894, 500, "x".. stats_played_pieces[7], white)
-	
+
 	-- buttons to restart or exit
 	Font.setPixelSizes(fnt_main, 25)
 	

@@ -7,7 +7,6 @@ GAME_MODE = 2
 local img_inteface 		= Graphics.loadImage("app0:/assets/img/classic.png")
 local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
 local img_button 		= Graphics.loadImage("app0:/assets/img/ingame_button.png")
-local img_stats 		= Graphics.loadImage("app0:/assets/img/stats.png")
 
 -- font
 local fnt_main = Font.load("app0:/assets/xolonium.ttf")
@@ -588,7 +587,6 @@ function game_start()
 	Timer.reset(game.start) -- restart game timer
 	
 	-- clear stats
-	stats_played_pieces = {0, 0, 0, 0, 0, 0, 0} -- nil might be issue
 	stats_lines = {single = 0, double = 0, triple = 0, tetro = 0}
 	
 	-- start the sound
@@ -653,18 +651,6 @@ function draw_game_over()
 	Font.print(fnt_main, 570, 320, "triple : x".. stats_lines.triple, white)
 	Font.print(fnt_main, 570, 350, "tetro : x".. stats_lines.tetro, white)
 	Font.print(fnt_main, 570, 380, "total : ".. score.line .. " lines", white)
-	
-	-- could be cleaner
-	Font.setPixelSizes(fnt_main, 20)
-	
-	Graphics.drawImage(786, 204, img_stats)
-	Font.print(fnt_main, 894, 215, "x".. stats_played_pieces[1], white)
-	Font.print(fnt_main, 894, 265, "x".. stats_played_pieces[2], white)
-	Font.print(fnt_main, 894, 315, "x".. stats_played_pieces[3], white) -- square
-	Font.print(fnt_main, 894, 360, "x".. stats_played_pieces[4], white) -- 4long
-	Font.print(fnt_main, 894, 400, "x".. stats_played_pieces[5], white)
-	Font.print(fnt_main, 894, 450, "x".. stats_played_pieces[6], white)
-	Font.print(fnt_main, 894, 500, "x".. stats_played_pieces[7], white)
 	
 	-- buttons to restart or exit
 	Font.setPixelSizes(fnt_main, 25)
@@ -990,7 +976,6 @@ function ct_clean_exit()
 	-- free images
 	Graphics.freeImage(img_inteface)
 	Graphics.freeImage(img_background)
-	Graphics.freeImage(img_stats)
 	Graphics.freeImage(img_button)
 
 	-- close music files
