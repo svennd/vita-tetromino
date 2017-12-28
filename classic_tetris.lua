@@ -3,7 +3,6 @@
 -- load images
 local img_inteface 		= Graphics.loadImage("app0:/assets/img/classic.png")
 local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
-local img_battery_icon 	= Graphics.loadImage("app0:/assets/img/power.png")
 local img_button 		= Graphics.loadImage("app0:/assets/img/ingame_button.png")
 local img_stats 		= Graphics.loadImage("app0:/assets/img/stats.png")
 
@@ -92,7 +91,6 @@ local function ct_clean_exit()
 	-- free images
 	Graphics.freeImage(img_inteface)
 	Graphics.freeImage(img_background)
-	Graphics.freeImage(img_battery_icon)
 	Graphics.freeImage(img_button)
 	Graphics.freeImage(img_stats)
 
@@ -723,7 +721,7 @@ function draw_frame()
 	-- score
 	draw_score()
 	
-	-- draw battery info
+	-- (global) draw battery info
 	draw_battery()
 	
 	-- level up :D
@@ -931,29 +929,6 @@ function draw_next()
 		-- shift it
 		bitx = bit.rshift(bitx, 1)
 	end
-end
-
--- draw battery
-function draw_battery()
-    local margin = 60
-	local y_offset = 5
-    local life = System.getBatteryPercentage()
-	
-	-- icon
-	-- ok
-	if life > 70 then
-		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 0, 50, 25)
-	elseif life > 50 then
-		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 26, 50, 25)
-	elseif life > 30 then
-		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 53, 50, 25)
-	elseif life > 10 then
-		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 78, 50, 25)
-	end
-
-	-- decrease font size
-	Font.setPixelSizes(fnt_main, 16)
-	Font.print(fnt_main, DISPLAY_WIDTH - margin - 45, y_offset, life .. "%", white)
 end
 
 -- draw a box

@@ -16,6 +16,12 @@ MENU = {MENU = 0, START_CLASSIC = 1, START_COLOR = 2, HELP = 3, CREDIT = 4, HIGH
 -- script variables
 state = MENU.MENU 
 
+--
+local img_battery_icon 	= Graphics.loadImage("app0:/assets/img/power.png")
+
+-- font
+local fnt_main = Font.load("app0:/assets/xolonium.ttf")
+
 -- main
 -- main function
 function main()
@@ -57,9 +63,42 @@ function main()
 	clean_exit()
 end
 
+-- household functions 
+--
+
+-- draw battery
+function draw_battery()
+    local margin = 60
+	local y_offset = 5
+    local life = System.getBatteryPercentage()
+	
+	-- icon
+	-- ok
+	if life > 70 then
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 0, 50, 25)
+	elseif life > 50 then
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 26, 50, 25)
+	elseif life > 30 then
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 52, 50, 25)
+	elseif life > 10 then
+		Graphics.drawPartialImage(DISPLAY_WIDTH - margin, y_offset, img_battery_icon, 0, 78, 50, 25)
+	end
+
+	-- decrease font size
+	Font.setPixelSizes(fnt_main, 16)
+	Font.print(fnt_main, DISPLAY_WIDTH - margin - 45, y_offset, life .. "%", Color.new(255, 255, 255))
+end
+
+
 -- close all resources
 -- while not strictly necessary, its clean
 function clean_exit()
+	
+	-- unload battery
+	Graphics.freeImage(img_battery_icon)
+	
+	-- unload font
+	Font.unload(fnt_main)
 	
 	-- kill app
 	System.exit()
