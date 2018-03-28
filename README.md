@@ -39,4 +39,3 @@ If you wish to 'compile' this game :
 # img
 <img src='https://github.com/svennd/vita-tetromino/blob/master/screenshot_v0.7.png' />
 <img src='https://github.com/svennd/vita-tetromino/blob/master/menu.png' />
-<img src='https://github.com/svennd/vita-tetromino/blob/master/level_up.png' />
