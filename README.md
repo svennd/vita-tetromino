@@ -11,6 +11,7 @@ This is a Tetris alike game written in lua for the PS VITA
 * endless tetris !
 * no scoreboard, but there is a high-score :) 
 * fully open source
+* [Touhou themed edition](http://vitadb.rinnegatamante.it/#/info/376) by [Aurora](https://twitter.com/KawaiiAuroraA)
 
 # Installation
 A release is made every so often and can be downloaded directly from the [releases](https://github.com/svennd/vita-tetromino/releases) this can be installed using molecularshell (Team Molecule) or [vitashell](https://github.com/TheOfficialFloW/VitaShell) (TheFlow).
@@ -37,5 +38,4 @@ If you wish to 'compile' this game :
 * Font Awesome by Dave Gandy - http://fontawesome.io
 
 # img
-<img src='https://github.com/svennd/vita-tetromino/blob/master/screenshot_v0.7.png' />
 <img src='https://github.com/svennd/vita-tetromino/blob/master/menu.png' />
