@@ -65,6 +65,7 @@ local animation = {state = false, last_tick = 0, game_over = 1, game_over_direct
 local actions = {} -- table with all user input
 local pieces = {} -- fill all the blocks in this
 local field = {} -- playing field table
+local high_score_5 = {} -- should contain 5 highest scores
 
 -- pieces
 local i = { ID = 1, BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -370,7 +371,7 @@ function drop()
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
 			-- store highscore if needed
-			local is_new_high_score = new_highscore(GAME_MODE, score.current, score.high)
+			local is_new_high_score = new_highscore("classic", score.current, high_score_5, Timer.getTime(game.start))
 			game.state = STATE.DEAD
 			sound_game_over(is_new_high_score)
 			
@@ -980,10 +981,13 @@ function main()
 	Sound.play(snd_background, LOOP)
 	
 	-- set current highscore (file call, don't need to renew every game)
-	local highscore = get_high_score(1) -- global f(x) call
+	local highscore = get_high_score("classic") -- global f(x) call
+	
+	-- store highscore_5;
+	high_score_5 = highscore
 	
 	-- set highscore to local value
-	score.high = highscore
+	score.high = highscore[1]
 	
 	-- initiate game variables
 	game_start()
