@@ -4,8 +4,20 @@
 GAME_MODE = 1
 
 -- load images
-local img_inteface 		= Graphics.loadImage("app0:/assets/img/classic.png")
-local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
+local img_interface 	= Graphics.loadImage("app0:/assets/img/classic.png")
+
+local img_bg = {
+					Graphics.loadImage("app0:/assets/img/bg.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_1.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_2.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_3.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_4.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_5.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_6.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_7.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_8.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_9.png")
+				}
 local img_button 		= Graphics.loadImage("app0:/assets/img/ingame_button.png")
 
 -- font
@@ -93,10 +105,16 @@ local break_loop = false
 local function ct_clean_exit()
 
 	-- free images
-	Graphics.freeImage(img_inteface)
-	Graphics.freeImage(img_background)
+	Graphics.freeImage(img_interface)
 	Graphics.freeImage(img_button)
 
+	-- free all backgrounds
+	local i = 1
+	while img_bg[i] do
+		Graphics.freeImage(img_bg[i])
+		i = i + 1
+	end
+	
 	-- close music files
 	Sound.close(snd_background)
 	Sound.close(snd_gameover)
@@ -642,8 +660,8 @@ function draw_frame()
 	Graphics.initBlend()
 	
 	-- background image
-	Graphics.drawImage(0, 0, img_background)
-	Graphics.drawImage(5, 10, img_inteface)
+	Graphics.drawImage(0, 0, img_bg[game.level + 1])
+	Graphics.drawImage(5, 10, img_interface)
 	
 	-- draw court
 	draw_court()
@@ -834,8 +852,8 @@ end
 function draw_level_up()
 
 	if animation.level_up then
-		Font.setPixelSizes(fnt_main, 25)
-		Font.print(fnt_main, 26+math.floor(animation.level_up_y/3), 120, "LEVEL UP !", Color.new(255,255,255))
+		Font.setPixelSizes(fnt_meatball, 25)
+		Font.print(fnt_meatball, 26+math.floor(animation.level_up_y/3), 120, "LEVEL UP", Color.new(255,255,255))
 	end
 end
 

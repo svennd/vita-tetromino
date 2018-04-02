@@ -63,3 +63,4 @@
 * added a top 5 highscore
 * cleaned up the game over
 * dropped unfinished color match mode
+* every level the background changes
