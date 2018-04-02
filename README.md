@@ -38,3 +38,4 @@ If you wish to 'compile' this game :
 
 # img
 <img src='https://github.com/svennd/vita-tetromino/blob/master/source/menu.png' />
+<img src='https://github.com/svennd/vita-tetromino/blob/master/source/highscore.jpg' />
