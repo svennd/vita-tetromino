@@ -769,7 +769,7 @@ function draw_game_over()
 	-- new high score ?
 	if score.new_high then
 		Font.setPixelSizes(fnt_main, 25)
-		Font.print(fnt_main, 560, 310, "! NEW HIGHSCORE !", white)
+		Font.print(fnt_main, 560, 290, "! NEW HIGHSCORE !", white)
 	end
 	
 	-- post game stats

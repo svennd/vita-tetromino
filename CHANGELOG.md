@@ -60,10 +60,14 @@
 * added animation to level up :)
 
 # v0.8
-* added a top 5 highscore
-* cleaned up the game over
-* dropped unfinished color match mode
+* added a top 5 highscore on a separate page
+* added a function to add a username to a highscore for multiuser
+* cleaned up the game over screen
 * every level the background changes
 * added hold option, based on the implementation of Aurora
-* redone interface for classic to accomodate the hold option
-* change line remove animation color based on amount of lines
+* redone interface for classic to accomodate the hold option and stats
+* changed the layout of the stats in classic game over screen
+* changed line remove animation, its now color based on amount of lines
+* added a new font Retroscape
+* added a new font Space Meatball
+* dropped unfinished color match mode, to complex
