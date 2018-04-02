@@ -1,56 +1,130 @@
--- highscore screen for tetris
-
--- load background
-local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
-local img_touch 		= Graphics.loadImage("app0:/assets/img/touch_negative.png")
-local img_version 		= Graphics.loadImage("app0:/assets/img/version.png")
-local img_highscore		= Graphics.loadImage("app0:/assets/img/highscore.png")
+-- highscore screen for tetromino
 
 -- font
-local fnt_main 	= Font.load("app0:/assets/xolonium.ttf")
+-- local fnt_main 	= Font.load("app0:/assets/xolonium.ttf")
+local fnt_retro 	= Font.load("app0:/assets/fonts/Retroscape.ttf")
 
--- credits vars
+-- load images
+local img_highscore_header 	= Graphics.loadImage("app0:/assets/img/highscore_header.png")
+local img_version 			= Graphics.loadImage("app0:/assets/img/version.png")
+
+-- highscore vars
 local return_value = false
-local animate_touch = 1
-local animate_touch_direction = 1
 
 -- colors
 local white 	= Color.new(255, 255, 255)
 local black 	= Color.new(0, 0, 0)
+local yellow 	= Color.new(255, 255, 0)
+local orange 	= Color.new(255, 102, 0)
+local red 		= Color.new(255, 0, 0)
+local purple	= Color.new(136, 0, 170)
+local pink	 	= Color.new(255, 0, 102)
 
+-- animation
+math.randomseed(os.clock()*1000)
+local stars = {
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) },
+				{ x = math.random(5,950), y = math.random(10,544), yellow = math.random(0,255), level = math.random(0,255) }
+			}
+			
 -- draw function
+local function draw_stars()
+	local i = 1
+	
+	while stars[i] do
+		Graphics.fillRect(stars[i].x, stars[i].x + 3, stars[i].y, stars[i].y + 3, Color.new(255, 255, stars[i].yellow, stars[i].level))
+		
+		local new_level = stars[i].level + 3
+		if new_level > 255 then
+			stars[i].level = 0
+		else
+			stars[i].level = new_level
+		end
+		
+		if math.random(0,1) == 1 then
+			local new_color = stars[i].yellow + 1
+			if new_color > 255 then
+				stars[i].yellow = stars[i].yellow - 2;
+			else
+				stars[i].yellow = new_color
+			end			
+		else
+			local new_color = stars[i].yellow - 1
+			if new_color < 0 then
+				stars[i].yellow = stars[i].yellow + 2;
+			else
+				stars[i].yellow = new_color
+			end			
+		end
+		
+		i = i + 1
+	end
+end
+
 local function highscore_draw()
 	-- init
 	Graphics.initBlend()
 	
-	-- plot the background (this one is a bit larger)
-	Graphics.drawImage(0,0, img_background)
+	-- black background
+	Graphics.fillRect(0, DISPLAY_WIDTH, 0, DISPLAY_HEIGHT, black)
+
+	-- draw stars
+	draw_stars(1)
 	
-	-- text background
-	Graphics.fillRect(140, 840, 60, 440, Color.new(255, 255, 255, 70))
+	-- draw header
+	Graphics.drawImage(100, 54, img_highscore_header)
+	
+	-- draw table
+	-- draw header
+	Font.setPixelSizes(fnt_retro, 18)
+	Font.print(fnt_retro, 135, 280, "RANK", white)
+	Font.print(fnt_retro, 335, 280, "SCORE", white)
+	Font.print(fnt_retro, 600, 280, "PLAYER", white)
+	
+	-- get data
+	local high_score = get_high_score("classic")
+	
+	Font.setPixelSizes(fnt_retro, 16)
+	Font.print(fnt_retro, 150, 330, "1ST", yellow)
+	Font.print(fnt_retro, 150, 370, "2ND", orange)
+	Font.print(fnt_retro, 150, 410, "3RD", red)
+	Font.print(fnt_retro, 150, 450, "4TH", purple)
+	Font.print(fnt_retro, 150, 490, "5TH", pink)
+	
+	-- print set data :)
+	local color = {yellow, orange, red, purple, pink}
+	local i = 1
+	while 5 >= i do
+		-- value
+		Font.print(fnt_retro, 370, 330+(40*(i-1)), high_score[1][i], color[i])
 		
-	-- set font size
-	Font.setPixelSizes(fnt_main, 26)
+		-- username
+		Font.print(fnt_retro, 600, 330+(40*(i-1)), string.upper(high_score[2][i]), color[i])
+		
+		i = i + 1
+	end
 	
-	-- input
-	Font.print(fnt_main, 170, 90, "HIGHSCORE", black)
-	
-	-- reduce font size
-	Font.setPixelSizes(fnt_main, 22)
-	
-	-- bling bling
-	Graphics.drawImage(110, 30, img_highscore)
-	Graphics.drawImage(800, 30, img_highscore)
-	Graphics.drawImage(110, 380, img_highscore)
-	Graphics.drawImage(800, 380, img_highscore)
-	
-	-- credit
-	Font.print(fnt_main, 190, 140, "Classic :" .. get_high_score(1), black)
-	Font.print(fnt_main, 190, 170, "Color   :" .. get_high_score(2), black)
-
-	-- touch tip
-	Graphics.drawImage(5, 470, img_touch, Color.new(255,255,255, 50 + math.floor(animate_touch/3)))
-
 	-- draw version
 	Graphics.drawImage(791, 506, img_version) -- version
 	
@@ -83,15 +157,12 @@ end
 
 -- clean up loaded resources
 local function cleanup ()
-
-	-- free it again
-	Graphics.freeImage(img_background)
-	Graphics.freeImage(img_touch)
-	Graphics.freeImage(img_version)
-	Graphics.freeImage(img_highscore)
-	
 	-- unload font
-	Font.unload(fnt_main)
+	Font.unload(fnt_retro)
+	
+	-- unload gfx
+	Graphics.freeImage(img_highscore_header)
+	Graphics.freeImage(img_version)
 	
 end
 
@@ -101,14 +172,6 @@ function highscore()
 	while not return_value do
 		highscore_draw()
 		highscore_user_input()
-		-- we get about 180 fps (not essential)
-		if 150*3 < animate_touch then
-			animate_touch_direction = -1
-		elseif animate_touch < 1 then
-			animate_touch_direction = 1
-		
-		end
-		animate_touch = animate_touch + animate_touch_direction
 	end
 	
 	-- cleanup loaded resources

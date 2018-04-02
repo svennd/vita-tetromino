@@ -137,17 +137,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="288.50449"
-     inkscape:cy="956.40538"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="195.00463"
+     inkscape:cy="893.33539"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer5"
+     inkscape:current-layer="layer2"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="958"
+     inkscape:window-height="1018"
+     inkscape:window-x="-7"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -164,7 +164,6 @@
      inkscape:label="Laag 1"
      inkscape:groupmode="layer"
      id="layer1"
-     sodipodi:insensitive="true"
      style="display:none">
     <rect
        style="opacity:1;fill:#e6e6e6;fill-opacity:1;stroke:none;stroke-width:21.93844986;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -178,8 +177,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="backlayer"
-     style="display:none"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <rect
        style="opacity:1;fill:url(#radialGradient4542);fill-opacity:1;stroke:none;stroke-width:10.09439087;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4518"
@@ -187,9 +185,9 @@
        height="114.85936"
        x="3.966974"
        y="7.0832705"
-       inkscape:export-filename="C:\Users\svenn\Desktop\bitmap.png"
-       inkscape:export-xdpi="120.30019"
-       inkscape:export-ydpi="120.30019" />
+       inkscape:export-filename="C:\Users\svenn\Desktop\menu.png"
+       inkscape:export-xdpi="120.3"
+       inkscape:export-ydpi="120.3" />
     <image
        y="105.00461"
        x="3.9713778"
@@ -203,8 +201,7 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="noise"
-     style="display:none"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <g
        id="g4646"
        clip-path="url(#clipPath4672)"
@@ -607,14 +604,12 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="pointer"
-     style="display:none"
-     sodipodi:insensitive="true" />
+     style="display:inline" />
   <g
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="text_version"
-     style="display:none"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#b3b3b3;fill-opacity:1;stroke:none;stroke-width:0.26458332"

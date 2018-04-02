@@ -6,7 +6,7 @@ local img_touch 		= Graphics.loadImage("app0:/assets/img/touch_negative.png")
 local img_version 		= Graphics.loadImage("app0:/assets/img/version.png")
 
 -- font
-local fnt_main 	= Font.load("app0:/assets/xolonium.ttf")
+local fnt_main 	= Font.load("app0:/assets/fonts/xolonium.ttf")
 
 -- credits vars
 local return_value = false

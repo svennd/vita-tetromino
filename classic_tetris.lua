@@ -9,7 +9,7 @@ local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
 local img_button 		= Graphics.loadImage("app0:/assets/img/ingame_button.png")
 
 -- font
-local fnt_main = Font.load("app0:/assets/xolonium.ttf")
+local fnt_main = Font.load("app0:/assets/fonts/xolonium.ttf")
 
 -- sound
 -- this seems to be required outside to load the pieces
@@ -65,7 +65,7 @@ local animation = {state = false, last_tick = 0, game_over = 1, game_over_direct
 local actions = {} -- table with all user input
 local pieces = {} -- fill all the blocks in this
 local field = {} -- playing field table
-local high_score_5 = {} -- should contain 5 highest scores
+local high_score_5 = {} -- should contain 5 highest scores and names
 
 -- pieces
 local i = { ID = 1, BLOCK = {0x0F00, 0x2222, 0x00F0, 0x4444}, COLOR = yellow }
@@ -987,7 +987,7 @@ function main()
 	high_score_5 = highscore
 	
 	-- set highscore to local value
-	score.high = highscore[1]
+	score.high = highscore[1][1]
 	
 	-- initiate game variables
 	game_start()

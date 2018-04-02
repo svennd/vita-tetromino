@@ -23,16 +23,18 @@ local function menu_draw()
 	Graphics.drawImage(0,0, img_background)
 		
 	-- the lazy method
-	Graphics.drawImage(341,85, img_menu)
+	Graphics.drawImage(341, 40, img_menu)
 	
-	if current_menu == 1 then
-		Graphics.drawImage(357,94, img_pointer) -- start
-	elseif current_menu == 2 then
-		Graphics.drawImage(357,192, img_pointer) -- help
-	elseif current_menu == 3 then
-		Graphics.drawImage(357,290, img_pointer) -- credits
-	elseif current_menu == 4 then
-		Graphics.drawImage(357,388, img_pointer) -- exit
+	if current_menu == MENU.START_CLASSIC then
+		Graphics.drawImage(357, 50, img_pointer) -- start
+	elseif current_menu == MENU.HIGHSCORE then
+		Graphics.drawImage(357, 145, img_pointer) -- score
+	elseif current_menu == MENU.HELP then
+		Graphics.drawImage(357, 238, img_pointer) -- help
+	elseif current_menu == MENU.CREDIT then
+		Graphics.drawImage(357, 325, img_pointer) -- credits
+	elseif current_menu == MENU.QUIT then
+		Graphics.drawImage(357, 423, img_pointer) -- exit
 	end
 	
 	-- draw version
@@ -78,31 +80,19 @@ local function menu_user_input()
 		
 		-- within bounds of buttons (big hitbox around)
 		if x > 340 and x < 580 then
-			if y > 80 and y < 150 then
+			if y > 20 and y < 110 then
 				return_value = MENU.START_CLASSIC -- start
-			elseif y > 170 and y < 250 then
+			elseif y > 130 and y < 200 then
+				return_value = MENU.HIGHSCORE -- highscore
+			elseif y > 220 and y < 290 then
 				return_value = MENU.HELP -- help
-			elseif y > 275 and y < 345 then
+			elseif y > 310 and y < 390 then
 				return_value = MENU.CREDIT -- credits
-			elseif y > 375 and y < 450 then
+			elseif y > 410 and y < 480 then
 				return_value = MENU.QUIT -- quit
 			end
 		end
 		
-		-- awesome buttons
-		if y < 75 then
-		
-			if x > 0 and x < 50 then
-				return_value = MENU.HIGHSCORE				
-			elseif x > 700 and x < 793 then
-				return_value = MENU.CREDIT		
-			elseif x > 793 and x < 877 then
-				return_value = MENU.HELP		
-			elseif x > 877 and x < 960 then
-				return_value = MENU.QUIT		
-			end
-		
-		end
 	end
 	
 	-- remember

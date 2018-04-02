@@ -7,7 +7,7 @@ local img_control 		= Graphics.loadImage("app0:/assets/img/control.png")
 local img_version		= Graphics.loadImage("app0:/assets/img/version.png")
 
 -- font
-local fnt_main = Font.load("app0:/assets/xolonium.ttf")
+local fnt_main = Font.load("app0:/assets/fonts/xolonium.ttf")
 
 -- constants
 BUTTON = { CROSS = 1, CIRCLE = 2, TRIANGLE = 3, SQUARE = 4, LTRIGGER = 5, RTRIGGER = 6, LEFT = 7, RIGHT = 8, UP = 9, DOWN = 10, ANALOG = 11, START = 12, SELECT = 13 }

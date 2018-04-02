@@ -11,8 +11,7 @@ DISPLAY_WIDTH = 960
 DISPLAY_HEIGHT = 544
 
 -- debug mode
--- DEBUG_MODE = false
-DEBUG_MODE = true
+DEBUG_MODE = false
 
 -- script constant
 MENU = {MENU = 0, START_CLASSIC = 1, HIGHSCORE = 2, HELP = 3, CREDIT = 4, QUIT = 5, MIN = 1, MAX = 5}
@@ -24,7 +23,7 @@ state = MENU.MENU
 local img_battery_icon 	= Graphics.loadImage("app0:/assets/img/power.png")
 
 -- font
-local fnt_main = Font.load("app0:/assets/xolonium.ttf")
+local fnt_main = Font.load("app0:/assets/fonts/xolonium.ttf")
 
 -- main
 -- main function
@@ -93,20 +92,17 @@ end
 -- note : current_score could also be called from file, but file calls are slower then ram, and since this is open-format anyways 
 --		  it does not matter much in way of "cheating"
 function new_highscore(mode, current_score, high_score, playtime)
-	debug_msg("new_highscore|");
+
     -- current score is higher then one of the top_5
 	local new_high = 0
-	local high_score = get_high_score("classic")
-	debug_msg("get_high_score done|");
 	local i = 1
-	while high_score[i] do
-		if high_score[i] < current_score then
+	while high_score[1][i] do
+		if high_score[1][i] < current_score then
 			new_high = 1
 		end
 		i = i + 1
 	end
 	
-	debug_msg("get_high_score done|");
 	-- no new highscore
 	if new_high ~= 1 then
 		return false
@@ -114,7 +110,6 @@ function new_highscore(mode, current_score, high_score, playtime)
 	
 	-- get the username
 	-- init keyboard
-	debug_msg("keyboard show|");
 	Keyboard.show("New highscore : player", "")
 	
 	local player = ""
@@ -131,7 +126,7 @@ function new_highscore(mode, current_score, high_score, playtime)
 			-- Check if user didn't canceled the keyboard
 			if status ~= CANCELED then
 				-- only allow 8 char names
-				player = string.sub(Keyboard.getInput(), 8)
+				player = string.sub(Keyboard.getInput(), 0, 16)
 			else
 				player = "Guest"
 			end
@@ -166,6 +161,12 @@ function get_high_score(mode)
 		local top_4 = 0
 		local top_5 = 0
 		
+		local player_1 = 0
+		local player_2 = 0
+		local player_3 = 0
+		local player_4 = 0
+		local player_5 = 0
+		
 		-- score file
 		local score_file = System.openFile("ux0:/data/tetrinomi/tetromino.score", FREAD)
 
@@ -180,7 +181,7 @@ function get_high_score(mode)
 		
 		-- no score lines yet
 		if #score_lines == 0 then
-			return {0, 0, 0, 0, 0}
+			return {{0, 0, 0, 0, 0}, {"guest","guest","guest","guest","guest"}}
 		end
 		
 		-- loop through all the scores
@@ -193,6 +194,8 @@ function get_high_score(mode)
 			if v[1] == mode then
 				-- higher score ?
 				local value = tonumber(v[2])
+				local player = v[3]
+				
 				if value >= top_1 then
 					-- push all the scores down
 					top_5 = top_4
@@ -200,30 +203,58 @@ function get_high_score(mode)
 					top_3 = top_2
 					top_2 = top_1
 					top_1 = value
+					
+					-- push all player down
+					player_5 = player_4
+					player_4 = player_3
+					player_3 = player_2
+					player_2 = player_1
+					player_1 = player
+					
 				elseif value >= top_2 then
 					-- push all the scores down from top_2
 					top_5 = top_4
 					top_4 = top_3
 					top_3 = top_2
 					top_2 = value
+					
+					-- push all player down from p2
+					player_5 = player_4
+					player_4 = player_3
+					player_3 = player_2
+					player_2 = player
+					
 				elseif value >= top_3 then
 					top_5 = top_4
 					top_4 = top_3
 					top_3 = value
+					
+					-- push all player down from p3
+					player_5 = player_4
+					player_4 = player_3
+					player_3 = player
+					
 				elseif value >= top_4 then
 					top_5 = top_4
 					top_4 = value
+					
+					-- push all player down from p4
+					player_5 = player_4
+					player_4 = player
+					
 				elseif value > top_5 then
 					top_5 = value
+					
+					player_5 = player
 				end
 			end
 			x = x + 1
 		end
 		
-		return {top_1, top_2, top_3, top_4, top_5}
+		return {{top_1, top_2, top_3, top_4, top_5}, {player_1, player_2, player_3, player_4, player_5}}
 		
-	else	
-		return {0, 0, 0, 0, 0}
+	else
+		return {{0, 0, 0, 0, 0}, {"guest","guest","guest","guest","guest"}}
 	end
 end
 
