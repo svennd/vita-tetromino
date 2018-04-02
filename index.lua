@@ -91,7 +91,7 @@ end
 -- make a new highscore entry
 -- note : current_score could also be called from file, but file calls are slower then ram, and since this is open-format anyways 
 --		  it does not matter much in way of "cheating"
-function new_highscore(mode, current_score, high_score, playtime)
+function new_highscore(mode, current_score, high_score, playtime, stats)
 
     -- current score is higher then one of the top_5
 	local new_high = 0
@@ -141,7 +141,7 @@ function new_highscore(mode, current_score, high_score, playtime)
 	end
 	
 	-- create it a new highscore file
-	write_score(mode, current_score, player, playtime)
+	write_score(mode, current_score, player, playtime, stats)
 	
 	return true
 end
@@ -259,7 +259,7 @@ function get_high_score(mode)
 end
 
 -- write the score to file
-function write_score(mode, value, player, playtime)
+function write_score(mode, value, player, playtime, stats)
 
 	-- just to be sure
 	create_data_dir()
@@ -268,7 +268,7 @@ function write_score(mode, value, player, playtime)
 	timestamp = os.date("%H:%M - %x")
 	
 	-- score line (if you wanted to encrypt and later decrypt this would be the place)
-	score_line = mode .. "|" .. value .. "|" .. player .. "|" .. timestamp .. "|" .. playtime .. "\n"
+	score_line = mode .. "|" .. value .. "|" .. player .. "|" .. timestamp .. "|" .. playtime .. "|" .. stats ..  "\n"
 
 	-- open for writing, if not exist create
 	score_file = System.openFile("ux0:/data/tetrinomi/tetromino.score", FCREATE)

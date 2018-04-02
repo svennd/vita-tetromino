@@ -58,3 +58,8 @@
 * changed field size with to 9
 * game over now slightly animated
 * added animation to level up :)
+
+# v0.8
+* added a top 5 highscore
+* cleaned up the game over
+* dropped unfinished color match mode

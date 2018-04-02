@@ -9,7 +9,9 @@ local img_background 	= Graphics.loadImage("app0:/assets/img/bg.png")
 local img_button 		= Graphics.loadImage("app0:/assets/img/ingame_button.png")
 
 -- font
-local fnt_main = Font.load("app0:/assets/fonts/xolonium.ttf")
+local fnt_main 		= Font.load("app0:/assets/fonts/xolonium.ttf")
+local fnt_retro 	= Font.load("app0:/assets/fonts/Retroscape.ttf")
+local fnt_meatball 	= Font.load("app0:/assets/fonts/space_meatball.otf")
 
 -- sound
 -- this seems to be required outside to load the pieces
@@ -104,6 +106,8 @@ local function ct_clean_exit()
 	
 	-- unload font
 	Font.unload(fnt_main)
+	Font.unload(fnt_retro)
+	Font.unload(fnt_meatball)
 	
 	-- kill this loop
 	break_loop = true
@@ -371,7 +375,8 @@ function drop()
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
 			-- store highscore if needed
-			local is_new_high_score = new_highscore("classic", score.current, high_score_5, Timer.getTime(game.start))
+			local stats = stats_lines.single .. "-" .. stats_lines.double .. "-" .. stats_lines.triple .. "-" .. stats_lines.tetro
+			local is_new_high_score = new_highscore("classic", score.current, high_score_5, Timer.getTime(game.start), stats)
 			game.state = STATE.DEAD
 			sound_game_over(is_new_high_score)
 			
@@ -669,23 +674,39 @@ function draw_frame()
 end
 
 function draw_game_over()
-	Font.setPixelSizes(fnt_main, 35)
-
-	Font.print(fnt_main, 270, 180, "GAME OVER", Color.new(255,255,255, 180 + math.floor(animation.game_over)))
+	-- draw background for game over box
+	Graphics.fillRect(240, 515, 180, 225, Color.new(255,255,255, 150 + math.floor(animation.game_over)))
+	
+	-- game over text
+	Font.setPixelSizes(fnt_meatball, 33)
+	Font.print(fnt_meatball, 240, 180, "GAME OVER", Color.new(255,0,0))
 	
 	-- new high score ?
 	if score.new_high then
 		Font.setPixelSizes(fnt_main, 25)
-		Font.print(fnt_main, 570, 220, "! NEW HIGHSCORE !", white)
+		Font.print(fnt_main, 560, 240, "! NEW HIGHSCORE !", white)
 	end
 	
 	-- post game stats
-	Font.setPixelSizes(fnt_main, 20)
-	Font.print(fnt_main, 570, 260, "single : x".. stats_lines.single, white)
-	Font.print(fnt_main, 570, 290, "double : x".. stats_lines.double, white)
-	Font.print(fnt_main, 570, 320, "triple : x".. stats_lines.triple, white)
-	Font.print(fnt_main, 570, 350, "tetro : x".. stats_lines.tetro, white)
-	Font.print(fnt_main, 570, 380, "total : ".. score.line .. " lines", white)
+	Font.setPixelSizes(fnt_retro, 16)
+	
+	-- draw stats
+	Graphics.fillRect(560, 750, 270, 440, Color.new(255,255,255, 120))
+	
+	Font.print(fnt_retro, 570, 280, "SINGLE", Color.new(136, 0, 170))
+	Font.print(fnt_retro, 715, 280, stats_lines.single, Color.new(136, 0, 170))
+	
+	Font.print(fnt_retro, 570, 310, "DOUBLE", Color.new(255, 0, 0))
+	Font.print(fnt_retro, 715, 310, stats_lines.double, Color.new(255, 0, 0))
+	
+	Font.print(fnt_retro, 570, 340, "TRIPLE", Color.new(255, 102, 0))
+	Font.print(fnt_retro, 715, 340, stats_lines.triple, Color.new(255, 102, 0))
+	
+	Font.print(fnt_retro, 570, 370, "TETRO", Color.new(255, 255, 0))
+	Font.print(fnt_retro, 715, 370, stats_lines.tetro, Color.new(255, 255, 0))
+	
+	Font.print(fnt_retro, 570, 420, "LINES", white)
+	Font.print(fnt_retro, 715, 420, score.line, white)
 
 	-- buttons to restart or exit
 	Font.setPixelSizes(fnt_main, 25)

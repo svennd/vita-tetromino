@@ -1,7 +1,8 @@
 description of score file format;
 - file is stored in /data/tetrinomi/tetromino.score
 - every line is a new score
-- every line contains : game mode, value, playername, time, playtime
+- every line contains : game mode, value, playername, time, playtime, stats
 - every value in the line is seperated by |
 - playtime 	= duration of game
 - time		= datetime end of game
+- stats		= values of single lines, double lines, triple lines and tetro lines seperated by -

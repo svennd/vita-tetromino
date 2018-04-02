@@ -28,13 +28,13 @@ local function menu_draw()
 	if current_menu == MENU.START_CLASSIC then
 		Graphics.drawImage(357, 50, img_pointer) -- start
 	elseif current_menu == MENU.HIGHSCORE then
-		Graphics.drawImage(357, 145, img_pointer) -- score
+		Graphics.drawImage(357, 144, img_pointer) -- score
 	elseif current_menu == MENU.HELP then
-		Graphics.drawImage(357, 238, img_pointer) -- help
+		Graphics.drawImage(357, 235, img_pointer) -- help
 	elseif current_menu == MENU.CREDIT then
-		Graphics.drawImage(357, 325, img_pointer) -- credits
+		Graphics.drawImage(357, 327, img_pointer) -- credits
 	elseif current_menu == MENU.QUIT then
-		Graphics.drawImage(357, 423, img_pointer) -- exit
+		Graphics.drawImage(357, 421, img_pointer) -- exit
 	end
 	
 	-- draw version
