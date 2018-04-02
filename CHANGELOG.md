@@ -64,3 +64,6 @@
 * cleaned up the game over
 * dropped unfinished color match mode
 * every level the background changes
+* added hold option, based on the implementation of Aurora
+* redone interface for classic to accomodate the hold option
+* change line remove animation color based on amount of lines

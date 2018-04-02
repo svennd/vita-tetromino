@@ -40,7 +40,7 @@ local snd_single_line 	= Sound.open("app0:/assets/sound/single_line.ogg")
 local DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
 local STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
 local MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
-local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 9, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 40 } -- size in px
+local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 9, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 20, HELD_OFFSET_X = 570, HELD_OFFSET_Y = 160 } -- size in px
 local MIN_INPUT_DELAY = 100
 local ANIMATION_STEP = 30
 local SPEED_LIMIT = 30
@@ -69,6 +69,8 @@ local text_color_score = Color.new(249, 255, 255)
 local game = {start = Timer.new(), level = 0, last_tick = 0, state = STATE.INIT, step = 500}
 local current = {piece = {}, x = 0, y = 0, dir = DIR.UP } -- current active piece
 local next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
+local hold = {piece = false, dir = DIR.UP, trigger = false } -- piece in hold
+local tmp_piece = {piece = false, dir = DIR.UP } -- piece to push on the before next (hold)
 local input = {prev = SCE_CTRL_CIRCLE, last_tick = 0, double_down = 0}
 local score = {current = 0, visual = 0, high = 0, line = 0, new_high = false}
 
@@ -89,7 +91,12 @@ local o = { ID = 4, BLOCK = {0xCC00, 0xCC00, 0xCC00, 0xCC00}, COLOR = orange }
 local s = { ID = 5, BLOCK = {0x06C0, 0x8C40, 0x6C00, 0x4620}, COLOR = blue }
 local t = { ID = 6, BLOCK = {0x0E40, 0x4C40, 0x4E00, 0x4640}, COLOR = seablue }
 local z = { ID = 7, BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
-local k = { COLOR = white }
+
+-- line animations
+local single 	= { COLOR = white }
+local double 	= { COLOR = pink }
+local triple 	= { COLOR = orange }
+local tetra 	= { COLOR = purple }
 
 -- statics
 local stats_lines = {single = 0, double = 0, triple = 0, tetro = 0}
@@ -385,7 +392,20 @@ function drop()
 		drop_pieces() -- split it
 		remove_lines() -- find full lines
 		set_current_piece() -- set next piece as current
-		set_next_piece() -- determ a new piece
+		
+		-- in case we need to jump the hold piece
+		if hold.trigger then
+			-- jump the next piece
+			next_piece.piece 	= tmp_piece.piece
+			next_piece.dir 		= tmp_piece.dir
+			
+			-- the tmp is empty
+			hold.trigger = false
+			tmp_piece.piece = false
+		else
+			set_next_piece() -- determ a new piece
+		end
+		
 		add_score(10) -- add 10 points for dropping a piece
 		increase_speed() -- increase speed based on lines
 		set_level() -- set level 
@@ -512,7 +532,7 @@ function animate_remove_line()
 	-- start animation
 	local x = 0
 	local i = 0
-	
+
 	-- left to right,
 	for x = 0, SIZE.WIDTH_FIELD, x + 1 do
 	
@@ -532,7 +552,15 @@ function animate_remove_line()
 				remove_line(line)
 			else 
 				-- set block
-				set_block(position, line, k) -- k = special white
+				if count_lremove == 1 then
+					set_block(position, line, single)
+				elseif count_lremove == 2 then 
+					set_block(position, line, double)
+				elseif count_lremove == 3 then 
+					set_block(position, line, triple)
+				else
+					set_block(position, line, tetra)
+				end
 				
 				-- update state
 				lremove.position[i+1] = position + 1
@@ -605,6 +633,40 @@ function add_line(n)
 	score.line = score.line + n
 end
 
+-- hold function
+function hold_piece()
+	-- there is nothing in the hold right now
+	-- and a holded piece is not awaiting a drop
+	if not hold.piece and not tmp_piece.piece then
+		-- store next one
+		hold.piece 	= next_piece.piece
+		hold.dir 	= next_piece.dir
+		
+		-- generate a new piece for next field
+		set_next_piece()
+	end	
+end
+
+-- replace the next with previously held piece
+function drop_hold()
+	-- check if there is a piece
+	if hold.piece then
+		-- move the normal next piece to tmp
+		tmp_piece.piece = next_piece.piece
+		tmp_piece.dir	= next_piece.dir
+		
+		-- moce hold to next
+		next_piece.piece 	= hold.piece
+		next_piece.dir 		= hold.dir
+		
+		-- reset hold
+		hold.piece = false
+		
+		-- inform that a piece is going to jump the queu
+		hold.trigger = true
+	end
+end
+
 -- start the game
 function game_start()
 	
@@ -672,6 +734,11 @@ function draw_frame()
 	-- draw upcomming piece
 	draw_next()
 	
+	-- draw hold
+	if hold.piece then
+		draw_held()
+	end
+	
 	-- score
 	draw_score()
 	
@@ -702,29 +769,29 @@ function draw_game_over()
 	-- new high score ?
 	if score.new_high then
 		Font.setPixelSizes(fnt_main, 25)
-		Font.print(fnt_main, 560, 240, "! NEW HIGHSCORE !", white)
+		Font.print(fnt_main, 560, 310, "! NEW HIGHSCORE !", white)
 	end
 	
 	-- post game stats
 	Font.setPixelSizes(fnt_retro, 16)
 	
 	-- draw stats
-	Graphics.fillRect(560, 750, 270, 440, Color.new(255,255,255, 120))
+	Graphics.fillRect(560, 750, 320, 490, Color.new(255,255,255, 120))
 	
-	Font.print(fnt_retro, 570, 280, "SINGLE", Color.new(136, 0, 170))
-	Font.print(fnt_retro, 715, 280, stats_lines.single, Color.new(136, 0, 170))
+	Font.print(fnt_retro, 570, 330, "SINGLE", Color.new(136, 0, 170))
+	Font.print(fnt_retro, 715, 330, stats_lines.single, Color.new(136, 0, 170))
 	
-	Font.print(fnt_retro, 570, 310, "DOUBLE", Color.new(255, 0, 0))
-	Font.print(fnt_retro, 715, 310, stats_lines.double, Color.new(255, 0, 0))
+	Font.print(fnt_retro, 570, 360, "DOUBLE", Color.new(255, 0, 0))
+	Font.print(fnt_retro, 715, 360, stats_lines.double, Color.new(255, 0, 0))
 	
-	Font.print(fnt_retro, 570, 340, "TRIPLE", Color.new(255, 102, 0))
-	Font.print(fnt_retro, 715, 340, stats_lines.triple, Color.new(255, 102, 0))
+	Font.print(fnt_retro, 570, 390, "TRIPLE", Color.new(255, 102, 0))
+	Font.print(fnt_retro, 715, 390, stats_lines.triple, Color.new(255, 102, 0))
 	
-	Font.print(fnt_retro, 570, 370, "TETRO", Color.new(255, 255, 0))
-	Font.print(fnt_retro, 715, 370, stats_lines.tetro, Color.new(255, 255, 0))
+	Font.print(fnt_retro, 570, 420, "TETRO", Color.new(255, 255, 0))
+	Font.print(fnt_retro, 715, 420, stats_lines.tetro, Color.new(255, 255, 0))
 	
-	Font.print(fnt_retro, 570, 420, "LINES", white)
-	Font.print(fnt_retro, 715, 420, score.line, white)
+	Font.print(fnt_retro, 570, 470, "LINES", white)
+	Font.print(fnt_retro, 715, 470, score.line, white)
 
 	-- buttons to restart or exit
 	Font.setPixelSizes(fnt_main, 25)
@@ -811,7 +878,7 @@ function draw_score()
 	Font.print(fnt_main, 25, 25, score.visual, text_color_score)
 
 	-- best
-	Font.print(fnt_main, 565, 185, score.high, text_color_score)
+	Font.print(fnt_main, 18, 148, score.high, text_color_score)
 	
 	-- level
 	Font.setPixelSizes(fnt_main, 16)
@@ -889,6 +956,38 @@ function draw_next()
 	end
 end
 
+-- draw held block
+function draw_held()
+	local x = 0
+	local y = 0
+	local margin = 15 -- margin around next box
+	
+	-- 8x8
+	local bitx = 0x8000
+	while bitx > 0 do
+		
+		-- if current.piece bit is set are draw block
+		if bit.band(hold.piece.BLOCK[hold.dir], bitx) > 0 then
+			-- draw_block uses SIZE.COURT_OFFSET by default
+			Graphics.fillRect(
+					SIZE.HELD_OFFSET_X + (x*SIZE.X) + x,
+					SIZE.HELD_OFFSET_X + ((x+1)*SIZE.X) + x,
+					SIZE.HELD_OFFSET_Y + (y*SIZE.Y) + y,
+					SIZE.HELD_OFFSET_Y + ((y+1)*SIZE.Y) + y,
+					hold.piece.COLOR)
+		end
+		
+		x = x + 1
+		if x == 4 then
+			x = 0
+			y = y + 1
+		end
+		
+		-- shift it
+		bitx = bit.rshift(bitx, 1)
+	end
+end
+
 -- draw a box
 -- untill fillEmptyRect is fixed
 function draw_box(x1, x2, y1, y2, width, color)
@@ -952,6 +1051,12 @@ function user_input()
 
 	elseif Controls.check(pad, SCE_CTRL_CIRCLE) and not Controls.check(input.prev, SCE_CTRL_CIRCLE) then
 		input.double_down = 1 -- speed down
+		
+	elseif Controls.check(pad, SCE_CTRL_TRIANGLE) and not Controls.check(input.prev, SCE_CTRL_TRIANGLE) then
+		hold_piece()
+		
+	elseif Controls.check(pad, SCE_CTRL_SQUARE) and not Controls.check(input.prev, SCE_CTRL_SQUARE) then
+		drop_hold()
 		
 	elseif Controls.check(pad, SCE_CTRL_START) and not Controls.check(input.prev, SCE_CTRL_START) then
 		if game.state == STATE.INIT then
