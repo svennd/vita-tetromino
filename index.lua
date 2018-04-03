@@ -110,6 +110,8 @@ function new_highscore(mode, current_score, high_score, playtime, stats)
 	
 	-- get the username
 	-- init keyboard
+	-- since players just lost, it is very intense, and we need to let them a bit breathe :)
+	System.wait(100) -- 100ms
 	Keyboard.show("New highscore : player", "")
 	
 	local player = ""
