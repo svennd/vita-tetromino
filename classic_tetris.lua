@@ -24,9 +24,8 @@ local snd_single_line 	= 0
 -- game constants
 local DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
 local STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
-local MIN_INPUT_DELAY = 50 -- mimimun delay between 2 keys are considered pressed in ms
 local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 9, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 20, HELD_OFFSET_X = 570, HELD_OFFSET_Y = 160 } -- size in px
-local MIN_INPUT_DELAY = 100
+local MIN_INPUT_DELAY = 100 -- mimimun delay between 2 keys are considered pressed in ms
 local ANIMATION_STEP = 30
 local SPEED_LIMIT = 30
 
@@ -58,7 +57,6 @@ local hold = {piece = false, dir = DIR.UP, trigger = false } -- piece in hold
 local tmp_piece = {piece = false, dir = DIR.UP } -- piece to push on the before next (hold)
 local input = {prev = SCE_CTRL_CIRCLE, last_tick = 0, double_down = 0}
 local score = {current = 0, visual = 0, high = 0, line = 0, new_high = false}
-
 local lremove = {line = {}, position = {}, sound = 0}
 local animation = {state = false, last_tick = 0, game_over = 1, game_over_direction = 1, level_up = false, level_up_y = 1}
 
@@ -76,6 +74,7 @@ local o = { ID = 4, BLOCK = {0xCC00, 0xCC00, 0xCC00, 0xCC00}, COLOR = orange }
 local s = { ID = 5, BLOCK = {0x06C0, 0x8C40, 0x6C00, 0x4620}, COLOR = blue }
 local t = { ID = 6, BLOCK = {0x0E40, 0x4C40, 0x4E00, 0x4640}, COLOR = seablue }
 local z = { ID = 7, BLOCK = {0x0C60, 0x4C80, 0xC600, 0x2640}, COLOR = purple }
+local r = { ID = 8, COLOR = grey_1 }
 
 -- line animations
 local single 	= { COLOR = white }
@@ -524,7 +523,7 @@ function remove_lines()
 				end
 				
 				-- add line score
-				add_line(1)
+				score.line = score.line + 1
 			end
 		end
 		
@@ -654,9 +653,45 @@ function add_score(n)
 	score.current = score.current + n
 end
 
--- add line score
-function add_line(n)
-	score.line = score.line + n
+-- add line to field
+function add_line()
+	local x = 0
+	local y = 0
+	local type_block = {}
+	
+	-- start from up, and work the way down
+	for y = 1, SIZE.HEIGHT_FIELD, y + 1 do
+		
+		-- left to right  
+		for x = 1, SIZE.WIDTH_FIELD, x + 1 do
+			type_block = get_block(x, y+1)
+			set_block(x, y, type_block)
+		end
+	end
+	
+	-- add the random line
+	
+	-- shuffle outcome
+	-- slightly larger amount of filled
+	local numbers = {0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1}
+	
+	math.randomseed(os.clock()*1000) -- os.time() is to easy
+	for i = 1, 10 do
+		local random1 = math.random(table.getn(numbers))
+		local random2 = math.random(table.getn(numbers))
+		numbers[random1], numbers[random2] = numbers[random2], numbers[random1]
+	end
+	
+	y = SIZE.HEIGHT_FIELD
+	for x = 1, SIZE.WIDTH_FIELD, x + 1 do
+		-- set grey
+		if numbers[x] == 1 then
+			set_block(x, y, r)
+		else
+			set_block(x, y, nil)
+		end
+	end
+	
 end
 
 -- hold function
