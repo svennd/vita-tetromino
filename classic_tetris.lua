@@ -1,25 +1,25 @@
 -- classic tetris
 
--- load images
-local img_interface = Graphics.loadImage("app0:/assets/img/classic.png")
+-- images
 local img_bg 		= {}
-local img_button 	= Graphics.loadImage("app0:/assets/img/ingame_button.png")
+local img_button 	= 0
+local img_interface = 0
 
 -- font
-local fnt_main 		= Font.load("app0:/assets/fonts/xolonium.ttf")
-local fnt_retro 	= Font.load("app0:/assets/fonts/Retroscape.ttf")
-local fnt_meatball 	= Font.load("app0:/assets/fonts/space_meatball.otf")
+local fnt_main 		= 0
+local fnt_retro 	= 0
+local fnt_meatball 	= 0
 
 -- sound
 -- this seems to be required outside to load the pieces
 Sound.init()
 
 -- load sound
-local snd_background 	= Sound.open("app0:/assets/sound/bg.ogg")
-local snd_gameover 		= Sound.open("app0:/assets/sound/game_over.ogg")
-local snd_highscore 	= Sound.open("app0:/assets/sound/new_highscore.ogg")
-local snd_multi_line 	= Sound.open("app0:/assets/sound/multi_line.ogg")
-local snd_single_line 	= Sound.open("app0:/assets/sound/single_line.ogg")
+local snd_background 	= 0
+local snd_gameover 		= 0
+local snd_highscore 	= 0
+local snd_multi_line 	= 0
+local snd_single_line 	= 0
 
 -- game constants
 local DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
@@ -126,8 +126,9 @@ end
 -- load all resources that might block 
 function init()
 	-- render a screen
-	loading_screen()
+	loading_screen("graphics")
 	
+	-- images
 	-- loading 10 images takes some time
 	img_bg = {
 					Graphics.loadImage("app0:/assets/img/bg.png"),
@@ -141,6 +142,27 @@ function init()
 					Graphics.loadImage("app0:/assets/img/bg_level_8.png"),
 					Graphics.loadImage("app0:/assets/img/bg_level_9.png")
 			}
+	img_button 	= Graphics.loadImage("app0:/assets/img/ingame_button.png")
+	img_interface = Graphics.loadImage("app0:/assets/img/classic.png")
+	
+	-- update
+	loading_screen("fonts")
+	
+	-- fonts
+	fnt_main 		= Font.load("app0:/assets/fonts/xolonium.ttf")
+	fnt_retro 		= Font.load("app0:/assets/fonts/Retroscape.ttf")
+	fnt_meatball 	= Font.load("app0:/assets/fonts/space_meatball.otf")
+	
+	-- update
+	loading_screen("sounds")
+	
+	-- sounds
+	snd_background 		= Sound.open("app0:/assets/sound/bg.ogg")
+	snd_gameover 		= Sound.open("app0:/assets/sound/game_over.ogg")
+	snd_highscore 		= Sound.open("app0:/assets/sound/new_highscore.ogg")
+	snd_multi_line 		= Sound.open("app0:/assets/sound/multi_line.ogg")
+	snd_single_line 	= Sound.open("app0:/assets/sound/single_line.ogg")
+
 end
 -- game mechanincs
 

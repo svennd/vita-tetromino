@@ -315,15 +315,19 @@ function explode(d,p)
 end
 
 -- this will generate a static screen while stuff is happening that take a while
-function loading_screen()
+function loading_screen(msg)
 	Graphics.initBlend()
 	Screen.clear()
 
 	Graphics.fillRect(0, DISPLAY_WIDTH, 0, DISPLAY_HEIGHT, Color.new(0, 0, 0))
 	
 	Font.setPixelSizes(fnt_main, 35)
-	Font.print(fnt_main, 20, 20, "LOADING...", Color.new(255, 255, 255))
-
+	if msg then
+		Font.print(fnt_main, 20, 20, "LOADING " .. msg, Color.new(255, 255, 255))
+	else
+		Font.print(fnt_main, 20, 20, "LOADING...", Color.new(255, 255, 255))
+	end
+	
 	Graphics.termBlend()
 	Screen.flip()
 end
