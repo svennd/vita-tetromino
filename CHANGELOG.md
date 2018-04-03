@@ -71,3 +71,7 @@
 * added a new font Retroscape
 * added a new font Space Meatball
 * dropped unfinished color match mode, to complex
+
+# v0.9
+* added a loading screen (cause what is a game w/o one?)
+* added a slight delay before we pop up the keyboard after a game over
