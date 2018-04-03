@@ -1,24 +1,9 @@
 -- classic tetris
 
--- color match game mode
-GAME_MODE = 1
-
 -- load images
-local img_interface 	= Graphics.loadImage("app0:/assets/img/classic.png")
-
-local img_bg = {
-					Graphics.loadImage("app0:/assets/img/bg.png"),
-					Graphics.loadImage("app0:/assets/img/bg_level_1.png"),
-					Graphics.loadImage("app0:/assets/img/bg_level_2.png"),
-					Graphics.loadImage("app0:/assets/img/bg_level_3.png"),
-					Graphics.loadImage("app0:/assets/img/bg_level_4.png"),
-					Graphics.loadImage("app0:/assets/img/bg_level_5.png"),
-					Graphics.loadImage("app0:/assets/img/bg_level_6.png"),
-					Graphics.loadImage("app0:/assets/img/bg_level_7.png"),
-					Graphics.loadImage("app0:/assets/img/bg_level_8.png"),
-					Graphics.loadImage("app0:/assets/img/bg_level_9.png")
-				}
-local img_button 		= Graphics.loadImage("app0:/assets/img/ingame_button.png")
+local img_interface = Graphics.loadImage("app0:/assets/img/classic.png")
+local img_bg 		= {}
+local img_button 	= Graphics.loadImage("app0:/assets/img/ingame_button.png")
 
 -- font
 local fnt_main 		= Font.load("app0:/assets/fonts/xolonium.ttf")
@@ -138,6 +123,25 @@ local function ct_clean_exit()
 	break_loop = true
 end
 
+-- load all resources that might block 
+function init()
+	-- render a screen
+	loading_screen()
+	
+	-- loading 10 images takes some time
+	img_bg = {
+					Graphics.loadImage("app0:/assets/img/bg.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_1.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_2.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_3.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_4.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_5.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_6.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_7.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_8.png"),
+					Graphics.loadImage("app0:/assets/img/bg_level_9.png")
+			}
+end
 -- game mechanincs
 
 -- main game mechanics update
@@ -1120,7 +1124,9 @@ end
 
 -- main function
 function main()
-
+	-- load resources
+	init()
+	
 	-- start sound
 	Sound.play(snd_background, LOOP)
 	
