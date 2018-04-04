@@ -75,3 +75,4 @@
 # v0.9
 * added a loading screen (cause what is a game w/o one?)
 * added a slight delay before we pop up the keyboard after a game over
+* added pauze option (start button during game)

@@ -23,7 +23,7 @@ local snd_single_line 	= 0
 
 -- game constants
 local DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
-local STATE = {INIT = 1, PLAY = 2, DEAD = 3} -- game state
+local STATE = {INIT = 1, PLAY = 2, DEAD = 3, WIN = 4, PAUSE = 5} -- game state
 local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 9, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 20, HELD_OFFSET_X = 570, HELD_OFFSET_Y = 160 } -- size in px
 local MIN_INPUT_DELAY = 100 -- mimimun delay between 2 keys are considered pressed in ms
 local ANIMATION_STEP = 30
@@ -171,12 +171,23 @@ function update()
 	-- check if we are playing
 	if game.state ~= STATE.PLAY then
 	    
-	    -- update the score to reflect the reall score after game over
-	    if game.state == STATE.DEAD then
-	        score.visual = score.current
-	    end
+		-- pauze
+		if game.state == STATE.PAUSE then
+			return true;
+		end
 		
-		if game.state == STATE.DEAD then
+		-- won
+		if game.state == STATE.WIN then
+			-- give option to do next level
+		end
+		
+		-- dead
+	    if game.state == STATE.DEAD then
+		
+			-- update the score to reflect the reall score after game over
+	        score.visual = score.current
+			
+			-- animation of game over
 			if 70 < animation.game_over then
 				animation.game_over_direction = -1
 			elseif animation.game_over < 1 then
@@ -184,6 +195,7 @@ function update()
 			
 			end
 			animation.game_over = animation.game_over + animation.game_over_direction
+			
 		end
 	    
 	    -- stop doing the game mechanics if no play
@@ -812,6 +824,8 @@ function draw_frame()
 	-- game over
 	if game.state == STATE.DEAD then
 		draw_game_over()
+	elseif game.state == STATE.PAUSE then
+		draw_pause()
 	end
 	
 	-- Terminating drawing phase
@@ -819,6 +833,7 @@ function draw_frame()
 	Screen.flip()
 end
 
+-- draw game over
 function draw_game_over()
 	-- draw background for game over box
 	Graphics.fillRect(240, 515, 180, 225, Color.new(255,255,255, 150 + math.floor(animation.game_over)))
@@ -862,6 +877,16 @@ function draw_game_over()
 	
 	Graphics.drawImage(733, 101, img_button)
 	Font.print(fnt_main, 758, 115, "  EXIT  ", white)
+end
+
+-- draw pause
+function draw_pause()
+	-- draw background for game pause box
+	Graphics.fillRect(240, 515, 180, 225, Color.new(100,255,100))
+	
+	-- game over text
+	Font.setPixelSizes(fnt_meatball, 33)
+	Font.print(fnt_meatball, 240, 180, "PAUSE", Color.new(255,0,0))
 end
 
 -- draw current block
@@ -1120,13 +1145,22 @@ function user_input()
 		drop_hold()
 		
 	elseif Controls.check(pad, SCE_CTRL_START) and not Controls.check(input.prev, SCE_CTRL_START) then
-		if game.state == STATE.INIT then
-			-- give option to start
-		elseif game.state == STATE.PLAY then
-			-- pauze ?
+	
+		-- pauze
+		if game.state == STATE.PLAY then
+			game.state = STATE.PAUSE
+			Timer.pause(game.start)
+			
+		-- unpauze
+		elseif game.state == STATE.PAUSE then
+			game.state = STATE.PLAY
+			Timer.resume(game.start)
+		
+		-- restart
 		elseif game.state == STATE.DEAD then
 			game_start()
 		end
+		
 	elseif Controls.check(pad, SCE_CTRL_SELECT) then
 		ct_clean_exit()
 	end
