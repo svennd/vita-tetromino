@@ -76,3 +76,4 @@
 * added a loading screen (cause what is a game w/o one?)
 * added a slight delay before we pop up the keyboard after a game over
 * added pauze option (start button during game)
+* added support for a different sound for every amount of lines (single, dubbel, triple, tetra)

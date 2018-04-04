@@ -159,8 +159,10 @@ function init()
 	snd_background 		= Sound.open("app0:/assets/sound/bg.ogg")
 	snd_gameover 		= Sound.open("app0:/assets/sound/game_over.ogg")
 	snd_highscore 		= Sound.open("app0:/assets/sound/new_highscore.ogg")
-	snd_multi_line 		= Sound.open("app0:/assets/sound/multi_line.ogg")
 	snd_single_line 	= Sound.open("app0:/assets/sound/single_line.ogg")
+	snd_double_line		= Sound.open("app0:/assets/sound/multi_line.ogg")
+	snd_triple_line		= snd_double_line -- only have one sound for multi_lines
+	snd_tetra_line		= snd_double_line
 
 end
 -- game mechanincs
@@ -179,6 +181,7 @@ function update()
 		-- won
 		if game.state == STATE.WIN then
 			-- give option to do next level
+			-- true
 		end
 		
 		-- dead
@@ -237,6 +240,8 @@ function update()
 		animate_remove_line()
 	end
 	
+	
+	-- level up anmimation
 	if animation.level_up then
 		if animation.level_up_y > 150 then
 			animation.level_up = false
@@ -558,10 +563,14 @@ function animate_remove_line()
 
 	-- let's make some noise !
 	if lremove.sound then
-		if count_lremove > 1 then
+		if count_lremove == 1 
+			Sound.play(snd_single_line, NO_LOOP)
+		elseif count_lremove == 2 then
+			Sound.play(snd_multi_line, NO_LOOP)
+		elseif count_lremove == 3 then
 			Sound.play(snd_multi_line, NO_LOOP)
 		else
-			Sound.play(snd_single_line, NO_LOOP)
+			Sound.play(snd_multi_line, NO_LOOP)
 		end
 		lremove.sound = false
 	end
