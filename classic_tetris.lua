@@ -214,7 +214,12 @@ function update()
 
 	-- tick score
 	if score.current > score.visual then
-		score.visual = score.visual + 1
+		-- for large difference do it a bit quicker
+		if (score.current - score.visual) > 300) then
+			score.visual = score.visual + 3
+		else
+			score.visual = score.visual + 1
+		end
 	end
 	
 	-- if double speed is activated drop extra every step/2
@@ -448,9 +453,15 @@ function drop()
 			set_next_piece() -- determ a new piece
 		end
 		
-		add_score(10) -- add 10 points for dropping a piece
+		if input.double_down == 1 then
+			add_score(15) -- add 15 points for dropping a piece double speed
+		else
+			add_score(10) -- add 10 points for dropping a piece
+		end
+		
 		increase_speed() -- increase speed based on lines
 		set_level() -- set level 
+		
 		-- if not possible to find a spot for its current location its overwritten = dead
 		if occupied(current.piece, current.x, current.y, current.dir) then
 			-- lose()
@@ -513,8 +524,8 @@ function remove_lines()
 				
 				-- if its not the first line double score !
 				if (multi_line > 0) then
-					
-					add_score( 100 * ( multi_line + 1 ) )
+				
+					add_score( (100+(game.level*10)) * ( multi_line + 1 ) )
 					multi_line = multi_line + 1
 					
 					-- stats (its a double)
@@ -534,7 +545,7 @@ function remove_lines()
 						stats_lines.tetro = stats_lines.tetro + 1
 					end
 				else
-					add_score( 100 ) -- scored a line :D
+					add_score( 100 + (game.level*10) ) -- scored a line :D
 					multi_line = multi_line + 1
 					stats_lines.single = stats_lines.single + 1
 				end

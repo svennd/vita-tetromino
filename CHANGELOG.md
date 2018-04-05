@@ -77,3 +77,7 @@
 * added a slight delay before we pop up the keyboard after a game over
 * added pauze option (start button during game)
 * added support for a different sound for every amount of lines (single, dubbel, triple, tetra)
+* increased score.visual tick if large difference between reall and visible score
+* documented the scoring matrix
+* in higher levels both single and multi lines give more points
+* using double down, increases the points slightly for dropping a block
