@@ -215,7 +215,7 @@ function update()
 	-- tick score
 	if score.current > score.visual then
 		-- for large difference do it a bit quicker
-		if (score.current - score.visual) > 300) then
+		if (score.current - score.visual) > 300 then
 			score.visual = score.visual + 3
 		else
 			score.visual = score.visual + 1
