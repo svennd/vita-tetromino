@@ -25,6 +25,9 @@ local img_battery_icon 	= Graphics.loadImage("app0:/assets/img/power.png")
 -- font
 local fnt_main = Font.load("app0:/assets/fonts/xolonium.ttf")
 
+-- static file locations
+local config_file = "ux0:/data/tetrinomi/tetromino.conf"
+
 -- main
 -- main function
 function main()
@@ -330,6 +333,66 @@ function loading_screen(msg)
 	
 	Graphics.termBlend()
 	Screen.flip()
+end
+
+-- load settings from file
+function load_settings()
+	
+	local settings = {}
+	
+	-- just in case
+	create_data_dir()
+	
+	-- no config made
+	if not System.doesFileExist(config_file) then
+		return false;
+	end
+	
+	-- open file and read everything into buffer
+	local fh_config = System.openFile(config_file, FREAD)
+	local config = System.readFile(fh_config, System.sizeFile(fh_config))
+	
+	local config_lines = explode("\n", config)
+	
+	local i = 1
+	local option = ""
+	local value = 0
+	while config_lines[i] then
+		-- support for comments
+		if config_lines[i] and config_lines[i]:sub( 1, 1 ) ~= "#" then
+			-- parse option
+			option = config_lines[i]:match("(.*)="):lower()
+			-- parse value 
+			value = config_lines[i]:match("%S=(.*)")
+			
+			-- in case of flags
+			if not value then
+				settings[option] = true
+			-- key = value pair
+			else
+				settings[option] = value
+			end
+		end
+		i = i + 1
+	end
+	
+	return settings
+end
+
+-- write settings
+function write_settings(settings)
+	
+	local settings = "# automated generated configuration file for tetromino\n"
+	for key,value in pairs(settings) do 
+		settings = settings .. key .. "=" .. value .. "\n"
+	end
+
+	-- open for writing, if not exist create
+	cnf_file = System.openFile(config_file, FCREATE)
+		
+	-- write the "score" line to file
+	System.writeFile(cnf_file, settings, string.len(settings))
+	System.closeFile(cnf_file)
 end
 
 -- debug function

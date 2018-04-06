@@ -110,8 +110,10 @@ local function ct_clean_exit()
 	Sound.close(snd_background)
 	Sound.close(snd_gameover)
 	Sound.close(snd_highscore)
-	Sound.close(snd_multi_line)
 	Sound.close(snd_single_line)
+	Sound.close(snd_double_line)
+	Sound.close(snd_triple_line)
+	Sound.close(snd_tetra_line)
 	
 	-- unload font
 	Font.unload(fnt_main)
@@ -123,7 +125,7 @@ local function ct_clean_exit()
 end
 
 -- load all resources that might block 
-function init()
+local function init()
 	-- render a screen
 	loading_screen("graphics")
 	
@@ -165,6 +167,7 @@ function init()
 	snd_tetra_line		= snd_double_line
 
 end
+
 -- game mechanincs
 
 -- main game mechanics update
@@ -574,14 +577,14 @@ function animate_remove_line()
 
 	-- let's make some noise !
 	if lremove.sound then
-		if count_lremove == 1 
+		if count_lremove == 1 then
 			Sound.play(snd_single_line, NO_LOOP)
 		elseif count_lremove == 2 then
-			Sound.play(snd_multi_line, NO_LOOP)
+			Sound.play(snd_double_line, NO_LOOP)
 		elseif count_lremove == 3 then
-			Sound.play(snd_multi_line, NO_LOOP)
+			Sound.play(snd_triple_line, NO_LOOP)
 		else
-			Sound.play(snd_multi_line, NO_LOOP)
+			Sound.play(snd_tetra_line, NO_LOOP)
 		end
 		lremove.sound = false
 	end
