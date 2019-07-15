@@ -294,7 +294,8 @@ function set_current_piece()
 	current.piece = next_piece.piece
 	-- randomize entry point
 	-- 4 : 4x4 size for blocks
-	current.x = math.random(0, SIZE.WIDTH_FIELD - 4)
+	--current.x = math.random(0, SIZE.WIDTH_FIELD - 4)
+	current.x = 4
 	current.y = 0
 	current.dir = next_piece.dir
 end
