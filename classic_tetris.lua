@@ -212,9 +212,6 @@ function update()
 	local dt_game = time_played - game.last_tick
 	local dt_animation = time_played - animation.last_tick
 	
-	-- handle of the actions
-	handle_input()
-
 	-- tick score
 	if score.current > score.visual then
 		-- for large difference do it a bit quicker
@@ -230,6 +227,9 @@ function update()
 		if dt_game > math.floor(game.step/2) then
 			drop()
 		end
+	else
+		-- handle of the actions
+		handle_input()
 	end
 	
 	-- normal speed drop
