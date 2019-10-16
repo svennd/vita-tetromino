@@ -27,7 +27,7 @@ local STATE = {INIT = 1, PLAY = 2, DEAD = 3, WIN = 4, PAUSE = 5} -- game state
 local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 9, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 20, HELD_OFFSET_X = 570, HELD_OFFSET_Y = 160 } -- size in px
 local MIN_INPUT_DELAY = 100 -- mimimun delay between 2 keys are considered pressed in ms
 local ANIMATION_STEP = 30
-local SPEED_LIMIT = 30
+local SPEED_LIMIT = 40
 
 -- color definitions
 local white 	= Color.new(255, 255, 255)
