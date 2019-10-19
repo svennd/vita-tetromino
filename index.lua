@@ -357,7 +357,7 @@ function load_settings()
 	local i = 1
 	local option = ""
 	local value = 0
-	while config_lines[i] then
+	while config_lines[i] do
 		-- support for comments
 		if config_lines[i] and config_lines[i]:sub( 1, 1 ) ~= "#" then
 			-- parse option
