@@ -23,11 +23,12 @@ local snd_single_line 	= 0
 
 -- game constants
 local DIR = { UP = 1, RIGHT = 2, DOWN = 3, LEFT = 4, MIN = 1, MAX = 4 } -- tetronimo direction
-local STATE = {INIT = 1, PLAY = 2, DEAD = 3, WIN = 4, PAUSE = 5} -- game state
+local STATE = {INIT = 1, PLAY = 2, DEAD = 3, WIN = 4, PAUSE = 5, COUNTDOWN = 6} -- game state
 local SIZE = { X = 25, Y = 25, HEIGHT_FIELD = 19, WIDTH_FIELD = 9, COURT_OFFSET_X = 250, COURT_OFFSET_Y = 5, NEXT_OFFSET_X = 570, NEXT_OFFSET_Y = 20, HELD_OFFSET_X = 570, HELD_OFFSET_Y = 160 } -- size in px
 local MIN_INPUT_DELAY = 100 -- mimimun delay between 2 keys are considered pressed in ms
 local ANIMATION_STEP = 30
 local SPEED_LIMIT = 40
+local COUNTDOWN = 4
 
 -- color definitions
 local white 	= Color.new(255, 255, 255)
@@ -50,7 +51,7 @@ local grey_3	= Color.new(96, 96, 96)
 local text_color_score = Color.new(249, 255, 255)
 
 -- initialize variables
-local game = {start = Timer.new(), level = 0, last_tick = 0, state = STATE.INIT, step = 500}
+local game = {start = Timer.new(), level = 0, last_tick = 0, state = STATE.INIT, countdown = COUNTDOWN, step = 500}
 local current = {piece = {}, x = 0, y = 0, dir = DIR.UP } -- current active piece
 local next_piece = {piece = {}, dir = DIR.UP } -- upcoming piece
 local hold = {piece = false, dir = DIR.UP, trigger = false } -- piece in hold
@@ -176,9 +177,22 @@ function update()
 	-- check if we are playing
 	if game.state ~= STATE.PLAY then
 	    
+		if game.state == STATE.COUNTDOWN then
+			
+			-- except for first second pauze
+			if game.countdown ~= COUNTDOWN then
+				-- one second
+				System.wait(1000000)
+			end
+			-- continue with countdown
+			countdown()
+			
+			return true
+		end
+		
 		-- pauze
 		if game.state == STATE.PAUSE then
-			return true;
+			return true
 		end
 		
 		-- won
@@ -764,6 +778,17 @@ function drop_hold()
 	end
 end
 
+-- countdown before starting game
+function countdown()
+
+	if game.countdown == 1 then
+		game.state = STATE.PLAY
+		Timer.resume(game.start)
+	else 
+		game.countdown = game.countdown - 1
+	end
+end
+
 -- start the game
 function game_start()
 	
@@ -800,8 +825,9 @@ function game_start()
 	game.step = 500
 	game.level = 0 -- bound to step
 	game.last_tick = 0 -- drop ticks
-	game.state = STATE.PLAY
+	game.state = STATE.COUNTDOWN
 	Timer.reset(game.start) -- restart game timer
+	Timer.pause(game.start) -- pause for countdown
 	
 	-- clear stats
 	stats_lines = {single = 0, double = 0, triple = 0, tetro = 0}
@@ -850,6 +876,8 @@ function draw_frame()
 		draw_game_over()
 	elseif game.state == STATE.PAUSE then
 		draw_pause()
+	elseif game.state == STATE.COUNTDOWN then
+		draw_countdown()
 	end
 	
 	-- Terminating drawing phase
@@ -901,6 +929,16 @@ function draw_game_over()
 	
 	Graphics.drawImage(733, 101, img_button)
 	Font.print(fnt_main, 758, 115, "  EXIT  ", white)
+end
+
+-- draw countdown
+function draw_countdown()
+	-- draw background for game pause box
+	Graphics.fillRect(240, 515, 180, 225, Color.new(100,255,100))
+	
+	-- count down to start
+	Font.setPixelSizes(fnt_main, 32)
+	Font.print(fnt_main, 377, 180, game.countdown, Color.new(255,0,0))
 end
 
 -- draw pause
@@ -1177,8 +1215,10 @@ function user_input()
 			
 		-- unpauze
 		elseif game.state == STATE.PAUSE then
-			game.state = STATE.PLAY
-			Timer.resume(game.start)
+			-- reset countdown clock
+			game.countdown = COUNTDOWN
+			-- set state to countdown
+			game.state = STATE.COUNTDOWN
 		
 		-- restart
 		elseif game.state == STATE.DEAD then
