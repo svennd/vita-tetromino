@@ -1,0 +1,1138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:export-filename="C:\Users\svenn\Desktop\tetromino\vita-tetromino\assets\img\achievements.png"
+   inkscape:export-xdpi="35.450001"
+   inkscape:export-ydpi="35.450001"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="achievements.svg">
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient864"
+       inkscape:collect="always">
+      <stop
+         id="stop860"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1" />
+      <stop
+         id="stop862"
+         offset="1"
+         style="stop-color:#f2f2f2;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,0.94339208,0,3.3222574)"
+       r="23.5"
+       fy="58.688919"
+       fx="70.824409"
+       cy="58.688919"
+       cx="70.824409"
+       id="radialGradient866"
+       xlink:href="#linearGradient864"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient4698"
+       inkscape:collect="always">
+      <stop
+         id="stop4694"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1" />
+      <stop
+         id="stop4696"
+         offset="1"
+         style="stop-color:#999999;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4540"
+       inkscape:collect="always">
+      <stop
+         id="stop4536"
+         offset="0"
+         style="stop-color:#2a2aff;stop-opacity:1;" />
+      <stop
+         id="stop4538"
+         offset="1"
+         style="stop-color:#000080;stop-opacity:1" />
+    </linearGradient>
+    <clipPath
+       id="clipPath4672"
+       clipPathUnits="userSpaceOnUse">
+      <rect
+         y="7.0832729"
+         x="3.966974"
+         height="117.12719"
+         width="195.0685"
+         id="rect4674"
+         style="opacity:1;fill:url(#radialGradient4676);fill-opacity:1;stroke:none;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </clipPath>
+    <radialGradient
+       r="97.534248"
+       fy="65.646866"
+       fx="101.50122"
+       cy="65.646866"
+       cx="101.50122"
+       gradientTransform="matrix(1,0,0,0.60044139,5.5434418e-6,26.229774)"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient4676"
+       xlink:href="#linearGradient4540"
+       inkscape:collect="always" />
+    <linearGradient
+       gradientTransform="matrix(0.93796766,0,0,0.76198773,12.657431,-20.929562)"
+       gradientUnits="userSpaceOnUse"
+       y2="76.441864"
+       x2="95.441109"
+       y1="60.94796"
+       x1="95.007294"
+       id="linearGradient4700"
+       xlink:href="#linearGradient4698"
+       inkscape:collect="always" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="213.29369"
+     inkscape:cy="725.99911"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2"
+     sodipodi:insensitive="true" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer 3"
+     sodipodi:insensitive="true">
+    <g
+       id="g8260"
+       transform="translate(49.20432,0.18708867)">
+      <g
+         id="g7205">
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15"
+           width="21.648832"
+           height="21.648832"
+           x="1.6036181"
+           y="11.021606" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0"
+           width="21.648832"
+           height="21.648832"
+           x="24.310785"
+           y="11.02161" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-3"
+           width="21.648832"
+           height="21.648832"
+           x="47.017952"
+           y="11.021608" />
+      </g>
+      <g
+         inkscape:export-ydpi="35.450001"
+         inkscape:export-xdpi="35.450001"
+         inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+         style="fill:#c9b037;fill-opacity:1"
+         transform="matrix(0,-0.4136159,0.4136159,0,-38.422715,45.531072)"
+         id="g1186">
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33"
+           width="15.119047"
+           height="15.119047"
+           x="34.58482"
+           y="107.82291" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="107.82291" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="122.94196" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6-0"
+           width="15.119047"
+           height="15.119047"
+           x="64.822914"
+           y="122.94196" />
+      </g>
+      <g
+         inkscape:export-ydpi="35.450001"
+         inkscape:export-xdpi="35.450001"
+         inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+         style="fill:#d7d7d7;fill-opacity:1"
+         transform="matrix(0,-0.4136159,0.4136159,0,-15.715549,45.531074)"
+         id="g1186-4">
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-6"
+           width="15.119047"
+           height="15.119047"
+           x="34.58482"
+           y="107.82291" />
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-8"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="107.82291" />
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6-8"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="122.94196" />
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6-0-8"
+           width="15.119047"
+           height="15.119047"
+           x="64.822914"
+           y="122.94196" />
+      </g>
+      <g
+         inkscape:export-ydpi="35.450001"
+         inkscape:export-xdpi="35.450001"
+         inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+         style="fill:#ad8a56;fill-opacity:1"
+         transform="matrix(0,-0.4136159,0.4136159,0,6.9916186,45.531072)"
+         id="g1186-4-6">
+        <rect
+           style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-6-7"
+           width="15.119047"
+           height="15.119047"
+           x="34.58482"
+           y="107.82291" />
+        <rect
+           style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-8-0"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="107.82291" />
+        <rect
+           style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6-8-4"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="122.94196" />
+        <rect
+           style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6-0-8-2"
+           width="15.119047"
+           height="15.119047"
+           x="64.822914"
+           y="122.94196" />
+      </g>
+      <g
+         transform="translate(0,-0.05040067)"
+         id="g7192">
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-7"
+           width="21.648832"
+           height="21.648832"
+           x="1.6036186"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-5"
+           width="21.648832"
+           height="21.648832"
+           x="24.310785"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-3-1"
+           width="21.648832"
+           height="21.648832"
+           x="47.017952"
+           y="33.199608" />
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#ad8a56;fill-opacity:1"
+           transform="matrix(0,-0.42339697,0.42339697,0,24.433071,67.549018)"
+           id="g1180-3-3">
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-6-9"
+             width="15.119047"
+             height="15.119047"
+             x="32.883926"
+             y="63.788689" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-9-7"
+             width="15.119047"
+             height="15.119047"
+             x="48.002975"
+             y="63.788689" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-2-75-45"
+             width="15.119047"
+             height="15.119047"
+             x="63.122025"
+             y="63.788689" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-2-7-0-3"
+             width="15.119047"
+             height="15.119047"
+             x="63.122025"
+             y="78.907738" />
+        </g>
+      </g>
+      <g
+         transform="translate(0,22.077216)"
+         id="g7192-2">
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-7-8"
+           width="21.648832"
+           height="21.648832"
+           x="1.6036186"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-5-8"
+           width="21.648832"
+           height="21.648832"
+           x="24.310785"
+           y="33.336628" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-3-1-4"
+           width="21.648832"
+           height="21.648832"
+           x="47.017952"
+           y="33.199608" />
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#ad8a56;fill-opacity:1"
+           transform="matrix(0,-0.4136159,-0.4136159,0,108.69312,67.709073)"
+           id="g1186-9-47">
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-7-6"
+             width="15.119047"
+             height="15.119047"
+             x="34.58482"
+             y="107.82291" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-1-84-0"
+             width="15.119047"
+             height="15.119047"
+             x="49.703865"
+             y="107.82291" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-1-6-6-95"
+             width="15.119047"
+             height="15.119047"
+             x="49.703865"
+             y="122.94196" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-1-6-0-3-84"
+             width="15.119047"
+             height="15.119047"
+             x="64.822914"
+             y="122.94196" />
+        </g>
+      </g>
+      <g
+         inkscape:export-ydpi="35.450001"
+         inkscape:export-xdpi="35.450001"
+         inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+         style="fill:#c9b037;fill-opacity:1"
+         transform="matrix(0,-0.42339697,0.42339697,0,-20.981262,67.416741)"
+         id="g1180-3">
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-6"
+           width="15.119047"
+           height="15.119047"
+           x="32.883926"
+           y="63.788689" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-3-9"
+           width="15.119047"
+           height="15.119047"
+           x="48.002975"
+           y="63.788689" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-3-2-75"
+           width="15.119047"
+           height="15.119047"
+           x="63.122025"
+           y="63.788689" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-3-2-7-0"
+           width="15.119047"
+           height="15.119047"
+           x="63.122025"
+           y="78.907738" />
+      </g>
+      <g
+         inkscape:export-ydpi="35.450001"
+         inkscape:export-xdpi="35.450001"
+         inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+         style="fill:#d7d7d7;fill-opacity:1"
+         transform="matrix(0,-0.42339697,0.42339697,0,1.7259048,67.416741)"
+         id="g1180-3-9">
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-6-1"
+           width="15.119047"
+           height="15.119047"
+           x="32.883926"
+           y="63.788689" />
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-3-9-0"
+           width="15.119047"
+           height="15.119047"
+           x="48.002975"
+           y="63.788689" />
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-3-2-75-4"
+           width="15.119047"
+           height="15.119047"
+           x="63.122025"
+           y="63.788689" />
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-3-2-7-0-7"
+           width="15.119047"
+           height="15.119047"
+           x="63.122025"
+           y="78.907738" />
+      </g>
+      <g
+         transform="translate(0,44.204816)"
+         id="g7192-2-3">
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-7-8-9"
+           width="21.648832"
+           height="21.648832"
+           x="1.6036186"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-5-8-2"
+           width="21.648832"
+           height="21.648832"
+           x="24.310785"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-3-1-4-0"
+           width="21.648832"
+           height="21.648832"
+           x="47.017952"
+           y="33.199608" />
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#c9b037;fill-opacity:1"
+           transform="matrix(0.4120829,0,0,0.4120829,-10.468321,11.507495)"
+           id="g1180">
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815"
+             width="15.119047"
+             height="15.119047"
+             x="32.883926"
+             y="63.788689" />
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3"
+             width="15.119047"
+             height="15.119047"
+             x="48.002975"
+             y="63.788689" />
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-2"
+             width="15.119047"
+             height="15.119047"
+             x="63.122025"
+             y="63.788689" />
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-2-7"
+             width="15.119047"
+             height="15.119047"
+             x="63.122025"
+             y="78.907738" />
+        </g>
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#d7d7d7;fill-opacity:1"
+           transform="matrix(0.41208291,0,0,0.41208291,12.238845,11.507494)"
+           id="g1180-5">
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-63"
+             width="15.119047"
+             height="15.119047"
+             x="32.883926"
+             y="63.788689" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-7"
+             width="15.119047"
+             height="15.119047"
+             x="48.002975"
+             y="63.788689" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-2-5"
+             width="15.119047"
+             height="15.119047"
+             x="63.122025"
+             y="63.788689" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-2-7-9"
+             width="15.119047"
+             height="15.119047"
+             x="63.122025"
+             y="78.907738" />
+        </g>
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#ad8a56;fill-opacity:1"
+           transform="matrix(0.41208291,0,0,0.41208291,34.946012,11.507494)"
+           id="g1180-7">
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-4"
+             width="15.119047"
+             height="15.119047"
+             x="32.883926"
+             y="63.788689" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-8"
+             width="15.119047"
+             height="15.119047"
+             x="48.002975"
+             y="63.788689" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-2-3"
+             width="15.119047"
+             height="15.119047"
+             x="63.122025"
+             y="63.788689" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-3-2-7-8"
+             width="15.119047"
+             height="15.119047"
+             x="63.122025"
+             y="78.907738" />
+        </g>
+      </g>
+      <g
+         transform="translate(0,66.332433)"
+         id="g7192-2-3-8">
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-7-8-9-4"
+           width="21.648832"
+           height="21.648832"
+           x="1.6036186"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-5-8-2-6"
+           width="21.648832"
+           height="21.648832"
+           x="24.310785"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-3-1-4-0-0"
+           width="21.648832"
+           height="21.648832"
+           x="47.017952"
+           y="33.199608" />
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           transform="matrix(0.40394247,0,0,0.40394247,-19.600809,-10.065197)"
+           id="g1130-8">
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-3-9"
+             width="15.119047"
+             height="15.119047"
+             x="112.8259"
+             y="133.90327" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-3-5-1"
+             width="15.119047"
+             height="15.119047"
+             x="127.94495"
+             y="133.90327" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-3-5-2-86"
+             width="15.119047"
+             height="15.119047"
+             x="143.064"
+             y="133.90327" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-3-5-2-8-5"
+             width="15.119047"
+             height="15.119047"
+             x="127.94495"
+             y="118.78423" />
+        </g>
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           transform="matrix(0.40394247,0,0,0.40394247,3.1063579,-10.065197)"
+           id="g1130-9">
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-3-1"
+             width="15.119047"
+             height="15.119047"
+             x="112.8259"
+             y="133.90327" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-3-5-11"
+             width="15.119047"
+             height="15.119047"
+             x="127.94495"
+             y="133.90327" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-3-5-2-2"
+             width="15.119047"
+             height="15.119047"
+             x="143.064"
+             y="133.90327" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-3-5-2-8-4"
+             width="15.119047"
+             height="15.119047"
+             x="127.94495"
+             y="118.78423" />
+        </g>
+      </g>
+      <g
+         transform="translate(0,88.460032)"
+         id="g7192-2-5">
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-7-8-1"
+           width="21.648832"
+           height="21.648832"
+           x="1.6036186"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-5-8-8"
+           width="21.648832"
+           height="21.648832"
+           x="24.310785"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-3-1-4-8"
+           width="21.648832"
+           height="21.648832"
+           x="47.017952"
+           y="33.199608" />
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#c9b037;fill-opacity:1"
+           transform="matrix(0.39351704,0,0,0.39351704,-39.036028,3.230011)"
+           id="g1142">
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0"
+             width="15.119047"
+             height="15.119047"
+             x="115.66071"
+             y="103.66518" />
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9"
+             width="15.119047"
+             height="15.119047"
+             x="115.66071"
+             y="88.546127" />
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9"
+             width="15.119047"
+             height="15.119047"
+             x="130.77975"
+             y="88.546127" />
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7"
+             width="15.119047"
+             height="15.119047"
+             x="130.77975"
+             y="103.66518" />
+        </g>
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#d7d7d7;fill-opacity:1"
+           transform="matrix(0.39351704,0,0,0.39351704,-16.328862,3.230011)"
+           id="g1142-7">
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-3"
+             width="15.119047"
+             height="15.119047"
+             x="115.66071"
+             y="103.66518" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-2"
+             width="15.119047"
+             height="15.119047"
+             x="115.66071"
+             y="88.546127" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-8"
+             width="15.119047"
+             height="15.119047"
+             x="130.77975"
+             y="88.546127" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-4"
+             width="15.119047"
+             height="15.119047"
+             x="130.77975"
+             y="103.66518" />
+        </g>
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#ad8a56;fill-opacity:1"
+           transform="matrix(0.39351704,0,0,0.39351704,6.3783051,3.230011)"
+           id="g1142-9">
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-95"
+             width="15.119047"
+             height="15.119047"
+             x="115.66071"
+             y="103.66518" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-8"
+             width="15.119047"
+             height="15.119047"
+             x="115.66071"
+             y="88.546127" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-3"
+             width="15.119047"
+             height="15.119047"
+             x="130.77975"
+             y="88.546127" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-0-9-9-7-7"
+             width="15.119047"
+             height="15.119047"
+             x="130.77975"
+             y="103.66518" />
+        </g>
+      </g>
+      <g
+         transform="translate(0,110.58764)"
+         id="g7192-2-3-0">
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-7-8-9-6"
+           width="21.648832"
+           height="21.648832"
+           x="1.6036186"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-5-8-2-62"
+           width="21.648832"
+           height="21.648832"
+           x="24.310785"
+           y="33.199608" />
+        <rect
+           style="fill:#808080;stroke-width:0.26458332"
+           id="rect15-0-3-1-4-0-4"
+           width="21.648832"
+           height="21.648832"
+           x="47.017952"
+           y="33.199608" />
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#c9b037;fill-opacity:1"
+           transform="matrix(-0.32587629,0,0,-0.32587629,43.960444,74.911472)"
+           id="g1136">
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-84"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="64.544647" />
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="79.663696" />
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="94.782745" />
+          <rect
+             style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="109.90179" />
+        </g>
+        <g
+           inkscape:transform-center-y="-0.1889881"
+           inkscape:transform-center-x="0.75595238"
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#d7d7d7;fill-opacity:1"
+           transform="matrix(-0.32587628,0,0,-0.32587628,66.66761,74.911471)"
+           id="g1136-2">
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-84-8"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="64.544647" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-2"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="79.663696" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-1"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="94.782745" />
+          <rect
+             style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-8"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="109.90179" />
+        </g>
+        <g
+           inkscape:export-ydpi="35.450001"
+           inkscape:export-xdpi="35.450001"
+           inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+           style="fill:#ad8a56;fill-opacity:1"
+           transform="matrix(-0.32587628,0,0,-0.32587628,89.374776,74.911471)"
+           id="g1136-6">
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-84-2"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="64.544647" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-8"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="79.663696" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-4"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="94.782745" />
+          <rect
+             style="fill:#ad8a56;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect815-33-6-8-0-7-3"
+             width="15.119047"
+             height="15.119047"
+             x="89.202377"
+             y="109.90179" />
+        </g>
+      </g>
+      <rect
+         y="165.91486"
+         x="1.6036186"
+         height="21.648832"
+         width="21.648832"
+         id="rect15-7-8-9-4-0"
+         style="fill:#808080;stroke-width:0.26458332" />
+      <rect
+         y="165.91486"
+         x="24.263763"
+         height="21.648832"
+         width="21.648832"
+         id="rect15-0-3-1-4-0-0-8"
+         style="fill:#808080;stroke-width:0.26458332" />
+      <g
+         inkscape:export-ydpi="35.450001"
+         inkscape:export-xdpi="35.450001"
+         inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+         style="fill:#c9b037;fill-opacity:1"
+         transform="matrix(0,-0.4136159,-0.4136159,0,63.278785,89.786288)"
+         id="g1186-9">
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-7"
+           width="15.119047"
+           height="15.119047"
+           x="34.58482"
+           y="107.82291" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-84"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="107.82291" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6-6"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="122.94196" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6-0-3"
+           width="15.119047"
+           height="15.119047"
+           x="64.822914"
+           y="122.94196" />
+      </g>
+      <g
+         inkscape:export-ydpi="35.450001"
+         inkscape:export-xdpi="35.450001"
+         inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+         style="fill:#d7d7d7;fill-opacity:1"
+         transform="matrix(0,-0.4136159,-0.4136159,0,85.985951,89.92331)"
+         id="g1186-9-4">
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-7-7"
+           width="15.119047"
+           height="15.119047"
+           x="34.58482"
+           y="107.82291" />
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-84-8"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="107.82291" />
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6-6-9"
+           width="15.119047"
+           height="15.119047"
+           x="49.703865"
+           y="122.94196" />
+        <rect
+           style="fill:#d7d7d7;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-1-6-0-3-8"
+           width="15.119047"
+           height="15.119047"
+           x="64.822914"
+           y="122.94196" />
+      </g>
+      <g
+         inkscape:export-ydpi="35.450001"
+         inkscape:export-xdpi="35.450001"
+         inkscape:export-filename="C:\Users\svenn\Desktop\vita-tetronimo\vita-tetromino\sce_sys\icon0.png"
+         transform="matrix(0.40394247,0,0,0.40394247,-42.307973,56.267239)"
+         id="g1130">
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-6-8-0-7-0-9-9-7-3"
+           width="15.119047"
+           height="15.119047"
+           x="112.8259"
+           y="133.90327" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-6-8-0-7-0-9-9-7-3-5"
+           width="15.119047"
+           height="15.119047"
+           x="127.94495"
+           y="133.90327" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-6-8-0-7-0-9-9-7-3-5-2"
+           width="15.119047"
+           height="15.119047"
+           x="143.064"
+           y="133.90327" />
+        <rect
+           style="fill:#c9b037;fill-opacity:1;stroke:#000080;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect815-33-6-8-0-7-0-9-9-7-3-5-2-8"
+           width="15.119047"
+           height="15.119047"
+           x="127.94495"
+           y="118.78423" />
+      </g>
+      <rect
+         y="165.91486"
+         x="46.970932"
+         height="21.648832"
+         width="21.648832"
+         id="rect15-7-8-9-4-0-4"
+         style="fill:#808080;stroke-width:0.26458332" />
+      <text
+         id="text7952"
+         y="180.52199"
+         x="9.1155758"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ad8a56;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="fill:#ad8a56;fill-opacity:1;stroke-width:0.26458332"
+           y="180.52199"
+           x="9.1155758"
+           id="tspan7950"
+           sodipodi:role="line">5</tspan></text>
+      <text
+         id="text7960"
+         y="180.59175"
+         x="28.427086"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#d7d7d7;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan7962"
+           style="fill:#d7d7d7;fill-opacity:1;stroke-width:0.26458332"
+           y="180.59175"
+           x="28.427086"
+           sodipodi:role="line">25</tspan></text>
+      <text
+         id="text7968"
+         y="180.59175"
+         x="51.00248"
+         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#c9b037;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="fill:#c9b037;fill-opacity:1;stroke-width:0.26458332"
+           y="180.59175"
+           x="51.00248"
+           id="tspan7966"
+           sodipodi:role="line">50</tspan></text>
+    </g>
+  </g>
+</svg>
